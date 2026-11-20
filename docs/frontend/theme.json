@@ -1,0 +1,92 @@
+{
+  "status": "design-proposal",
+  "colors": {
+    "canvas": "#F4F6FA",
+    "surface": "#FFFFFF",
+    "sidebar": "#F7F9FC",
+    "textPrimary": "#17253D",
+    "textSecondary": "#526178",
+    "primary": "#315BEA",
+    "primaryHover": "#2449C6",
+    "primaryPressed": "#1F3FA9",
+    "primaryText": "#FFFFFF",
+    "controlBorder": "#64748B",
+    "divider": "#E2E8F0",
+    "incoming": "#F1F5F9",
+    "outgoing": "#E8EEFF",
+    "successText": "#166534",
+    "successSurface": "#DCFCE7",
+    "warningText": "#92400E",
+    "warningSurface": "#FEF3C7",
+    "errorText": "#991B1B",
+    "errorSurface": "#FEE2E2",
+    "focus": "#1D4ED8"
+  },
+  "typography": {
+    "family": "Segoe UI",
+    "bodyPoints": 10,
+    "titlePoints": 20,
+    "sectionPoints": 12,
+    "metadataPoints": 9
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32
+  ],
+  "contrastChecks": [
+    {
+      "foreground": "textPrimary",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textSecondary",
+      "background": "surface",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textPrimary",
+      "background": "incoming",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textPrimary",
+      "background": "outgoing",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "primaryText",
+      "background": "primary",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "primaryText",
+      "background": "primaryHover",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "primaryText",
+      "background": "primaryPressed",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "successText",
+      "background": "successSurface",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "warningText",
+      "background": "warningSurface",
+      "minimum": 4.5
+    },
+    {
+      "foreground": "errorText",
+      "background": "errorSurface",
+      "minimum": 4.5
+    }
+  ]
+}

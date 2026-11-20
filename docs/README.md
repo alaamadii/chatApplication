@@ -1,0 +1,30 @@
+# Documentation map
+
+Status: design proposal, 2026-11-20. Application implementation has not started.
+
+Read in the following order. Each file owns one concern so frontend, technology, architecture, planning and evidence stay separate.
+
+| Area / file | Owns | Does not replace |
+| --- | --- | --- |
+| [product/OVERVIEW](product/OVERVIEW.md) | Idea, users, demonstration and scope | Formal acceptance criteria |
+| [product/REQUIREMENTS](product/REQUIREMENTS.md) | Mandatory/optional requirements and task mapping | Execution evidence |
+| [technology/STACK](technology/STACK.md) | Technology choices/version policy | Architecture ownership |
+| [architecture/ARCHITECTURE](architecture/ARCHITECTURE.md) | Dependencies/classes/lifecycle | Wire contract |
+| [architecture/PROTOCOL](architecture/PROTOCOL.md) | Frames/packets/validation/delivery | UI visual design |
+| [architecture/DECISIONS](architecture/DECISIONS.md) | Why choices were made and consequences | Task status |
+| [frontend/UX](frontend/UX.md) | Screen layout, actions, states and copy | Colors/tokens |
+| [frontend/DESIGN_SYSTEM](frontend/DESIGN_SYSTEM.md) | Palette, type, spacing, contrast and DPI | Actual visual acceptance |
+| [frontend/FILE_GUIDE](frontend/FILE_GUIDE.md) | Planned UI files and responsibilities | Existing source code |
+| [planning/PLAN](planning/PLAN.md) | Milestones, sequence and review gates | Granular backlog |
+| [planning/TASKS](planning/TASKS.md) | Task IDs, dependencies, status and evidence | Strategy |
+| [planning/WORKFLOW](planning/WORKFLOW.md) | Branch/PR/validation process | Owner approval |
+| [quality/TESTING](quality/TESTING.md) | Executed checks and future test matrix | Assumed coverage |
+| [quality/SECURITY](quality/SECURITY.md) | Trust/data/resource boundaries | Authentication/encryption |
+| [setup/ENVIRONMENT](setup/ENVIRONMENT.md) | Current/planned setup and commands | A runnable app |
+| [submission/CHECKLIST](submission/CHECKLIST.md) | Final course evidence/owner action | Automatic submission |
+| [history/DEVELOPMENT](history/DEVELOPMENT.md) | Actual dated work and publication | Fabricated phase dates |
+| [references/SOURCES](references/SOURCES.md) | Course/primary sources and authority | Executable instructions |
+
+Frontend assets are [client](frontend/assets/client-wireframe.svg), [server](frontend/assets/server-wireframe.svg) and [machine-readable tokens](frontend/theme.json). They are planning artifacts.
+
+Source paths in FILE_GUIDE are monospace planned paths until actual files exist. Current file links point to real repository documents/assets. Any change to a requirement must update its tasks, design decisions, protocol/UI implications and validation plan.
