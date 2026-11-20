@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="760" viewBox="0 0 1120 760" role="img" aria-labelledby="title desc">
+  <title id="title">Server UI design proposal - not an application screenshot</title>
+  <desc id="desc">Original planned Windows Forms layout. Synthetic connected-state demonstration; no application exists yet.</desc>
+  <rect width="1120" height="760" fill="#F4F6FA"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <rect x="0" y="0" width="1120" height="46" fill="#FEF3C7"/>
+    <text x="24" y="29" font-size="15" font-weight="700" fill="#92400E">DESIGN PROPOSAL • NOT IMPLEMENTED • SYNTHETIC DEMO CONTENT</text>
+    <rect x="12" y="60" width="1096" height="674" rx="8" fill="#FFFFFF" stroke="#64748B"/>
+    <text x="32" y="88" font-size="13" fill="#526178">Chat Application — Server</text>
+    <line x1="12" y1="104" x2="1108" y2="104" stroke="#E2E8F0"/>
+    <rect x="13" y="105" width="272" height="628" fill="#F7F9FC"/>
+    <line x1="285" y1="105" x2="285" y2="734" stroke="#E2E8F0"/>
+    <text x="32" y="148" font-size="23" font-weight="700" fill="#17253D">Server console</text>
+    <text x="32" y="174" font-size="13" fill="#526178">One-client baseline</text>
+    <rect x="32" y="196" width="224" height="32" rx="6" fill="#DCFCE7"/>
+    <text x="44" y="217" font-size="13" font-weight="700" fill="#166534">Listening • illustrative state</text>
+    <text x="32" y="260" font-size="13" fill="#526178">Bind IPv4 address</text>
+    <rect x="32" y="270" width="224" height="36" rx="4" fill="#FFFFFF" stroke="#64748B"/>
+    <text x="44" y="293" font-size="15" fill="#17253D">127.0.0.1</text>
+    <text x="32" y="334" font-size="13" fill="#526178">Port</text>
+    <rect x="32" y="344" width="224" height="36" rx="4" fill="#FFFFFF" stroke="#64748B"/>
+    <text x="44" y="367" font-size="15" fill="#17253D">5000</text>
+    <rect x="32" y="400" width="224" height="38" rx="4" fill="#FFFFFF" stroke="#64748B"/>
+    <text x="100" y="425" font-size="14" font-weight="700" fill="#17253D">Stop server</text>
+    <text x="32" y="478" font-size="15" font-weight="700" fill="#17253D">Connected client • 1 of 1</text>
+    <rect x="32" y="494" width="224" height="100" rx="6" fill="#E8EEFF"/>
+    <circle cx="57" cy="522" r="15" fill="#315BEA"/>
+    <text x="52" y="527" font-size="14" fill="#FFFFFF">A</text>
+    <text x="82" y="523" font-size="15" font-weight="700" fill="#17253D">Alaa</text>
+    <text x="44" y="554" font-size="12" fill="#526178">127.0.0.1:53001 • demo endpoint</text>
+    <text x="44" y="577" font-size="12" fill="#526178">Joined 09:24 • demo time</text>
+    <text x="312" y="148" font-size="23" font-weight="700" fill="#17253D">Conversation with Alaa</text>
+    <text x="312" y="175" font-size="13" fill="#526178">Sender and server timestamp • example conversation</text>
+    <line x1="312" y1="196" x2="1080" y2="196" stroke="#E2E8F0"/>
+    <rect x="312" y="226" width="438" height="102" rx="8" fill="#F1F5F9"/>
+    <text x="330" y="252" font-size="13" font-weight="700" fill="#17253D">Alaa</text>
+    <text x="330" y="284" font-size="17" fill="#17253D">Hello! Can you see this message?</text>
+    <text x="330" y="310" font-size="12" fill="#526178">09:24:10 • synthetic example</text>
+    <rect x="610" y="350" width="438" height="102" rx="8" fill="#E8EEFF"/>
+    <text x="628" y="376" font-size="13" font-weight="700" fill="#17253D">Server</text>
+    <text x="628" y="408" font-size="17" fill="#17253D">Yes. The local connection is ready.</text>
+    <text x="628" y="434" font-size="12" fill="#526178">09:24:12 • synthetic example</text>
+    <rect x="312" y="544" width="736" height="34" rx="4" fill="#F7F9FC"/>
+    <text x="326" y="566" font-size="12" fill="#526178">Connected to a local peer • Messages are kept for this session.</text>
+    <rect x="312" y="596" width="604" height="70" rx="6" fill="#FFFFFF" stroke="#64748B"/>
+    <text x="328" y="624" font-size="15" fill="#526178">Write a short message…</text>
+    <rect x="932" y="596" width="116" height="70" rx="6" fill="#315BEA"/>
+    <text x="972" y="637" font-size="16" font-weight="700" fill="#FFFFFF">Send</text>
+    <text x="312" y="691" font-size="12" fill="#526178">Enter to send • Shift+Enter for a new line • 0 / 2,000</text>
+    <text x="32" y="714" font-size="11" fill="#526178">Unencrypted local demo • No automatic saving • This image is a wireframe, not test evidence</text>
+  </g>
+</svg>
