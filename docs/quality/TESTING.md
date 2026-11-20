@@ -50,3 +50,13 @@ Keep failures reproducible with synthetic content. Record steps, expected/actual
 - Selected text-color ratios are 5.50:1 to 15.35:1. This is a token check, not complete UI accessibility evidence.
 - git diff --check passed. Original Client/Server SVGs were rendered with an isolated headless Edge profile and visually reviewed; previews remain under ignored .local. These are design previews, not Windows Forms/application checks.
 - Application build/behavior tests, physical UI and second-computer results remain not performed because source has not been implemented. Hosted exact-head results are recorded on the foundation PR after execution.
+
+## Published foundation receipt — 2026-11-20
+
+- [PR #1](https://github.com/alaamadii/chatApplication/pull/1) targets main from docs/project-foundation and is ready for owner documentation/design review.
+- Published tooling candidate bef1ec485bb4307d4fe4e073ffbd1d40cfabc45d passed documentation CI run 44729812668.
+- A fresh isolated checkout of that exact candidate passed the same docs check: 24 required artifacts, 22 Markdown files, 87 local targets, 29 tasks/93 references, 10 contrast pairs and 2 labeled SVGs. The clone stayed clean.
+- Anonymous README/index/PLAN/TASKS/Client-SVG/Server-SVG URLs returned HTTP 200. Existing public visibility was preserved.
+- Final publication-receipt SHA and exact hosted run/results are recorded on PR #1; later edits reconcile documentation status only.
+
+These are documentation and design checks. Application functionality, native WinForms/physical acceptance and another Windows computer remain unperformed. Owner acceptance is still pending.

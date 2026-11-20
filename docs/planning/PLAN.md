@@ -8,7 +8,7 @@ This PR creates the requirements/design foundation only. Owner review is pending
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
-| Preparation | Organized docs, frontend proposals, architecture/protocol and backlog | Owner's current request | In review preparation |
+| Preparation | Organized docs, frontend proposals, architecture/protocol and backlog | Owner's current request | Published on PR #1; owner review pending |
 | P00 | Solution, initialization windows, environment and .NET CI | Foundation reviewed/requested | Pending |
 | P01 | Server/Client interfaces and shared presentation | P00 accepted | Pending |
 | P02 | Bounded TCP protocol and real connection/username lifecycle | P01 accepted | Pending |

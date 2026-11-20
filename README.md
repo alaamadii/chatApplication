@@ -2,7 +2,7 @@
 
 A planned C#/.NET Windows Forms client-server chat assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: documentation/design foundation, awaiting owner review.** There is no application source, executable, connection, message exchange or application test suite yet. The SVG previews are original design proposals, not screenshots of working software.
+**Current status: documentation/design foundation, awaiting owner review in [PR #1](https://github.com/alaamadii/chatApplication/pull/1).** There is no application source, executable, connection, message exchange or application test suite yet. The SVG previews are original design proposals, not screenshots of working software.
 
 ## Idea and required outcome
 

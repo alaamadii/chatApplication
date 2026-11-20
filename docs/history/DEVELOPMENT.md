@@ -21,3 +21,12 @@ Local/hosted documentation check, visual preview, diff and publication receipts 
 - During checker development, XmlDocument.InnerText was not a usable validation source in PowerShell; replaced that check with an explicit labeled SVG text-node query, then reran successfully.
 - Rendered original SVG assets through isolated hidden/headless Edge profiles, visually reviewed both roles and refined user-facing footer/limit wording. Rendered previews/profile data are ignored under .local; no application screenshot is claimed.
 - App code/behavior/manual acceptance and optional feature approvals remain pending. Publication/hosted results follow confirmed execution.
+
+### Publication and review receipt
+
+- Pushed minimal main baseline e496391 and reviewed foundation commits 06f1150 / bef1ec4 to the selected existing public repository.
+- Opened [PR #1](https://github.com/alaamadii/chatApplication/pull/1) for documentation/design review. Hosted documentation run 44729812668 passed.
+- Fresh isolated checkout of bef1ec485bb4307d4fe4e073ffbd1d40cfabc45d passed the same documentation checks and stayed clean; no local renderer/profile is required for validation.
+- Anonymous README/index/PLAN/TASKS/two-SVG access returned 200. Narrow exclusions, limited credential scan and intended docs-only diff passed.
+- Documentation preparation artifacts/checks/publication are complete; owner review remains pending and every application implementation task remains Pending. Final exact-head CI is recorded on PR #1 without self-referential receipt commits.
+- No application build, runtime test, listener, merge, visibility change or Classroom submission.

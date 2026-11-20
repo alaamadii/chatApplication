@@ -12,7 +12,7 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 | DOC-002 | Document stack, architecture and protocol decisions | DOC-001 | technology/STACK and architecture documents | Done |
 | DOC-003 | Specify frontend files, controls, palette and two wireframes | DOC-002 | frontend documents/assets/tokens | Done |
 | DOC-004 | Separate milestone plan and actionable backlog | DOC-001 | PLAN and this ledger | Done |
-| DOC-005 | Validate docs/design metadata, publish reviewed foundation | DOC-002, DOC-003, DOC-004 | Actual local/hosted checks and PR receipt | In progress |
+| DOC-005 | Validate docs/design metadata, publish reviewed foundation | DOC-002, DOC-003, DOC-004 | Actual local/hosted checks and PR receipt | Done |
 
 ## P00 — Initialization
 
