@@ -1,0 +1,25 @@
+# Build and development output
+**/bin/
+**/obj/
+.vs/
+.local/
+TestResults/
+artifacts/
+
+# Personal editor state
+*.user
+*.suo
+*.rsuser
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Credentials and local-only content
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+/transcripts/
+*.chatlog.txt
