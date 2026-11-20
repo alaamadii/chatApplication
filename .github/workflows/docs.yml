@@ -1,0 +1,25 @@
+name: Documentation checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate documentation, tasks, tokens and proposals
+        shell: pwsh
+        run: ./scripts/check-docs.ps1
+      - name: Check whitespace
+        shell: pwsh
+        run: git diff --check HEAD^ HEAD
