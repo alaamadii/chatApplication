@@ -36,6 +36,6 @@ Transcript retention is bounded to the latest 500 messages per window, with a vi
 
 ## Current state and review
 
-Only the documentation/design foundation exists. The owner reviews requirements, two executable roles, UI proposals, protocol assumptions and the staged backlog before Phase 00 creates source.
+Foundation PR #1 is merged. P00 now provides separate Server/Client initialization windows, empty Core, prepared test infrastructure and build/run/CI tooling. The owner reviews this scaffold before P01. The demonstration journey above remains future behavior: no connection, message exchange or participant tracking exists yet.
 
 See [requirements](REQUIREMENTS.md), [frontend UX](../frontend/UX.md), [architecture](../architecture/ARCHITECTURE.md) and [plan](../planning/PLAN.md).

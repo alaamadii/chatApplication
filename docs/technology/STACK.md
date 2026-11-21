@@ -1,40 +1,37 @@
 # Technology stack and version policy
 
-Status: proposed application stack; documentation tooling is the only implemented tooling.
+## Implemented P00 baseline — 2026-11-21
 
-| Technology | Purpose / placement | Version and dependency policy |
+| Technology | Current placement | Verified configuration |
 | --- | --- | --- |
-| C# / .NET | Desktop/runtime and BCL | Plan net10.0; installed SDK observed 10.0.402 on 2026-11-20 |
-| Windows Forms | Separate Server/Client apps and shared Presentation | net10.0-windows, programmatic native controls; no Designer dependency |
-| TcpListener / TcpClient | Accept/connect a TCP peer | Built-in System.Net.Sockets; no networking NuGet package |
-| NetworkStream + async/await | Cancellable framed reads/writes | Built-in async APIs; one reader/serialized writer per connection |
-| System.Text.Json | Versioned packet payloads | Built-in UTF-8 JSON; bounded framing is specified separately |
-| BinaryPrimitives / Encoding | Big-endian length and strict UTF-8 | BCL; reject malformed lengths/encoding |
-| CancellationToken / SemaphoreSlim | Lifetime, deadlines and write ordering | BCL; no blocking UI waits |
-| TimeProvider / DateTimeOffset | Testable server UTC timestamps | App/Networking supplies time; Core stores values |
-| xUnit + Microsoft.NET.Test.Sdk | Planned Core/transport/native UI tests | Pin exact stable package versions during P00-003 after restore/audit; none installed now |
-| PowerShell | Current documentation validation; future dev commands | Windows PowerShell 5.1-compatible scripts, pwsh in CI |
-| Git / GitHub Actions | Reviewed branches and repeatable checks | Current docs CI; Windows .NET CI added in Phase 00 |
-| VS Code / C# tooling | Owner's editing/debugging workflow | Shared configs planned; install extensions deliberately |
+| C# / .NET SDK | All four projects | SDK 10.0.402; global.json uses latestPatch and allowPrerelease=false |
+| Windows Forms | Separate Server and Client executables | net10.0-windows, UseWindowsForms=true, programmatic native controls |
+| Core / Core.Tests | Independent library and test infrastructure | net10.0; Core is an empty assembly with no UI/network dependencies |
+| Microsoft.NET.Test.Sdk | Core.Tests only | Exact version 18.12.0 |
+| xunit | Core.Tests only | Exact version 2.9.3 |
+| xunit.runner.visualstudio | Core.Tests only; private build/test dependency | Exact version 4.0.1 |
+| PowerShell | scripts/dev.ps1 and check-docs.ps1 | Locally executed on Windows PowerShell 5.1.22621.6133; CI uses pwsh |
+| Git / GitHub Actions | Reviewed phase branches and bounded Windows jobs | Git 2.53.0.windows.1; existing docs CI plus Windows .NET check |
+| VS Code | Shared build/check tasks and role/compound debug configurations | C# and C# Dev Kit recommended; physical F5 not performed |
 
-No database, ORM, web framework, SignalR, browser engine, cloud API, external UI toolkit or account service is needed for the baseline. Do not install packages merely to reserve architecture.
+The development machine reports Windows 10.0.22631 and Microsoft.NETCore.App / Microsoft.WindowsDesktop.App 10.0.13. A compatible SDK/runtime is required on another computer; this observation is not a second-computer result.
 
-## SDK and package reproducibility
+## Reproducibility and dependency policy
 
-Phase 00 will create global.json selecting 10.0.402, latestPatch and allowPrerelease=false after reconfirming availability. LatestPatch stays within the same SDK feature band; SDK selection is separate from target frameworks. See [Microsoft SDK policy](https://learn.microsoft.com/en-us/dotnet/core/tools/global-json).
+[global.json](../../global.json) selects a stable 10.0.402 SDK with latestPatch servicing within its feature band. SDK selection is separate from target frameworks. [Directory.Build.props](../../Directory.Build.props) enables nullable references, implicit usings, deterministic builds, warnings as errors and NuGet auditing of all dependencies at low severity and above.
 
-Use explicit test package versions and official NuGet package/audit sources. Enable nullable references, warnings as errors, deterministic builds and all-dependency advisory checking. Record exact restored versions and results; do not claim proposed packages are installed or vulnerability-free.
+[NuGet.Config](../../NuGet.Config) clears inherited package/audit sources and uses the official nuget.org v3 feed. No credentials are stored. Test packages are exact direct version pins verified by an actual restore; transitive versions are resolved by NuGet and are not locked by a packages.lock.json. Production projects have no external PackageReference.
 
-## UI, concurrency and transport
+Official package metadata: [test SDK 18.12.0](https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/18.12.0), [xUnit 2.9.3](https://www.nuget.org/packages/xunit/2.9.3) and [VS adapter 4.0.1](https://www.nuget.org/packages/xunit.runner.visualstudio/4.0.1). Restore/build/discovery succeeded with this combination. Core has no domain behavior: discovery reports zero cases, not coverage or a verified sample test.
 
-[Windows Forms](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/overview/) provides the required native desktop surface. Shared presentation uses native controls/original simple drawing, with fonts/resources owned and disposed.
+On 2026-11-21, restore auditing and the explicit direct/transitive advisory query against nuget.org reported no known vulnerable packages. This is a point-in-time advisory result, not a security certification. Recheck when changing dependencies.
 
-Transport runs with async I/O rather than wrapping blocking socket calls in Task.Run. Network callbacks never receive controls. Forms await UI-thread dispatch via [Control.InvokeAsync guidance](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-make-thread-safe-calls), guard closing/disposal and cancel their lifetime before releasing resources.
+## Planned later technology
 
-TCP helpers simplify stream access; they do not define application messages. Our [protocol](../architecture/PROTOCOL.md) supplies framing, limits and handshake rules. See [Microsoft TCP overview](https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/sockets/tcp-classes).
+TcpListener/TcpClient, NetworkStream, async/await, CancellationToken/SemaphoreSlim, System.Text.Json, BinaryPrimitives/Encoding and server-supplied TimeProvider/DateTimeOffset remain BCL design choices for P02/P03. They are not implemented by initialization.
 
-## Current evidence and deferred decisions
+Networking owns cancellable framed I/O; Core stays independent. Shared Presentation is deferred to P01 when there is actual shared UI code. No database, ORM, web framework, SignalR, browser engine, cloud API or external UI toolkit is required.
 
-Observed SDK/Git availability is recorded in [DEVELOPMENT](../history/DEVELOPMENT.md). There is no application build, dependency restore, behavior test or F5 result yet.
+See [SDK selection](https://learn.microsoft.com/en-us/dotnet/core/tools/global-json), [Windows Forms](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/overview/), [thread-safe UI calls](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-make-thread-safe-calls) and [TCP overview](https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/sockets/tcp-classes).
 
-Open implementation details: exact test package pins, measured message-control performance and actual DPI layouts. Resolve them in the listed phase/task, update decisions and preserve the owner review gate.
+Actual commands/results and pending physical DPI/debug review are in [ENVIRONMENT](../setup/ENVIRONMENT.md) and [TESTING](../quality/TESTING.md).

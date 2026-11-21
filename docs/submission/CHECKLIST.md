@@ -1,6 +1,6 @@
 # Course submission and owner evidence
 
-Current state: documentation/design only. The application is not ready for course submission.
+Current state: P00 initialization implemented, owner review pending. The application is not ready for course submission; required chat functionality remains unimplemented.
 
 Repository: [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication), currently public. The instructor recommends YMH219-ChatApp; retain the owner's selected repository and do not create another copy.
 
@@ -11,9 +11,10 @@ Author: Alaa Madi, as supplied. The original sheet requires name/student number;
 - [x] Separate public repository and documentation-first working agreement.
 - [x] Requirements, technology, architecture/protocol and original frontend proposal separated by concern.
 - [x] PLAN and TASKS are separate files with phase/task dependencies.
-- [ ] Owner accepts this foundation and requests P00.
+- [x] Owner merged foundation PR #1 and requested P00.
 - [ ] Working Server/Client source, required username/messages/timestamps/actions/client info/errors.
-- [ ] Actual reproducible build/run instructions and pinned dependencies.
+- [x] Actual initialization build/run instructions and pinned direct test dependencies.
+- [ ] Final chat build/run guide verified against the finished application.
 - [ ] Meaningful behavior tests and exact final-head hosted CI.
 - [ ] Two real application screenshots; source/date/method/DPI/hashes and owner approval.
 - [ ] Exact published clean-checkout build/check/run/normal close.
@@ -23,7 +24,7 @@ Author: Alaa Madi, as supplied. The original sheet requires name/student number;
 - [ ] Owner approves final PR/course readiness.
 - [ ] Owner submits GitHub profile link in Classroom.
 
-No application test/manual result has been supplied or performed in this docs delivery. Do not infer it from wireframes, design checks or future source paths.
+P00 restore/build/discovery/format/docs and scripted EXE window/normal-close checks have been executed; see TESTING. There are zero behavioral cases. Physical UI, F5/DPI, final chat behavior and second-computer evidence remain pending. Wireframes do not complete any of these checks.
 
 ## Screenshots and final record
 

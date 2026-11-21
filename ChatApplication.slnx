@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ChatApplication.Core/ChatApplication.Core.csproj" />
+    <Project Path="src/ChatApplication.Server/ChatApplication.Server.csproj" />
+    <Project Path="src/ChatApplication.Client/ChatApplication.Client.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ChatApplication.Core.Tests/ChatApplication.Core.Tests.csproj" />
+  </Folder>
+</Solution>

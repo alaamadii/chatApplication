@@ -21,8 +21,8 @@ Course source: supplied YMH219_Ek_Uygulama_Odevleri_Ogrenci_Foyu.pdf, pages 1, 3
 
 | ID | Criterion | Evidence / tasks |
 | --- | --- | --- |
-| SUB-001 | Separate public repository with source and .gitignore | Existing public chatApplication; source pending P00-001 |
-| SUB-002 | README purpose/tech/setup/features/limitations | Current planning README; actual run steps added in P00-002/P06-001 |
+| SUB-001 | Separate public repository with source and .gitignore | Existing public chatApplication; initialization source added in P00-001; chat functionality pending |
+| SUB-002 | README purpose/tech/setup/features/limitations | Actual initialization/build/run steps in README and ENVIRONMENT (P00-002); final chat guide pending P06-001 |
 | SUB-003 | At least two authentic application screenshots | P06-002; wireframes never count |
 | SUB-004 | Meaningful staged commits/PRs | Each phase follows WORKFLOW; no fabricated history |
 | SUB-005 | Run on a different Windows computer | P06-003 records date, Windows/SDK, commit, commands/results |

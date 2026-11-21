@@ -47,3 +47,7 @@ In high contrast, prefer system foreground/background/highlight colors and nativ
 English shell labels; Turkish/Arabic/English message content. Keep sender, timestamp and body in separate accessible elements to reduce bidi confusion. Do not encode information only in left/right alignment.
 
 The illustrative [Client](assets/client-wireframe.svg) and [Server](assets/server-wireframe.svg) assets are marked DESIGN PROPOSAL. They contain invented demo conversation for layout review, not execution evidence or copied WhatsApp assets.
+
+## Current implementation boundary — P00
+
+The palette/tokens/wireframes above remain design proposals for P01. P00 uses native system fonts and labels in two simple resizable initialization windows, with no custom colors, cards or shared Presentation library. Explicit PerMonitorV2 configuration exists, but physical 100%/125%/150% and monitor transitions have not been tested.

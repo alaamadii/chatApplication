@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Chat: build",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "${workspaceFolder}/scripts/dev.ps1",
+        "build"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Chat: check",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "${workspaceFolder}/scripts/dev.ps1",
+        "check"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

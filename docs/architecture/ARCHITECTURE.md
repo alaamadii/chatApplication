@@ -1,6 +1,14 @@
-# Planned architecture
+# Architecture
 
-Status: design proposal. Every application project/class below is planned, not an existing source file.
+## Implemented P00 structure
+
+[ChatApplication.slnx](../../ChatApplication.slnx) contains four projects only. [Core](../../src/ChatApplication.Core/ChatApplication.Core.csproj) is an empty net10.0 assembly. [Server](../../src/ChatApplication.Server/ChatApplication.Server.csproj) and [Client](../../src/ChatApplication.Client/ChatApplication.Client.csproj) are independent net10.0-windows WinExe projects referencing Core. [Core.Tests](../../tests/ChatApplication.Core.Tests/ChatApplication.Core.Tests.csproj) references Core with pinned test tooling and no cases.
+
+Each executable has its own STA entry point, PerMonitorV2 initialization and role Form. Forms own their native layout/labels through the control tree; no custom fonts/drawing resources are allocated. DPI autoscaling starts at 96 logical DPI, the client area is 800 x 480 and the minimum outer size is 640 x 400. Anchored, wrapping labels use the system font and remain within a fill-docked TableLayoutPanel. Physical scaling review is pending.
+
+Actual dependency direction is Server -> Core, Client -> Core and Core.Tests -> Core. Core contains no models or Windows/drawing/socket/timer/clock dependencies. There are no background tasks, listeners or gameplay-style timers. Networking and shared Presentation do not exist yet.
+
+The remainder describes the target architecture for future phases; only the initialization entry points/Forms and four projects above exist.
 
 ## Dependency direction
 
@@ -24,7 +32,7 @@ Server/Client may also reference Core directly. Core must never reference anothe
 | Core.Tests / Networking.Tests | net10.0; pure and bounded loopback cases | P00 infrastructure / P02 behavior |
 | App.Tests | net10.0-windows; native STA presentation/lifecycle | P01 when meaningful contracts exist |
 
-Do not create empty future classes or every project in the documentation phase. Phase 00 starts with two truthful initialization windows and independent Core/test infrastructure.
+Do not create empty future classes. P00 implements only the four projects listed above; the Networking/Presentation/App.Tests/Networking.Tests rows remain planned.
 
 ## Class ownership
 

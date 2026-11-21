@@ -1,6 +1,6 @@
 # Design decisions
 
-All application decisions are proposed until implemented/validated in the named phase.
+Decisions are proposals until implemented/validated in their named phase. P00 implements ADR-002's two executables, ADR-003's Core boundary, ADR-004's SDK/tooling subset and ADR-013 below; it does not implement the transport/protocol/UI proposals.
 
 | ADR | Decision / date | Rationale and consequence |
 | --- | --- | --- |
@@ -21,6 +21,14 @@ All application decisions are proposed until implemented/validated in the named 
 
 Record a new dated decision or explicitly supersede an old one. Explain the concrete reason, affected requirements/files/protocol/UI, migration impact and tests needed. Do not update task status merely because a design paragraph exists.
 
-Open decisions: exact test package pins in P00-003; performance/assistive review of message cards in P01/P03; optional feature selection in P05. These are not blockers to producing this reviewable documentation proposal.
+Open decisions: performance/assistive review of message cards in P01/P03 and optional feature selection in P05. P00 test package pins are now implemented and recorded in STACK.
 
 See [architecture](ARCHITECTURE.md), [protocol](PROTOCOL.md), [stack](../technology/STACK.md) and [tasks](../planning/TASKS.md).
+
+## ADR-013 — P00 implementation boundary and tooling — 2026-11-21
+
+Implemented: separate WinForms WinExe projects reference only empty Core; Core.Tests references Core with exact Microsoft.NET.Test.Sdk 18.12.0, xunit 2.9.3 and xunit.runner.visualstudio 4.0.1. No Class1, placeholder test, protocol model, Networking or Presentation project is created. This keeps initialization explainable and leaves domain assertions for actual behavior.
+
+Both programs explicitly use STA, PerMonitorV2 and visual styles. Native labels/system fonts are owned through the Form control tree; no custom drawing/font disposal is needed. A fill-docked table wraps initialization text; resizing is allowed with a sensible minimum. Physical F5/DPI acceptance remains pending.
+
+global.json pins stable SDK 10.0.402 with latestPatch. Shared properties enforce nullable references, deterministic builds, warnings as errors and all-dependency NuGet audit. Official sources are explicit. The development script scopes DOTNET_ROOT/CLI state to the invocation, restores inherited state and fails on nonzero tools. Windows CI runs the same check. Actual EXE open/normal-close and zero-case discovery are reported separately from behavioral/manual coverage. See STACK and TESTING for execution evidence.

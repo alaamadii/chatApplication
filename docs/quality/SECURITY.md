@@ -1,6 +1,6 @@
 # Planned security and data boundaries
 
-Status: design requirements, not implemented safeguards or a security certification.
+Status: P00 has initialization windows and build tooling only. Applications open no sockets, accept no usernames/messages and write no transcript. The transport/data safeguards below remain design requirements, not implemented security guarantees.
 
 ## Trust model
 
@@ -39,7 +39,7 @@ No automatic reconnect/replay: a write may have reached the peer even when the s
 
 ## Development dependencies and repository
 
-Phase 00 pins SDK/test packages and official NuGet package/audit sources. Run all-dependency known-advisory checks and report source/date/results, not a vulnerability-free claim. Runtime transport/UI/JSON use the BCL; no API secret or database is required.
+P00 pins SDK/direct test packages, enables all-dependency auditing at low severity and above, and clears inherited package/audit sources in favor of official nuget.org. Actual restore and direct/transitive advisory results are recorded in TESTING/STACK; these are time-bound known-advisory checks, not a vulnerability-free claim. Runtime transport/UI/JSON use the BCL; no API secret or database is required.
 
 Exclude bin/obj/.local/TestResults, personal IDE state, .env/certificates and transcripts. Use transcripts/ or *.chatlog.txt for isolated future test exports; do not ignore arbitrary documentation TXT files. Review staged content and use only owned temporary targets.
 

@@ -1,8 +1,8 @@
 # YMH219 : Chat Application
 
-A planned C#/.NET Windows Forms client-server chat assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
+A C#/.NET Windows Forms client-server chat assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: documentation/design foundation, awaiting owner review in [PR #1](https://github.com/alaamadii/chatApplication/pull/1).** There is no application source, executable, connection, message exchange or application test suite yet. The SVG previews are original design proposals, not screenshots of working software.
+**Current status: P00 initialization implemented in [PR #2](https://github.com/alaamadii/chatApplication/pull/2); owner review pending.** Foundation [PR #1](https://github.com/alaamadii/chatApplication/pull/1) is merged. Server and Client open as separate resizable Windows Forms programs with truthful initialization notices. Networking, usernames, messaging and participant tracking are not implemented. SVG previews remain design proposals, not screenshots of working software.
 
 ## Idea and required outcome
 
@@ -22,34 +22,42 @@ The mandatory baseline is **one server and at least one client** on the same com
 | [Protocol](docs/architecture/PROTOCOL.md) | Proposed framing, packet contract, limits and message flow |
 | [Frontend UX](docs/frontend/UX.md) | Server/client layouts, controls, states and interactions |
 | [Design system](docs/frontend/DESIGN_SYSTEM.md) | Exact colors, typography, spacing and accessibility |
-| [Frontend file guide](docs/frontend/FILE_GUIDE.md) | Planned UI files, purpose and creation phase |
+| [Frontend file guide](docs/frontend/FILE_GUIDE.md) | Existing initialization files and planned UI responsibilities |
 | [Plan](docs/planning/PLAN.md) | Phase order, deliverables and review gates |
 | [Tasks](docs/planning/TASKS.md) | Separate actionable backlog with dependencies/status |
 | [Workflow](docs/planning/WORKFLOW.md) | Branches, commits, checks and owner review |
-| [Testing](docs/quality/TESTING.md) | Current documentation checks and future test matrix |
+| [Testing](docs/quality/TESTING.md) | Executed P00 checks and future test matrix |
 | [Security](docs/quality/SECURITY.md) | Trust boundaries, data handling and limitations |
-| [Environment](docs/setup/ENVIRONMENT.md) | Current prerequisites and future run/debug commands |
+| [Environment](docs/setup/ENVIRONMENT.md) | Prerequisites, build/run/debug commands and troubleshooting |
 | [Submission](docs/submission/CHECKLIST.md) | Final evidence and owner actions |
 
 ## Design previews
 
-[Client design proposal](docs/frontend/assets/client-wireframe.svg) and [Server design proposal](docs/frontend/assets/server-wireframe.svg) show the intended light desktop layout. Their illustrative conversation is synthetic. The palette and control descriptions are reviewable now; application implementation follows later.
+[Client design proposal](docs/frontend/assets/client-wireframe.svg) and [Server design proposal](docs/frontend/assets/server-wireframe.svg) show the intended light desktop layout. Their illustrative conversation is synthetic. The complete layout, palette and controls are planned for later phases. P00 uses simple native labels; it does not implement these full layouts.
 
-## Planned technology
+## Technology
 
-C# / .NET 10, Windows Forms, TcpListener/TcpClient, NetworkStream, async/await and System.Text.Json. Separate Core, Networking and UI ownership; no database, hosted service, web frontend or external UI framework is required. The installed SDK observed on 2026-11-20 is 10.0.402; Phase 00 will pin and verify the actual application toolchain.
+SDK 10.0.402 with stable latestPatch selection; C#/.NET 10 and native Windows Forms. Server and Client target net10.0-windows and reference a behavior-free net10.0 Core. Exact test tooling pins are documented in [STACK](docs/technology/STACK.md). Networking and shared Presentation projects will be introduced in P02 and P01 when needed. TCP/async messaging is planned; no database, cloud service or external UI framework is required.
 
 ## What runs now
 
 From PowerShell in this repository:
 
 ```powershell
-./scripts/check-docs.ps1
+./scripts/dev.ps1 doctor
+./scripts/dev.ps1 check
+./scripts/dev.ps1 run-server
 ```
 
-This checks documentation structure/local links, task references, SVG proposal labeling and the specified text-color contrast pairs. Documentation CI runs the same command. These checks are not chat functionality tests or a complete accessibility audit.
+In another PowerShell terminal, run:
 
-There is no scripts/dev.ps1, .NET solution, F5 launch configuration or application run command yet. Their planned contract is in ENVIRONMENT; no setup step is presented as working before it exists.
+```powershell
+./scripts/dev.ps1 run-client
+```
+
+Use Windows with a compatible .NET 10 SDK/WindowsDesktop runtime. The check command restores, builds Release, discovers tests, verifies formatting and runs the existing documentation checker. Core has no domain behavior and discovery currently finds **zero cases**; this is infrastructure verification, not behavioral coverage.
+
+Both executables use STA, PerMonitorV2, visual styles and native resizable layouts. Scripted window/label checks and normal close passed locally. Shared VS Code build/check tasks, role launches and a compound launch are included; physical F5/DPI review remains pending. Windows .NET CI runs the same development check alongside preserved docs CI. See [TESTING](docs/quality/TESTING.md) for exact evidence and [ENVIRONMENT](docs/setup/ENVIRONMENT.md) for setup.
 
 ## Screenshots, identity and submission
 

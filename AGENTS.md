@@ -3,7 +3,7 @@
 ## Scope and workflow
 
 - Work only in this Chat Application repository; do not change sibling assignments.
-- Current delivery is documentation and design. Do not implement application behavior until the owner reviews this foundation and requests Phase 00.
+- Foundation PR #1 is merged. Phase P00 initialization is authorized: separate initialization windows, solution and development tooling only. Owner review of P00 is required before P01; networking and messaging remain future work.
 - Inspect status/remotes and preserve owner edits before changes.
 - Use a dedicated branch and one reviewed PR per phase. Main's minimal bootstrap is only the PR base.
 - Never force-push, rewrite history, merge automatically or submit to Classroom.
