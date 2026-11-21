@@ -1,4 +1,6 @@
 using ChatApplication.Presentation;
+using ChatApplication.Presentation.Layout;
+using ChatApplication.Networking;
 
 namespace ChatApplication.Client.Forms;
 
@@ -8,7 +10,7 @@ internal sealed partial class ClientForm : ChatWindow
     {
         Name = "Username",
         AccessibleName = "Username",
-        AccessibleDescription = "Editable display-name input. No username is accepted in this interface-only phase."
+        AccessibleDescription = "Display name for the username handshake. This name is not authenticated."
     };
     private readonly TextBox _serverAddress = new()
     {
@@ -25,9 +27,19 @@ internal sealed partial class ClientForm : ChatWindow
         Value = 5000
     };
 
+    private readonly Button _connectButton = UiLayout.ActionButton("&Connect", "Connect");
+    private readonly Button _disconnectButton = UiLayout.ActionButton("&Disconnect", "Disconnect");
+
     public ClientForm() : base("Client")
     {
+        _client = new(OnConnectionAsync);
         BuildLayout();
         CompleteLayout();
+        _connectButton.Click += ConnectClicked;
+        _disconnectButton.Click += DisconnectClicked;
+        _username.TextChanged += (_, _) => RenderConnection(_client.Snapshot);
+        _serverAddress.TextChanged += (_, _) => RenderConnection(_client.Snapshot);
+        _port.ValueChanged += (_, _) => RenderConnection(_client.Snapshot);
+        RenderConnection(_client.Snapshot);
     }
 }

@@ -37,6 +37,17 @@ internal static class StaWindow
         }
     }
 
+    public static void Until(Func<bool> condition)
+    {
+        var deadline = System.Diagnostics.Stopwatch.StartNew();
+        while (!condition())
+        {
+            if (deadline.Elapsed > TimeSpan.FromSeconds(7)) { throw new TimeoutException("Native condition not reached."); }
+            Application.DoEvents();
+            Thread.Sleep(5);
+        }
+    }
+
     public static IEnumerable<Control> Descendants(Control root)
     {
         foreach (Control child in root.Controls)

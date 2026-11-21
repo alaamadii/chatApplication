@@ -4,14 +4,14 @@ PLAN owns sequence, deliverables and review gates. [TASKS](TASKS.md) owns indivi
 
 ## Current delivery
 
-Foundation PR #1 and initialization PR #2 are merged by the owner. P01 now implements the Server/Client presentation shells, shared theme/resources and native UI integration checks in [PR #3](https://github.com/alaamadii/chatApplication/pull/3), with passing hosted checks for the fixed implementation. Owner acceptance of P01 remains pending. Physical UI/F5/assistive checks carry forward honestly; merged P00 does not invent those results. No networking or message exchange is claimed.
+PR #3 was merged by the owner before P02. Real TCP connection/username handshake, bounded framing and owned async cleanup are now implemented and locally exercised with actual separate executables. Fixed implementation publication and both hosted workflows have passed in [PR #4](https://github.com/alaamadii/chatApplication/pull/4); owner P02 acceptance remains pending. Physical UI/F5/assistive/LAN checks carry forward; no message exchange or detailed participant-list completion is claimed.
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
 | Preparation | Organized docs, frontend proposals, architecture/protocol and backlog | Owner's current request | PR #1 merged by owner; foundation reviewed |
 | P00 | Solution, initialization windows, environment and .NET CI | Foundation reviewed/requested | PR #2 merged by owner |
-| P01 | Server/Client interfaces and shared presentation | P00 accepted | Implemented; owner review pending |
-| P02 | Bounded TCP protocol and real connection/username lifecycle | P01 accepted | Pending |
+| P01 | Server/Client interfaces and shared presentation | P00 accepted | PR #3 merged by owner |
+| P02 | Bounded TCP protocol and real connection/username lifecycle | P01 accepted | Implemented; owner review pending |
 | P03 | Real-time timestamped messaging and UI integration | P02 accepted | Pending |
 | P04 | Client information, disconnect/error/retry and resource regression | P03 accepted | Pending |
 | P05 | Separately selected optional features | Mandatory baseline accepted and explicit owner choice | Deferred |

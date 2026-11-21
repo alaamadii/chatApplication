@@ -1,36 +1,36 @@
 # Development environment
 
-## Prerequisites and checkout
+Use Windows, Git, PowerShell 5.1+ and a stable .NET 10 SDK allowed by global.json, with the .NET 10 WindowsDesktop runtime. VS Code with the shared C# recommendations is the intended editor. First restore/advisory checking requires official NuGet access; no database, API keys or extra UI framework is needed.
 
-Use Windows, a stable .NET 10 SDK matching global.json, the .NET 10 WindowsDesktop runtime, Git and PowerShell 5.1 or newer. VS Code with the recommended C# tooling is the intended editor. Official NuGet connectivity is needed for first restore and current advisories. No database, API keys, extra workloads or machine-wide policy changes are needed.
+## Checkout and checks
 
 ```powershell
 git clone https://github.com/alaamadii/chatApplication.git
 cd chatApplication
-# While the P01 PR is open:
-git switch feat/server-client-ui
+# While the P02 PR is open:
+git switch feat/tcp-connections
 ./scripts/dev.ps1 doctor
 ./scripts/dev.ps1 check
 ```
 
-After owner merge, use main with a fast-forward pull. On 2026-11-21 the development machine reported SDK 10.0.402, WindowsDesktop runtime 10.0.13, Windows 10.0.22631, PowerShell 5.1.22621.6133 and Git 2.53.0.windows.1. Other computers must run doctor themselves.
+After owner merge, use main and a fast-forward pull. The local P02 environment on 2026-11-21 reported SDK 10.0.402, .NET/WindowsDesktop 10.0.13, Windows 10.0.22631, PowerShell 5.1.22621.6133 and Git 2.53.0.windows.1.
 
-## Commands available now
-
-Run from PowerShell. scripts/dev.ps1 resolves its repository root, so it also works when invoked by an absolute path from another directory.
-
-| Command | Behavior |
+| Command | Implemented behavior |
 | --- | --- |
-| ./scripts/dev.ps1 doctor | Reports selected dotnet path/SDK/runtimes, Windows, PowerShell and Git; rejects missing WindowsDesktop 10 runtime |
-| ./scripts/dev.ps1 restore | Restores all four projects from configured sources with NuGet audit |
-| ./scripts/dev.ps1 build | Restore then Release build |
-| ./scripts/dev.ps1 test | Restore, Release build and test discovery/execution; 15 native UI cases and zero Core cases, TRX under ignored TestResults |
-| ./scripts/dev.ps1 check | Restore, Release build, discovery, format verification and existing documentation check |
-| ./scripts/dev.ps1 run-server | Restore/build then run the Server until it closes |
-| ./scripts/dev.ps1 run-client | Restore/build then run the Client until it closes |
-| ./scripts/check-docs.ps1 | Documentation/link/task/token/SVG validation only |
+| ./scripts/dev.ps1 doctor | Selected PATH SDK/runtime, Windows/PowerShell/Git prerequisites |
+| ./scripts/dev.ps1 restore | Restore all eight projects with official-source audit policy |
+| ./scripts/dev.ps1 build | Restore and Release build |
+| ./scripts/dev.ps1 test | Restore/build and execute Core, Networking and native App tests; ignored TRX output |
+| ./scripts/dev.ps1 check | Restore, Release build, tests, format verification and documentation check |
+| ./scripts/dev.ps1 run-server | Build/run actual Server until it closes |
+| ./scripts/dev.ps1 run-client | Build/run actual Client until it closes |
+| ./scripts/check-docs.ps1 | Documentation/link/task/token/proposal validation only |
 
-Open two terminals to use the separate programs:
+The script temporarily scopes matching DOTNET_ROOT, ignored .local CLI state and first-run certificate suppression; finally restores inherited environment/location. Native failures fail the command/CI. No persistent profile, firewall, execution policy or display setting is changed.
+
+## Actual two-process loopback demonstration
+
+Open two terminals:
 
 ```powershell
 ./scripts/dev.ps1 run-server
@@ -40,41 +40,45 @@ Open two terminals to use the separate programs:
 ./scripts/dev.ps1 run-client
 ```
 
-Each shows its role, editable local connection settings, a shared empty conversation, disabled actions/composer and P02/P03 guidance. Server also shows an empty client-information list. No port is opened, no username accepted and no message/participant data exists.
+1. Server: keep bind 127.0.0.1 and an available port (default 5000), then Start.
+2. Client: enter a supported synthetic name, the same IPv4/port, then Connect.
+3. Client progresses through Connecting/Handshaking and becomes Connected only after welcome. Server shows the accepted name, separately from Listening.
+4. Disconnect explicitly, then reconnect. Only one pending/accepted peer is allowed; another client receives server_busy.
+5. Stop Server: its listener/session close and Client returns to Disconnected.
+6. Close either window normally, including while connected. Normal close cancels I/O, joins owned commands/tasks and disposes service resources before disposing controls/fonts.
 
-The script selects the first dotnet application on PATH, temporarily sets its matching DOTNET_ROOT and repository-local DOTNET_CLI_HOME under .local, suppresses first-run ASP.NET certificate generation for the invocation, and restores inherited values and location in finally. Native tool failures throw and fail CI. Build output, CLI state and test results stay ignored; no personal environment settings are committed.
+Names allow 2–24 BMP letters/digits, ordinary spaces, underscore and hyphen after ordinary outer-space trimming; Server/System are reserved. Control/format characters and supplementary symbols are rejected. A name is not authentication.
 
-## Shared VS Code workflow
+Inputs use four decimal IPv4 octets and ports 1–65535. Leading-zero octets are interpreted as decimal, not octal; DNS/IPv6 are not supported. Bind port 0 is available through the service API for isolated tests, not the production UI.
 
-Open this repository folder. Install the deliberately recommended C# tooling from the Extensions view if needed. Run Terminal > Run Build Task for Chat: build, or select Chat: check from Run Task.
+Composer and Send remain disabled. No messages or join events appear. The accepted name/status proves the handshake; the detailed metadata list remains P04.
 
-Run and Debug offers Chat Server, Chat Client and Chat Server + Client. Both launches use the Release DLL output and the shared build prelaunch task. The compound starts two separate processes and stops both when debugging ends.
+## Debugging and manual checks
 
-Configuration files exist and their paths were inspected. Physical VS Code F5, breakpoint/debugger behavior, keyboard/IME/focus, high contrast and monitor transitions remain owner checks. P01 includes programmatic Tab traversal and captured-window review at the existing 125% display setting; neither replaces physical acceptance.
+Shared Chat: build/check tasks, separate Server/Client launches and compound launch remain available in VS Code. Native tests cover programmatic Tab traversal and layout. Connected-window captures were reviewed on the existing 125% display.
 
-## Advisory query
+Physical F5/debug stop, keyboard/IME/mnemonics, high contrast/screen reader, 100%/150%, monitor transitions, actual LAN and another Windows computer remain pending. Automated loopback checks do not complete them.
 
-From the repository root:
+## Errors and troubleshooting
+
+| Situation | Guidance |
+| --- | --- |
+| Missing SDK/runtime | Run doctor; install the compatible SDK/WindowsDesktop runtime deliberately |
+| Restore/audit unavailable | Inspect official feed connectivity; do not commit credentials or hide failures |
+| Invalid name/address | Correct the visible inputs; local validation does not replace server validation |
+| Occupied port | Choose another port or stop your own listener; never kill unrelated processes |
+| Refused/unavailable endpoint | Confirm actual listener/address/port; the OS may report refusal or the connect deadline may expire |
+| server_busy | Disconnect the pending/accepted peer, then retry explicitly |
+| Handshake/frame deadline | The incomplete operation is canceled/closed; no hidden reconnect |
+| Stop/close deadline failure | Failure is reported; owned completion remains observable, not falsely marked successful |
+| No chat text | Expected P02 scope; messaging arrives in P03 |
+
+Production deadlines: connect/handshake/send/shutdown 5 seconds each; frame completion 10 seconds after its first byte. An idle accepted connection does not expire merely because no packet starts. Awaited observers must honor their cancellation token; Forms use cancellable UI dispatch.
+
+TCP is plaintext. Use loopback or a deliberately configured trusted LAN; no discovery/firewall/router change is automated.
 
 ```powershell
 dotnet list ChatApplication.slnx package --vulnerable --include-transitive
 ```
 
-Use doctor to verify PATH first. This query uses official package/audit sources; results depend on the advisory data available at that time. It is not a claim of complete vulnerability detection.
-
-## Troubleshooting
-
-| Symptom | Action |
-| --- | --- |
-| SDK not found or incompatible | Install a stable SDK allowed by global.json; inspect dotnet resolution/doctor |
-| WindowsDesktop runtime missing | Install the .NET 10 WindowsDesktop runtime; a Core-only runtime cannot launch WinForms |
-| NuGet/advisory connection fails | Check access to the official feed and its reported error; do not commit tokens or suppress failures |
-| No test is available | Expected for Core.Tests, which is still empty. App.Tests must separately discover/pass its native UI cases |
-| Format check fails | Run dotnet format ChatApplication.slnx, inspect the diff, then rerun check |
-| Editable fields but disabled actions | Expected P01 behavior; TCP/connection handling arrives in P02 and messaging in P03 |
-| Shell blocks script execution | Use the computer's approved PowerShell policy/workflow; no automatic policy weakening |
-| Later remote connection fails | After transport exists, inspect explicit endpoint/listener/network policy; no hidden retry or automatic firewall changes |
-
-Later loopback demonstration uses 127.0.0.1:5000; trusted-LAN bind/peer addresses are deliberate future configuration. No listener, firewall/router rule or network discovery is part of P00.
-
-See [stack](../technology/STACK.md), [workflow](../planning/WORKFLOW.md) and [testing](../quality/TESTING.md).
+See [protocol](../architecture/PROTOCOL.md), [testing](../quality/TESTING.md), [security](../quality/SECURITY.md) and [workflow](../planning/WORKFLOW.md).

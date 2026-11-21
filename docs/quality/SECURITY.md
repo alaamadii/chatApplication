@@ -1,6 +1,6 @@
 # Planned security and data boundaries
 
-Status: P01 has editable native interface shells and build/test tooling only. Applications open no sockets, perform no username handshake/message exchange and write no transcript. The transport/data safeguards below remain design requirements, not implemented security guarantees.
+Status: P02 implements bounded framing/strict JSON/directions, supported-name validation, one pending/accepted peer, cancellation/deadlines and controlled connection failures. Applications open explicitly configured TCP listeners/connections. There is no chat payload or transcript persistence. Later message/data safeguards below remain future requirements, not a security certification.
 
 ## Trust model
 
@@ -25,7 +25,7 @@ No automatic transcript saving, hidden message log, analytics service or remote 
 
 ## Input/resource limits
 
-The proposed contract caps frame bytes at 16,384, JSON depth at 8, text at 2,000 UTF-16 code units, username at 24 and active clients at one. Validate length before allocation, valid Unicode and required fields before display. Timeouts/cancellation bound incomplete handshakes/frames/writes.
+Implemented connection limits cap frame bytes at 16,384, JSON depth at 8, supported username length at 24 and pending/accepted clients at one. Message text 2,000-code-unit and 500-visible-message retention limits remain P03 targets. Validate length before allocation, valid Unicode and required fields before display. Timeouts/cancellation bound incomplete handshakes/frames/writes.
 
 Display plain text, never concatenate received text into RTF/HTML, execute commands, load remote images or open arbitrary links automatically. Preserve literal ampersands. Resource bounds do not authenticate a malicious peer or make a deployed public service safe.
 

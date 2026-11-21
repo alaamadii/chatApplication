@@ -1,38 +1,44 @@
 # Architecture
 
-## Implemented P01 structure
+## Implemented P02 structure
 
-[ChatApplication.slnx](../../ChatApplication.slnx) contains six projects. Core is still empty and independent; no Networking project exists.
+[ChatApplication.slnx](../../ChatApplication.slnx) contains eight projects:
 
-```text
-Server ------> Core
-       ------> Presentation
-Client ------> Core
-       ------> Presentation
-Core.Tests --> Core
-App.Tests ---> Server, Client, Presentation
-```
-
-| Existing project | Target and current responsibility |
+| Project | Actual target / responsibility |
 | --- | --- |
-| [Core](../../src/ChatApplication.Core/ChatApplication.Core.csproj) | net10.0; behavior-free assembly, no UI/drawing/socket/timer/clock dependencies |
-| [Server](../../src/ChatApplication.Server/ChatApplication.Server.csproj) | net10.0-windows WinExe; editable listener settings and empty client context |
-| [Client](../../src/ChatApplication.Client/ChatApplication.Client.csproj) | net10.0-windows WinExe; editable username/endpoint settings |
-| [Presentation](../../src/ChatApplication.Presentation/ChatApplication.Presentation.csproj) | net10.0-windows; shared native shell, layout, theme, per-window fonts and empty transcript |
-| [Core.Tests](../../tests/ChatApplication.Core.Tests/ChatApplication.Core.Tests.csproj) | net10.0; pinned test tooling, zero cases while Core is empty |
-| [App.Tests](../../tests/ChatApplication.App.Tests/ChatApplication.App.Tests.csproj) | net10.0-windows; serial bounded native UI integration checks |
+| Core | net10.0; pure UsernameRules, no UI/drawing/socket/timer/clock dependency |
+| Networking | net10.0; framed connection protocol, validation, service/session ownership and cancellation |
+| Presentation | net10.0-windows; native shell/theme/fonts, guarded UI dispatch/close and local error copy; no Networking/Core reference |
+| Server / Client | net10.0-windows WinExe; separate composition, inputs/actions and real connection state projection |
+| Core.Tests | net10.0; actual supported-name behavior |
+| Networking.Tests | net10.0; codec/endpoint/deadline/real loopback lifecycle cases |
+| App.Tests | net10.0-windows; bounded serial native layout/action/handshake/close cases |
 
-### Presentation ownership
+Actual dependencies: Networking -> Core; Apps -> Core/Networking/Presentation; Core.Tests -> Core; Networking.Tests -> Networking; App.Tests -> Apps/Presentation (Networking transitively). Core and Presentation have no project references.
 
-Each STA entry point still enables PerMonitorV2 and visual styles. ServerForm/ClientForm inherit ChatWindow and own their local inputs. Their Layout partials compose role-specific sidebars; there are no Connection/Messaging partials or placeholder handlers.
+### Wire and state ownership
 
-ChatWindow owns the common header, preview badge, conversation shell, disabled composer, feedback and scrollable canvas. It owns one OwnedFonts instance per window. Controls are disposed before those fonts; closing another window does not invalidate resources. Presentation references no application service, socket or Core type.
+MessageProtocol/ConnectionPacket implement only hello, welcome, error and disconnect. FramedConnection owns its stream and one-reader contract, bounds allocation/JSON and serializes full writes. The name MessageProtocol describes the wire protocol; it contains no chat message model. See [PROTOCOL](PROTOCOL.md) for exact byte/direction rules.
 
-Layout construction is suspended until the role controls exist, then resumes against the 96-DPI baseline. Native autoscaling handles point fonts and logical spacing. The default client is 1120 x 720 logical pixels; the design minimum is 900 x 620. The actual outer minimum/default are clamped to the current working area. DPI changes refit to the scaled default within the destination working area; physical monitor transitions remain pending.
+ChatServer owns the listener, accept task and at most one pending/accepted ClientSession task. It reserves that slot before handshake I/O. Busy arrivals are processed serially by the accept loop: send server_busy and consume at most one bounded initial frame before close, avoiding a TCP reset discarding the response. No unbounded rejection/handshake task is created.
 
-A docked virtual canvas takes the larger of the design minimum and measured header/conversation/composer/feedback requirements. Expanded guidance can grow scrollable space without overlapping siblings. A separate sidebar viewport keeps its longer settings/client list reachable. The empty native list uses horizontal scrolling for metadata columns. No messages, peer rows, accepted identity or network state are synthesized.
+ClientSession owns accepted socket/stream, server-side name validation, welcome and accepted idle read. PeerCompletion exposes the owned task; cleanup releases the slot after task completion. Listening is the server state; an accepted peer name/session is separate data.
 
-Native App.Tests use internal access to the role Forms/working-area fit operation without adding application test hooks. Tests exercise actual layout/lifetime/no-op/navigation contracts. Core's zero discovery is reported separately.
+ChatClient owns one connect/handshake/read task. ConnectAsync completes successfully only after a validated welcome with the requested normalized name and a nonempty GUID. Completion remains active during the idle read. EOF/disconnect clears live-peer data; reconnect is explicit and creates a new session.
+
+### Notifications, cancellation and cleanup
+
+ConnectionSnapshot is immutable state/name/session/error data. ConnectionUpdates serializes awaited observer calls with cancellation. Observers must honor cancellation and never perform network cleanup reentrantly from the notification. Unexpected observer exceptions are converted to notification_failed and disable that failed observer; failures are not represented as successful connection.
+
+Deadlines are configured in ConnectionOptions: connect/handshake/send/shutdown 5 seconds; frame completion 10 seconds after its first byte. Idle accepted reads do not expire. Shutdown uses an overall budget including lifecycle gate, orderly-close attempt, joined tasks and final notification. Owned I/O is canceled/closed before joining; a failed deadline retains observable completion rather than reporting successful cleanup.
+
+Apps marshal snapshots with cancellable Control.InvokeAsync and closing/disposal guards. Async-void is limited to framework UI event boundaries, whose command Tasks are stored/awaited and errors controlled. Normal Form close guards updates, aborts I/O, joins outstanding commands, awaits service disposal, then closes/disposes controls and per-window fonts. Direct Form disposal aborts I/O; normal awaited close is the verified application path.
+
+### Presentation
+
+The inherited ChatWindow owns per-window fonts and the shared measured virtual canvas. Construction remains layout-suspended until role controls exist. Default/minimum/wide and small-working-area behavior retain the P01 regression coverage.
+
+Connection badges display actual state in text with neutral/success/warning/error tones and system-color fallback. Client input locks and Connect/Cancel/Disconnect follow real state. Server settings lock while active. Composer/Send remain disabled, transcript stays empty, and the detailed metadata list is clearly deferred to P04 even while an accepted name is shown elsewhere.
 
 ## Future dependency direction
 
@@ -56,7 +62,7 @@ Server/Client currently reference Core directly. The target diagram permits a fu
 | Core.Tests / Networking.Tests | net10.0; pure and bounded loopback cases | P00 infrastructure / P02 behavior |
 | App.Tests | net10.0-windows; native STA presentation/lifecycle | P01 when meaningful contracts exist |
 
-The target table includes future classes/projects. Presentation and App.Tests now exist as described above; Networking and Networking.Tests remain planned. Message models/cards, transport and state machines remain future behavior.
+The target table includes future classes/projects. The P02 projects exist as described above; Networking and Networking.Tests now exist; only messaging/full metadata behavior remains planned. Chat models/cards, message dispatch and complete participant metadata remain future behavior; the P02 transport/connection states are implemented above.
 
 ## Class ownership
 

@@ -57,25 +57,26 @@ public sealed class InterfaceTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void Editing_and_unavailable_actions_cannot_create_chat_data(bool server) =>
+    public void Editing_settings_and_unavailable_send_cannot_create_chat_data(bool server) =>
         StaWindow.Run(() =>
         {
             using var form = CreateForm(server);
             form.Show();
-            var before = Descendants(form).OfType<Label>().Select(label => label.Text).ToArray();
+            var transcript = Descendants(form).Single(control => control.Name == "Transcript");
+            var before = Descendants(transcript).OfType<Label>().Select(label => label.Text).ToArray();
             foreach (var input in Descendants(form).OfType<TextBox>().Where(input => input.Enabled && input.Parent is not UpDownBase))
             {
                 input.Text = "Test & input — مرحبا — Türkçe";
             }
 
-            foreach (var button in Descendants(form).OfType<Button>())
+            foreach (var button in Descendants(form).OfType<Button>().Where(button => button.Name == "SendMessage"))
             {
                 Assert.False(button.Enabled);
                 button.PerformClick();
             }
 
             Application.DoEvents();
-            Assert.Equal(before, Descendants(form).OfType<Label>().Select(label => label.Text).ToArray());
+            Assert.Equal(before, Descendants(transcript).OfType<Label>().Select(label => label.Text).ToArray());
             Assert.All(Descendants(form).OfType<ListView>(), list => Assert.Empty(list.Items));
             Assert.All(Descendants(form).OfType<TextBox>().Where(input => !input.Enabled),
                 input => Assert.Empty(input.Text));
@@ -84,14 +85,14 @@ public sealed class InterfaceTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void Tab_navigation_reaches_each_editable_setting_and_skips_unavailable_controls(bool server) =>
+    public void Tab_navigation_reaches_editable_settings_and_available_actions(bool server) =>
         StaWindow.Run(() =>
         {
             using var form = CreateForm(server);
             form.Show();
             var settings = Descendants(form)
-                .Where(control => control.Enabled && control.Parent is not UpDownBase
-                    && (control is TextBox || control is NumericUpDown))
+                .Where(control => control.Enabled && control.TabStop && control.Parent is not UpDownBase
+                    && (control is TextBox || control is NumericUpDown || control is Button))
                 .ToArray();
             var reached = new HashSet<Control>();
             for (var step = 0; step < settings.Length * 2; step++)
@@ -148,6 +149,72 @@ public sealed class InterfaceTests
             Assert.False(client.IsDisposed);
             AssertLayout(client);
         });
+
+    [Fact]
+    public void Actual_forms_complete_handshake_reconnect_and_close_without_enabling_messaging() =>
+        StaWindow.Run(() =>
+        {
+            using var reservation = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+            reservation.Start();
+            var port = ((System.Net.IPEndPoint)reservation.LocalEndpoint).Port;
+            reservation.Stop();
+            using var server = new ServerForm();
+            using var client = new ClientForm();
+            server.Show();
+            client.Show();
+            Find<NumericUpDown>(server, "Port").Value = port;
+            Find<NumericUpDown>(client, "Port").Value = port;
+            Find<TextBox>(client, "Username").Text = "علاء";
+            Find<Button>(server, "StartServer").PerformClick();
+            StaWindow.Until(() => Badge(server) == "Listening");
+            for (var cycle = 0; cycle < 2; cycle++)
+            {
+                Find<Button>(client, "Connect").PerformClick();
+                StaWindow.Until(() => Badge(client) == "Connected"
+                    && Find<Label>(server, "PeerSummary").Text.Contains("علاء"));
+                Assert.False(Find<TextBox>(client, "Username").Enabled);
+                Assert.False(Find<Button>(client, "SendMessage").Enabled);
+                Assert.Empty(Find<TextBox>(client, "MessageInput").Text);
+                Assert.Empty(Find<ListView>(server, "ConnectedClients").Items);
+                if (cycle == 0)
+                {
+                    Find<Button>(client, "Disconnect").PerformClick();
+                    StaWindow.Until(() => Badge(client) == "Disconnected"
+                        && Find<Label>(server, "PeerSummary").Text.StartsWith("No accepted peer."));
+                }
+            }
+            client.Close();
+            StaWindow.Until(() => client.IsDisposed
+                && Find<Label>(server, "PeerSummary").Text.StartsWith("No accepted peer."));
+            Find<Button>(server, "StopServer").PerformClick();
+            StaWindow.Until(() => Badge(server) == "Stopped");
+            server.Close();
+            StaWindow.Until(() => server.IsDisposed);
+        });
+
+    [Fact]
+    public void Occupied_port_feedback_keeps_server_controls_recoverable() =>
+        StaWindow.Run(() =>
+        {
+            using var occupied = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+            occupied.Start();
+            using var server = new ServerForm();
+            server.Show();
+            Find<NumericUpDown>(server, "Port").Value = ((System.Net.IPEndPoint)occupied.LocalEndpoint).Port;
+            Find<Button>(server, "StartServer").PerformClick();
+            StaWindow.Until(() => Badge(server) == "Stopped"
+                && Find<Label>(server, "Feedback").Text.Contains("already in use"));
+            Assert.True(Find<Button>(server, "StartServer").Enabled);
+            Assert.True(Find<TextBox>(server, "BindAddress").Enabled);
+            server.Close();
+            StaWindow.Until(() => server.IsDisposed);
+        });
+
+    private static T Find<T>(Control root, string name) where T : Control =>
+        Descendants(root).OfType<T>().Single(control => control.Name == name);
+
+    private static string Badge(Control root) => Descendants(root)
+        .OfType<ChatApplication.Presentation.Controls.ConnectionBadge>().Single().Text;
 
     private static Size LogicalSize(Form form, int width, int height) =>
         new((int)Math.Round(width * form.DeviceDpi / 96F), (int)Math.Round(height * form.DeviceDpi / 96F));

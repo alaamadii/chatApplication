@@ -1,6 +1,66 @@
 # Validation strategy and current evidence
 
-## P01 interface evidence — 2026-11-21
+## P02 connection evidence — 2026-11-21
+
+Status: implemented connection subset; owner acceptance pending. Confirmed [PR #3](https://github.com/alaamadii/chatApplication/pull/3) merged at e0cb64aa8fc6ff97c782dcd91eb2ec057338a69d, inspected a clean tree/correct origin, fast-forwarded main and created feat/tcp-connections.
+
+| Evidence | Executed result |
+| --- | --- |
+| Prerequisites | ./scripts/dev.ps1 doctor passed: Windows 10.0.22631, PowerShell 5.1.22621.6133, Git 2.53.0.windows.1, SDK 10.0.402, .NET/WindowsDesktop 10.0.13 |
+| Core | 19 supported-name/normalization/rejection cases passed |
+| Networking | 46 framing/strict JSON/endpoint/deadline/concurrent-write/real loopback lifecycle cases passed |
+| Native App | 17 serial STA layout/action/navigation/handshake/reconnect/close/resource cases passed |
+| Current total | **82 passed, 0 failed, 0 skipped**; no zero-case/placeholder coverage claim |
+| Build | Release build passed with 0 warnings/0 errors |
+| Full check | ./scripts/dev.ps1 check passed after reported whitespace corrections: restore, Release build, all 82 tests, format and documentation validation |
+| Dependencies | Explicit official nuget.org direct/transitive advisory query for all eight projects reported no known vulnerable packages at execution time; versions remain pinned |
+| Hosted CI | Candidate efe9b58b06745e4261337cf8a55be3c0ee521321 passed [Windows run 44906284347](https://github.com/alaamadii/chatApplication/actions/runs/44906284347) and [documentation run 44906284332](https://github.com/alaamadii/chatApplication/actions/runs/44906284332); exact final receipt-commit runs/results are maintained in [PR #4](https://github.com/alaamadii/chatApplication/pull/4) |
+
+### Actual two-process demonstration
+
+Launched the actual Release Server and Client EXEs independently. An isolated ignored probe drove their existing UI using UI Automation/native messages; it added no production test hooks. Used only owned loopback port **50634**, selected through an owned port-0 listener.
+
+Executed and passed:
+1. Held that port with the owned listener: Server Start showed friendly occupied-port feedback without crashing.
+2. Released the owned listener, started Server and observed actual Listening.
+3. Connected Client as synthetic Alaa_Test, observed Connected after welcome and Server's accepted name.
+4. Verified native Send disabled and multiline composer disabled/empty; no message or participant metadata rows.
+5. Explicit Client Disconnect cleared both live contexts; reconnect succeeded.
+6. Server Stop released the listener and Client returned to Disconnected.
+7. Connecting to the stopped endpoint showed friendly refused/timed-out feedback.
+8. Explicit Server restart and Client reconnect succeeded.
+9. Closed the connected Client via WM_CLOSE; it exited 0 and Server cleared its accepted peer.
+10. Closed Server via WM_CLOSE; it exited 0. No probe-owned process remained.
+
+Captured and visually reviewed both connected windows using PrintWindow at measured **DPI 120 (125%)**. Images/probes remain ignored under .local/p02-review; they are not published course screenshots or owner approval.
+
+The local UI Automation provider lacked a numeric value pattern, and label/input names could be ambiguous. The probe was corrected to target the owned native port editor and multiline composer rather than an enabled label or locked identity input. Failed probe attempts cleaned up only their own processes. The final complete probe passed; these were fixture corrections, not invented application results.
+
+### Meaningful boundaries and resolved defects
+
+Tests cover fragmented/coalesced frames, invalid prefix values before allocation, exact 16 KiB payload, strict UTF-8/JSON/depth/duplicate/direction rejection, truncated versus clean EOF, serialized writes, frame timeout/read cancellation and write timeout/unwinding. Idle reads wait for caller cancellation rather than a first-byte deadline.
+
+Real loopback tests cover hello/welcome, reserved names, mismatched welcome/unknown error, pending-slot timeout/release, busy rejection, failed/canceled connect, stop during incomplete input, repeated reconnect/restart and completed owned tasks. Short test deadlines are configurable; arrivals/cleanup are verified by events or task completion, not fixed-delay assumptions.
+
+An early busy-rejection test exposed reset/discard when closing with unread hello bytes. The accept loop now sends server_busy and consumes at most one bounded initial frame before closing. Closed-port tests accept the OS's controlled refusal or connect-deadline outcome while still requiring Disconnected and completed owned work. No assertion was relaxed to permit a live/false connection.
+
+P01 layout/lifetime regressions remain. Only obsolete all-actions-disabled/field-only Tab assumptions were updated to actual P02 actions; native tests also exercise live handshake, reconnect, active Client close and occupied-port recovery.
+
+### Final local receipt
+
+After the formatter corrections and documentation reconciliation, ./scripts/dev.ps1 check passed completely: restore, Release build (0 warnings/0 errors), 19 Core + 46 Networking + 17 App cases, format verification and docs validation. The docs checker reported 24 required artifacts, 22 Markdown files, 127 local links, 29 tasks/92 references, 10 contrast pairs and 2 labeled SVG proposals.
+
+Per-project reference inspection confirmed Core and Presentation have no project references; Networking references Core only; Apps reference Core/Networking/Presentation. Local native/demo output remains excluded. Exact publication/hosted results follow execution in the phase PR.
+
+### Remaining owner checks
+
+- Review real P02 connection behavior/appearance and approve the PR before P03.
+- Physical keyboard/IME/mnemonics/focus, high contrast/screen reader and VS Code role/compound F5/debug stop.
+- Actual 100%/150% scaling, monitor transitions and deliberate trusted-LAN demonstration.
+- Another Windows computer and final working-chat screenshots remain later-phase evidence.
+- Messaging, server-stamped message time/author/echo, full participant metadata/list and optional features are not implemented or accepted.
+
+## Historical P01 interface evidence — 2026-11-21
 
 Status: presentation implemented; owner acceptance pending. P00 [PR #2](https://github.com/alaamadii/chatApplication/pull/2) was merged at a4f5acb6fd1e90df55f8c68dd2a1658d24f29599 before the phase branch was created. The P00/foundation receipts below are historical.
 

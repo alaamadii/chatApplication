@@ -1,6 +1,6 @@
 # Frontend UX specification
 
-Status: P01 implements the native layout, editable settings and unavailable actions. Real connection/message states below remain future specifications, not existing behavior. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a future connected state with synthetic content.
+Status: P02 implements real connection actions, accepted identity and owned cleanup. Message composition/rendering below remains a P03 specification; Send is always disabled in P02. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a future connected state with synthetic content.
 
 ## Shared layout
 
@@ -42,13 +42,13 @@ Default bind is loopback. Stopping closes the owned peer and listener, updates t
 | --- | --- | --- | --- | --- |
 | Disconnected | Valid fields only | Disabled | Disabled | Enabled |
 | Connecting / handshaking | Disabled | Cancel action | Disabled | Locked |
-| Connected | Disabled | Enabled | Nonempty valid text and no send in progress | Locked |
+| Connected | Disabled | Enabled | Disabled until P03 | Locked |
 | Disconnecting / closing | Disabled | Disabled | Disabled | Locked |
 | Failed -> Disconnected | Valid fields/retry | Disabled | Disabled | Enabled |
 
 Server Start is available only when stopped with valid bind/port. Stop is available while running; it may cancel Starting. Send requires a handshaken live client. State transitions are serialized, not triggered by decorative badges.
 
-P01 has no network behavior: clearly label Not implemented and disable unavailable actions. P02 enables real connection actions; P03 enables messaging. Never fabricate a Connected state to make a preview look complete.
+P02 enables actual Start/Stop and Connect/Cancel/Disconnect according to these states. Connected requires validated welcome, while Listening is distinct from accepted-peer state. P03 enables messaging; currently composer/Send stay disabled. No connected state or transcript entry is fabricated.
 
 ## Compose, keyboard and error behavior
 
@@ -68,7 +68,18 @@ On close, disable actions, cancel the window lifetime, await bounded transport c
 
 See [design tokens](DESIGN_SYSTEM.md), [planned UI files](FILE_GUIDE.md), [protocol](../architecture/PROTOCOL.md) and [test strategy](../quality/TESTING.md).
 
-## Implemented P01 boundary — 2026-11-21
+
+## Implemented P02 connection boundary — 2026-11-21
+
+Start/Stop and Connect/Cancel/Disconnect now invoke real services. Valid local inputs enable actions, but the server independently validates hello. Client stays Connecting/Handshaking until welcome is verified, then locks identity/endpoint inputs while connected. Cancel/Disconnect restores editing after owned cleanup.
+
+Server Listening is separate from its accepted peer name. The conversation context and sidebar summary show that real name; the detailed information list remains explicitly P04 and has no fabricated rows. Peer close/stop clears the accepted context. Real errors use local controlled-code guidance; intentional cancel/stop is normal status.
+
+Snapshots cross to Forms through awaited, cancellable UI dispatch with closing guards. Normal window close aborts I/O, joins commands and awaits service disposal. Message composition/Send remain unavailable and transcripts stay empty, including after repeated reconnect.
+
+Actual two-process loopback tests covered handshake, occupied-port feedback, explicit disconnect/reconnect, server stop/restart, failed connection and active Client close. Connected captures were reviewed at current 125%. Physical F5/keyboard/IME/assistive review, remaining scaling/monitor transitions, actual LAN and another computer remain pending.
+
+## Historical P01 interface boundary — 2026-11-21
 
 Both roles now use shared header, Interface preview badge, visible P02/P03 guidance, a connection sidebar, empty conversation and disabled composer/Send. Client has an empty username plus 127.0.0.1:5000 defaults; Server has loopback bind/port and an empty native client-information list. Native port editing is limited to 1–65535; no input is accepted by a server or protocol.
 
