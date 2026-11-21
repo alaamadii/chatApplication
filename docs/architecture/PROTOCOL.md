@@ -1,6 +1,6 @@
-# Proposed TCP protocol v1
+# TCP protocol v1 — implemented connection subset
 
-Status: target contract for P02/P03, not implemented. Review this contract before transport coding; update DECISIONS if it changes.
+Status: P02 framing, strict connection-packet validation and hello/welcome/error/disconnect are implemented. chat/message payloads, message IDs/timestamps/author stamping and message rendering remain P03 target contracts below. The full target must not be read as completed messaging.
 
 ## Framing
 
@@ -18,14 +18,14 @@ One reader per stream; an async gate serializes prefix+payload writes as one log
 | --- | --- | --- | --- |
 | hello | Client -> Server, first packet | version, type, userName | Request display name |
 | welcome | Server -> Client | version, type, sessionId, userName | Accepted name/session; now Connected |
-| chat | Client -> Server after welcome | version, type, text | Request message submission |
-| message | Server -> Client | version, type, messageId, authorRole, authorName, text, sentAtUtc | Authoritative accepted message |
+| chat | Client -> Server after welcome | version, type, text | P03 target; rejected as unsupported in P02 |
+| message | Server -> Client | version, type, messageId, authorRole, authorName, text, sentAtUtc | P03 target; rejected as unsupported in P02 |
 | error | Server -> Client | version, type, code | Controlled failure, no stack/private data |
 | disconnect | Either accepted peer | version, type | Best-effort orderly close, not a delivery guarantee |
 
 Reserve the one admission slot before awaiting a handshake; release it on timeout/failure/disconnect, so pending handshakes cannot grow without bound.
 
-Handshake packets/codec arrive in P02; chat/message behavior arrives in P03. Do not present the full target as implemented in earlier phases.
+P02 accepts hello only before server admission, welcome/error during client handshake, disconnect after server acceptance and disconnect/error after client acceptance. Names in welcome must be normalized and match the client's requested name; GUID must be nonempty. chat/message behavior arrives in P03. Do not present the full target as implemented in earlier phases.
 
 Example payloads below are illustrative, not execution evidence. Prefix values must be calculated from encoded byte length, not characters:
 
@@ -51,9 +51,9 @@ Proposed controlled error codes: invalid_name, server_busy, invalid_packet, unsu
 
 ## Session/lifetime policy
 
-Default loopback endpoint: 127.0.0.1:5000. Production UI accepts literal IPv4 endpoints for the baseline; DNS/IPv6 support is deferred. Test servers bind port 0 and publish their actual endpoint.
+Default loopback endpoint: 127.0.0.1:5000. Production UI accepts four decimal IPv4 octets and nonzero ports for the baseline; leading-zero octets are decimal, not octal. DNS/IPv6 support is deferred. Test servers bind port 0 and publish their actual endpoint.
 
-Target deadlines: connect 5 s, handshake 5 s, frame completion after its first byte 10 s, send 5 s, shutdown 5 s. An idle accepted conversation does not expire merely because no one types. Deadlines are cancellable and must not leave a blocked read/task behind.
+Implemented deadlines: connect 5 s, handshake 5 s, frame completion after its first byte 10 s, send 5 s, overall shutdown 5 s. An idle accepted conversation does not expire merely because no one types. Deadlines are cancellable and must not leave a blocked read/task behind.
 
 Send failure/EOF transitions to Disconnected, clears live-peer state and retains visible text for review. Canceling an intentional local stop is not an error popup. No automatic reconnect/resend; user action is explicit.
 

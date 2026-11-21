@@ -36,6 +36,6 @@ Transcript retention is bounded to the latest 500 messages per window, with a vi
 
 ## Current state and review
 
-Foundation and P00 PRs are merged. P01 provides native Server/Client interface shells, shared Presentation, editable local settings, honest empty states and disabled actions, with native integration checks. Owner P01 review remains pending. The demonstration journey above is still future behavior: no connection, accepted username, message exchange or participant tracking exists.
+PR #3 is merged. P02 now provides real TCP listening, supported-name handshake, explicit cancellation/disconnect/reconnect and owned async cleanup. Owner P02 review remains pending. Message exchange and detailed participant information in the demonstration journey remain P03/P04; actual LAN/physical acceptance is not inferred from loopback checks.
 
 See [requirements](REQUIREMENTS.md), [frontend UX](../frontend/UX.md), [architecture](../architecture/ARCHITECTURE.md) and [plan](../planning/PLAN.md).

@@ -12,7 +12,7 @@ The initial main commit contains only a minimal README/.gitignore PR base becaus
 | --- | --- |
 | Foundation (merged PR #1) | docs/project-foundation |
 | P00 (merged PR #2) | chore/project-initialization |
-| P01 | feat/server-client-ui |
+| P01 (merged PR #3) | feat/server-client-ui |
 | P02 | feat/tcp-connections |
 | P03 | feat/realtime-messaging |
 | P04 | fix/connection-lifecycle |

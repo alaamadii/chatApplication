@@ -1,8 +1,8 @@
 # YMH219 : Chat Application
 
-A C#/.NET Windows Forms client-server chat assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
+A C#/.NET Windows Forms client-server assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: P01 interfaces implemented in [PR #3](https://github.com/alaamadii/chatApplication/pull/3); owner review pending.** Initialization [PR #2](https://github.com/alaamadii/chatApplication/pull/2) is merged. Separate Server and Client windows now provide editable connection settings, a shared conversation layout and explicit unavailable actions. Networking, username acceptance, messaging and participant tracking are not implemented. SVG wireframes remain design proposals.
+**Current status: P02 TCP connections and username handshake implemented; owner review pending.** Interface PR #3 is merged. Separate Server and Client programs now start/listen, connect with a validated display name, cancel/disconnect and close with owned async cleanup. Messaging and detailed participant information remain P03/P04.
 
 ## Idea and required outcome
 
@@ -19,7 +19,7 @@ The mandatory baseline is **one server and at least one client** on the same com
 | [Requirements](docs/product/REQUIREMENTS.md) | Course criteria, acceptance and traceability |
 | [Technology stack](docs/technology/STACK.md) | Frameworks, versions, dependencies and rationale |
 | [Architecture](docs/architecture/ARCHITECTURE.md) | Project boundaries, class responsibilities and lifecycle |
-| [Protocol](docs/architecture/PROTOCOL.md) | Proposed framing, packet contract, limits and message flow |
+| [Protocol](docs/architecture/PROTOCOL.md) | Implemented connection framing/packets and future message flow |
 | [Frontend UX](docs/frontend/UX.md) | Server/client layouts, controls, states and interactions |
 | [Design system](docs/frontend/DESIGN_SYSTEM.md) | Exact colors, typography, spacing and accessibility |
 | [Frontend file guide](docs/frontend/FILE_GUIDE.md) | Existing initialization files and planned UI responsibilities |
@@ -35,18 +35,18 @@ The mandatory baseline is **one server and at least one client** on the same com
 
 | Window | Available presentation | Unavailable actions |
 | --- | --- | --- |
-| Server | Editable loopback bind/port, empty client-information list, empty conversation and guidance | Start, Stop, composer and Send |
-| Client | Empty username, editable loopback address/port, empty conversation and guidance | Connect, Disconnect, composer and Send |
+| Server | Start/Stop, validated IPv4/port, actual Listening state and accepted peer name | Composer/Send; detailed metadata list in P04 |
+| Client | Validated name, Connect/Cancel/Disconnect, accepted identity and recoverable errors | Composer/Send; messages in P03 |
 
-Inputs only edit local controls. No port is opened, no username accepted and no messages or client rows are created. Connection actions arrive in P02; messaging arrives in P03.
+Start Server on 127.0.0.1:5000 (or another available port), then enter a supported name and matching endpoint in Client and Connect. Connected requires welcome, not just a TCP socket. Disconnect/reconnect explicitly or Stop Server. Only one pending/accepted client is allowed; extra clients receive server_busy. No chat messages or participant metadata rows are created.
 
 ## Design previews
 
-[Client design proposal](docs/frontend/assets/client-wireframe.svg) and [Server design proposal](docs/frontend/assets/server-wireframe.svg) show the intended light desktop layout. Their illustrative conversation is synthetic. P01 implements the light sidebar/conversation layout with empty states. Connected-state badges, conversation examples and message cards in the wireframes remain future designs.
+[Client design proposal](docs/frontend/assets/client-wireframe.svg) and [Server design proposal](docs/frontend/assets/server-wireframe.svg) show the intended light desktop layout. Their illustrative conversation is synthetic. P02 implements the sidebar/conversation shell and actual connection badges. The wireframes' conversation examples/message cards remain future designs.
 
 ## Technology
 
-SDK 10.0.402 with stable latestPatch selection; C#/.NET 10 and native Windows Forms. Server and Client target net10.0-windows and reference a behavior-free net10.0 Core. Exact test tooling pins are documented in [STACK](docs/technology/STACK.md). Shared Presentation now owns native layout/theme/fonts. Networking will be introduced in P02. TCP/async messaging is planned; no database, cloud service or external UI framework is required.
+SDK 10.0.402 with stable latestPatch selection; C#/.NET 10 and native Windows Forms. Server and Client target net10.0-windows; Core/Networking target net10.0. Exact test tooling pins are documented in [STACK](docs/technology/STACK.md). Networking now owns async TCP, strict bounded framing/JSON and connection lifetime. Shared Presentation owns native layout/theme/fonts and guarded UI dispatch. Messaging remains P03; no database, cloud service or external UI framework is required.
 
 ## What runs now
 
@@ -64,13 +64,13 @@ In another PowerShell terminal, run:
 ./scripts/dev.ps1 run-client
 ```
 
-Use Windows with a compatible .NET 10 SDK/WindowsDesktop runtime. The check command restores, builds Release, discovers tests, verifies formatting and runs the existing documentation checker. Core has no domain behavior and still discovers **zero cases**. App.Tests separately runs **15 native UI cases** covering layout, scrolling, unavailable actions, Tab traversal and window/font lifetime. These are presentation checks, not chat/transport coverage.
+Use Windows with a compatible .NET 10 SDK/WindowsDesktop runtime. The check command restores, builds Release, discovers tests, verifies formatting and runs the existing documentation checker. The current suite passes **82 cases**: 19 Core username cases, 46 Networking protocol/endpoint/deadline/lifecycle cases and 17 native App cases. These verify P02 connection behavior, not chat-message delivery.
 
-Both executables use STA, PerMonitorV2, visual styles and native resizable layouts. The shared canvas supports a 1120 x 720 logical default, 900 x 620 design minimum, working-area bounds and scrolling for smaller displays/expanded guidance. Actual EXE startup/disabled-action/normal-close checks passed; captured default/minimum/wide layouts were visually reviewed at the existing 125% display setting. Shared VS Code role/compound launches remain available; physical F5, keyboard/assistive review, 100%/150% and monitor transitions remain pending. Windows .NET CI runs the same development check alongside preserved docs CI. See [TESTING](docs/quality/TESTING.md) for exact evidence and [ENVIRONMENT](docs/setup/ENVIRONMENT.md) for setup.
+Both executables use STA, PerMonitorV2, visual styles and native resizable layouts. The shared canvas supports a 1120 x 720 logical default, 900 x 620 design minimum, working-area bounds and scrolling for smaller displays/expanded guidance. Actual separate EXEs completed handshake, disconnect/reconnect, server stop/restart, occupied-port/failed-connect feedback and normal exit 0. Connected-window captures were reviewed at the existing 125% display setting. Shared VS Code role/compound launches remain available; physical F5, keyboard/assistive review, 100%/150% and monitor transitions remain pending. Windows .NET CI runs the same development check alongside preserved docs CI. See [TESTING](docs/quality/TESTING.md) for exact evidence and [ENVIRONMENT](docs/setup/ENVIRONMENT.md) for setup.
 
 ## Screenshots, identity and submission
 
-Final submission screenshots remain pending. Local P01 window captures were used for review and remain ignored; final delivery needs at least two genuine captures of the completed application with owner approval. Wireframes do not satisfy that requirement.
+Final submission screenshots remain pending. Local P01/P02 window captures were used for review and remain ignored; final delivery needs at least two genuine captures of the completed application with owner approval. Wireframes do not satisfy that requirement.
 
 The selected public repository is [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication). The instructor recommends YMH219-ChatApp; the owner's selected name is retained. The course deadline is **2026-11-30, 23:59**, with institutional timezone unspecified.
 

@@ -1,6 +1,6 @@
 # Design decisions
 
-Decisions are proposals until implemented/validated in their named phase. P00 implements the initialization subset. P01 implements shared native presentation, shell theme/resources and layout in ADR-014/015; transport, protocol and message behavior remain proposals.
+Decisions are proposals until implemented/validated in their named phase. P00 implements the initialization subset. P01 implements shared native presentation in ADR-014/015. P02 implements the connection protocol and lifetime/UI boundary in ADR-016/017/018; message behavior remains a P03 proposal.
 
 | ADR | Decision / date | Rationale and consequence |
 | --- | --- | --- |
@@ -48,3 +48,19 @@ Suspend construction until base and role controls exist, then resume DPI layout 
 Use native docking/AutoScrollMinSize with measured wrapped content. Independent sidebar scrolling and a readable empty-transcript minimum prevent clipped guidance and overlapping composer/transcript content. DPI changes refit within the destination working area. Native regressions cover supported sizes, small working areas and long literal text; actual 125% captures were reviewed. No 100%/150% or monitor-transition result is inferred.
 
 The initial minimum-size/long-guidance checks exposed layout defects; the final 15-case native suite verifies the fixes. Follow [Microsoft automatic scaling guidance](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/forms/autoscale) and keep physical acceptance separate from scripted geometry checks.
+
+## ADR-016 — Implement only the connection protocol subset — 2026-11-21
+
+Implemented Core UsernameRules plus UI-free Networking for hello/welcome/error/disconnect. Keep strict four-byte big-endian framing, 16 KiB allocation cap, strict UTF-8/JSON/depth/duplicate validation and phase-direction checks. chat/message remain unsupported until P03. Server revalidates names; Client validates the welcome name/session before Connected.
+
+## ADR-017 — Bounded ownership and one admission slot — 2026-11-21
+
+Server owns one accept task and one pending/accepted peer task; busy rejection runs serially with a bounded initial-frame drain so a normal client's outgoing hello does not cause reset/discard of server_busy. No per-arrival fire-and-forget task. PeerCompletion/Completion expose owned work and are joined on shutdown.
+
+ConnectionOptions implements connect/handshake/send/shutdown 5-second defaults and a 10-second frame deadline starting after the first byte. Idle accepted reads do not expire. Cancel/close acts on the underlying socket/stream before joining. Shutdown failure retains observable work and is not reported as successful cleanup; awaited observers must honor cancellation.
+
+## ADR-018 — Real state projection with guarded UI close — 2026-11-21
+
+Immutable snapshots and serialized awaited observers contain no controls. Apps use cancellable InvokeAsync with closing guards and own command Tasks; framework async-void event handlers await handled operations. Normal close aborts I/O, joins commands, awaits service disposal, then disposes controls/fonts. Presentation remains independent of Networking/Core.
+
+Enable only real connection actions; retain disabled composer/Send and empty transcript. Show accepted name/state without claiming P04 detailed metadata completion. Local friendly messages map controlled codes, never arbitrary peer strings. Native tests were updated where P01 all-disabled/Tab assumptions became obsolete, while layout/resource regressions remain.

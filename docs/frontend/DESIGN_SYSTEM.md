@@ -1,6 +1,6 @@
 # Visual design system
 
-Status: P01 applies the native shell subset below; remaining message/connection-state tokens are proposals. This is not complete accessibility acceptance or a claim of pixel identity with the wireframes. [theme.json](theme.json) is the machine-readable design source for current contrast checks. P01 maps reviewed tokens into shared Presentation code and verifies them there.
+Status: P02 applies the native shell and real connection-state tones; message-card and custom primary-action tokens remain proposals. This is not complete accessibility acceptance or a claim of pixel identity with the wireframes. [theme.json](theme.json) is the machine-readable design source for current contrast checks. P01 maps reviewed tokens into shared Presentation code and verifies them there.
 
 ## Palette
 
@@ -48,11 +48,11 @@ English shell labels; Turkish/Arabic/English message content. Keep sender, times
 
 The illustrative [Client](assets/client-wireframe.svg) and [Server](assets/server-wireframe.svg) assets are marked DESIGN PROPOSAL. They contain invented demo conversation for layout review, not execution evidence or copied WhatsApp assets.
 
-## Implemented P01 subset
+## Implemented P02 subset
 
 ChatTheme maps canvas, surface, sidebar, primary/secondary text and the neutral blue-tinted preview surface into shared code. Body/title/section/metadata Segoe UI point fonts are owned per window. Padding, gaps, the 280-logical-pixel sidebar and 36-logical-pixel action height scale with the fully constructed Form. Inputs and disabled buttons retain native borders/disabled drawing rather than custom enabled-primary styling.
 
-Primary hover/pressed actions, success/warning/error connection badges and incoming/outgoing message cards are not implemented. theme.json keeps its design-proposal status because the complete inventory is not implemented; original wireframes remain proposals.
+ConnectionBadge now maps actual states to success (#166534/#DCFCE7), warning (#92400E/#FEF3C7), error (#991B1B/#FEE2E2) or neutral colors, always with readable state text. High contrast uses system foreground/background. Enabled/disabled actions retain native drawing. Custom primary hover/pressed actions and incoming/outgoing message cards are not implemented. theme.json keeps its design-proposal status because the complete inventory is not implemented; original wireframes remain proposals.
 
 On system-color changes the shell reapplies semantic colors. High contrast uses system Control/Window backgrounds with matching foregrounds, native disabled appearance and focus behavior. This branch is implemented but physical high-contrast/screen-reader acceptance has not been performed.
 

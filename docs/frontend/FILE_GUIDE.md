@@ -1,47 +1,52 @@
-# Frontend file guide
+# Frontend and integration file guide
 
-## Implemented P01 files
+## Existing role and shared files
 
-| Existing file | Responsibility and owner |
+| File | Implemented ownership |
 | --- | --- |
-| [Server Program](../../src/ChatApplication.Server/Program.cs) | Separate STA/PerMonitorV2 entry point and visual styles |
-| [ServerForm](../../src/ChatApplication.Server/Forms/ServerForm.cs) | Listener inputs and empty client-information list; no listener/session |
-| [Server layout](../../src/ChatApplication.Server/Forms/ServerForm.Layout.cs) | Sidebar labels, native fields, unavailable actions and empty peer context |
-| [Client Program](../../src/ChatApplication.Client/Program.cs) | Separate STA/PerMonitorV2 entry point and visual styles |
-| [ClientForm](../../src/ChatApplication.Client/Forms/ClientForm.cs) | Editable username/endpoint inputs; no accepted identity or connection |
-| [Client layout](../../src/ChatApplication.Client/Forms/ClientForm.Layout.cs) | Connection sidebar, explicit unavailable actions and explanatory copy |
-| [Presentation project](../../src/ChatApplication.Presentation/ChatApplication.Presentation.csproj) | Shared native WinForms library; no Core/socket/service dependency |
-| [ChatWindow](../../src/ChatApplication.Presentation/ChatWindow.cs) | Shared Form lifetime, per-window fonts, scrollable canvas and working-area/DPI sizing |
-| [Shared window layout](../../src/ChatApplication.Presentation/ChatWindow.Layout.cs) | Header, empty conversation, unavailable composer and inline guidance |
-| [UiLayout](../../src/ChatApplication.Presentation/Layout/UiLayout.cs) | Small native label/field/action/column builders; no application actions |
-| [ChatTheme](../../src/ChatApplication.Presentation/Theme/ChatTheme.cs) | Semantic canvas/surface/sidebar/text palette and system-color fallback |
-| [OwnedFonts](../../src/ChatApplication.Presentation/Theme/OwnedFonts.cs) | Per-window point-unit body/title/section/metadata fonts; disposed after controls |
-| [ConnectionBadge](../../src/ChatApplication.Presentation/Controls/ConnectionBadge.cs) | Literal Interface preview label; does not model or change connection state |
-| [TranscriptView](../../src/ChatApplication.Presentation/Controls/TranscriptView.cs) | Readable empty conversation shell only; no message collection/cards |
-| [App test project](../../tests/ChatApplication.App.Tests/ChatApplication.App.Tests.csproj) | Windows-only integration checks; same pinned tooling as Core.Tests |
-| [Interface tests](../../tests/ChatApplication.App.Tests/InterfaceTests.cs) | Layout/reachability, no-op actions, Tab traversal and independent window lifetime |
-| [STA helper](../../tests/ChatApplication.App.Tests/StaWindow.cs) | Serial, bounded STA execution and explicit Form disposal through test ownership |
+| [ServerForm](../../src/ChatApplication.Server/Forms/ServerForm.cs) | Listener inputs, action fields, owned ChatServer and UI event subscriptions |
+| [Server layout](../../src/ChatApplication.Server/Forms/ServerForm.Layout.cs) | Listener sidebar and explicitly deferred detailed peer list |
+| [Server connection](../../src/ChatApplication.Server/Forms/ServerForm.Connection.cs) | Start/Stop commands, real listening/accepted-peer projection and awaited close |
+| [ClientForm](../../src/ChatApplication.Client/Forms/ClientForm.cs) | Identity/endpoint inputs, action fields and owned ChatClient |
+| [Client layout](../../src/ChatApplication.Client/Forms/ClientForm.Layout.cs) | Identity/endpoint sidebar |
+| [Client connection](../../src/ChatApplication.Client/Forms/ClientForm.Connection.cs) | Connect/Cancel/Disconnect, input locks, accepted identity and awaited close |
+| [ChatWindow](../../src/ChatApplication.Presentation/ChatWindow.cs) | Shared geometry, measured scrolling and per-window fonts |
+| [Window layout](../../src/ChatApplication.Presentation/ChatWindow.Layout.cs) | Header, real status/context, empty transcript and unavailable composer |
+| [Window connection boundary](../../src/ChatApplication.Presentation/ChatWindow.Connection.cs) | Cancellable guarded UI dispatch, reusable close sequencing and presentation-only status setter |
+| [ConnectionFeedback](../../src/ChatApplication.Presentation/ConnectionFeedback.cs) | Local controlled-code guidance; never renders remote error prose |
+| [ConnectionBadge](../../src/ChatApplication.Presentation/Controls/ConnectionBadge.cs) | Actual text-backed neutral/success/warning/error tones |
+| [TranscriptView](../../src/ChatApplication.Presentation/Controls/TranscriptView.cs) | Empty conversation only; no message collection/cards |
+| [ChatTheme](../../src/ChatApplication.Presentation/Theme/ChatTheme.cs) | Semantic shell palette and system-color fallback |
+| [OwnedFonts](../../src/ChatApplication.Presentation/Theme/OwnedFonts.cs) | Per-window point fonts disposed after controls |
+| [UiLayout](../../src/ChatApplication.Presentation/Layout/UiLayout.cs) | Native field/label/action builders without network behavior |
 
-Role Forms inherit ChatWindow. Layout partials organize the same object; they are not additional controllers or windows. Each Form owns its controls and its own OwnedFonts instance. Fonts remain valid while the other executable/window closes. Native system fonts/colors are never disposed.
+STA/PerMonitorV2 entry points remain separate. Role Forms own Networking; Presentation owns no socket/service and references no Networking/Core project. Networking never receives a Control.
 
-The shared library contains presentation only. Apps retain their direct Core references from P00 and add Presentation; Presentation does not reference empty Core merely to follow a diagram.
+Normal Form close first guards callbacks, aborts owned I/O, joins outstanding UI commands and awaits service disposal. Direct Form disposal aborts I/O and prevents disposed-control callbacks. Normal close is the tested awaited application lifecycle.
+
+## Connection implementation
+
+| File | Responsibility |
+| --- | --- |
+| [UsernameRules](../../src/ChatApplication.Core/UsernameRules.cs) | Pure supported-name validation/normalization |
+| [MessageProtocol](../../src/ChatApplication.Networking/Protocol/MessageProtocol.cs) | Strict bounded JSON connection packets and directions |
+| [FramedConnection](../../src/ChatApplication.Networking/Protocol/FramedConnection.cs) | Exact framed I/O, first-byte deadline and serialized writes |
+| [ConnectionPacket](../../src/ChatApplication.Networking/Protocol/ConnectionPacket.cs) | Implemented hello/welcome/error/disconnect values and phases |
+| [ChatServer](../../src/ChatApplication.Networking/ChatServer.cs) | Listener, one reserved peer, bounded busy rejection and joined stop |
+| [ClientSession](../../src/ChatApplication.Networking/ClientSession.cs) | Accepted socket/stream, validated handshake and idle connection read |
+| [ChatClient](../../src/ChatApplication.Networking/ChatClient.cs) | Owned connect/handshake/read/cancel/disconnect lifetime |
+| [ConnectionSnapshot](../../src/ChatApplication.Networking/ConnectionSnapshot.cs) | Immutable state/name/session/error notification |
+| [ConnectionUpdates](../../src/ChatApplication.Networking/ConnectionUpdates.cs) | Serialized awaited observer updates with cancellation |
+| [ConnectionOptions](../../src/ChatApplication.Networking/ConnectionOptions.cs) | Verified defaults and short configurable test deadlines |
+| [EndpointInput](../../src/ChatApplication.Networking/EndpointInput.cs) | Production dotted-decimal IPv4/nonzero-port parsing |
+| [ConnectionFailureException](../../src/ChatApplication.Networking/ConnectionFailureException.cs) | Controlled protocol/local failure code and preserved exception cause |
+
+Tests live in [Core.Tests](../../tests/ChatApplication.Core.Tests/UsernameRulesTests.cs), [Networking protocol tests](../../tests/ChatApplication.Networking.Tests/ProtocolTests.cs), [Networking lifecycle tests](../../tests/ChatApplication.Networking.Tests/ConnectionTests.cs) and [native App tests](../../tests/ChatApplication.App.Tests/InterfaceTests.cs).
 
 ## Future files — not created
 
-| Planned path | Responsibility | Phase |
-| --- | --- | --- |
-| src/ChatApplication.Server/Forms/ServerForm.Connection.cs | Real Start/Stop, state projection, peer lifecycle and close guard | P02/P04 |
-| src/ChatApplication.Server/Forms/ServerForm.Messaging.cs | Awaited operator send and authoritative message display | P03 |
-| src/ChatApplication.Client/Forms/ClientForm.Connection.cs | Real Connect/Cancel/Disconnect and accepted identity | P02/P04 |
-| src/ChatApplication.Client/Forms/ClientForm.Messaging.cs | Explicit send, server echo rendering and errors | P03 |
-| src/ChatApplication.Presentation/Controls/MessageCard.cs | Plain author/time/body with accessible message content | P03 |
+ServerForm.Messaging.cs, ClientForm.Messaging.cs, ChatMessage/message validation and MessageCard remain P03. Detailed participant metadata/list population remains P04. No empty future handler or simulated message is introduced.
 
-There are no empty Connection/Messaging handlers, message models, fake participants or sample conversation. Networking is deferred to P02. Future transcript retention, trim notices, message accessibility and actual async notifications must be implemented and tested with the behavior they serve.
+[Client](assets/client-wireframe.svg) and [Server](assets/server-wireframe.svg) wireframes remain synthetic design proposals; [tokens](theme.json) retain their design inventory role. Local review captures stay ignored.
 
-## Design assets and evidence
-
-- [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) remain labeled proposals with synthetic future content.
-- [theme.json](theme.json) is the design inventory; only the P01 subset described in DESIGN_SYSTEM is applied.
-- P01 local review captures are ignored under .local, not published submission images.
-
-See [UX](UX.md), [design system](DESIGN_SYSTEM.md), [architecture](../architecture/ARCHITECTURE.md) and [testing](../quality/TESTING.md).
+See [UX](UX.md), [architecture](../architecture/ARCHITECTURE.md) and [testing](../quality/TESTING.md).

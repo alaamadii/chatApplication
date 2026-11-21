@@ -81,3 +81,20 @@ Branch: feat/server-client-ui. Confirmed owner merge of PR #2 at a4f5acb6fd1e90d
 - Initial Git HTTPS pushes of the fix encountered transient connectivity failures; an ordinary HTTP/1.1 retry succeeded. No force push, history rewrite, network-policy or TLS weakening.
 - Reconciled README/PLAN/TASKS/TESTING with [PR #3](https://github.com/alaamadii/chatApplication/pull/3) and passing implementation checks. Corrected only stale wireframe accessibility descriptions to identify synthetic proposals; wireframe visuals/labels remain unchanged.
 - Final documentation receipt is checked/published separately; its exact final SHA and hosted runs belong in PR #3 after execution. P01 owner acceptance and physical F5/keyboard/accessibility/remaining DPI checks stay pending.
+
+## 2026-11-21 — P02 TCP connections and username handshake
+
+Branch: feat/tcp-connections. Confirmed owner merge of PR #3 at e0cb64aa8fc6ff97c782dcd91eb2ec057338a69d, inspected clean tree/remotes, fetched/fast-forwarded main and branched. Resumption preserved that branch; no earlier partial source write existed and no owner changes were discarded.
+
+- Implemented pure UsernameRules and eight-project dependencies: UI-free Networking/Networking.Tests, existing Core/Presentation/Apps/tests retained. No production external package or test-version upgrade.
+- Added strict 4-byte signed big-endian framing, payload cap 16 KiB, strict UTF-8/JSON/depth/duplicates/phase-direction checks and hello/welcome/error/disconnect only. No chat/message models or payloads.
+- Implemented owned ChatServer/ClientSession/ChatClient lifetimes, one pending/accepted admission slot, serialized bounded rejection, actual accepted identity, cancellation/deadlines and observable/joined tasks.
+- Connected native Start/Stop and Connect/Cancel/Disconnect; real status tones/input locking/local controlled feedback. Awaited guarded UI dispatch and normal close join commands/services before controls/fonts. Composer/Send remain unavailable; detailed metadata list stays P04.
+- Added meaningful Core/Networking cases and retained/updated native regressions: current total 82 passing cases (19 Core, 46 Networking, 17 App). Release build had 0 warnings/0 errors.
+- Found/fixed busy-response reset/discard by bounded initial-frame consumption. Adjusted closed-port fixture for OS refusal versus connect-deadline notification while requiring complete cleanup/no false connection.
+- Ran doctor and required check; applied reported whitespace formatting. Final full-check receipt follows reconciled docs. Explicit official direct/transitive audit for all eight projects found no known vulnerable packages at the time.
+- Actual separate EXEs on owned loopback port 50634 passed occupied-port guidance, accepted synthetic identity, disconnect/reconnect, server stop/restart, failed endpoint feedback and connected Client close; both exited normally with code 0.
+- Reviewed actual connected PrintWindow captures at measured DPI 120 (125%). Corrected only ignored probe provider/selector assumptions before the final complete run; captures/probes stay under ignored .local.
+- Updated organized scope, architecture/protocol/decisions, frontend ownership/state, setup/stack, requirements, plan/tasks and exact evidence. Wireframes remain proposals.
+- Physical UI/F5/accessibility/remaining DPI/LAN/second-computer checks and owner acceptance remain pending. No P03 messaging, full P04 list, optional feature, merge, sibling change, student number or Classroom submission.
+- Final local check passed after formatting and docs reconciliation: all 82 cases, 0 build warnings/errors, format/docs success; docs inventory 127 local links and 29 tasks / 92 references. Project references were inspected and matched the intended platform boundaries.
