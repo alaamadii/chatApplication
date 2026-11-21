@@ -1,6 +1,43 @@
 # Validation strategy and current evidence
 
-## Documentation preparation — 2026-11-20
+## P00 initialization evidence — 2026-11-21
+
+Status: implemented initialization; owner acceptance pending. Foundation PR #1 is merged. This section supersedes the historical documentation-only current-state statements below.
+
+Environment: Windows 10.0.22631, PowerShell 5.1.22621.6133, Git 2.53.0.windows.1, selected SDK 10.0.402 and Microsoft.WindowsDesktop.App / Microsoft.NETCore.App 10.0.13.
+
+| Evidence category | Actually executed / result |
+| --- | --- |
+| Local prerequisite check | ./scripts/dev.ps1 doctor passed; selected C:\\Program Files\\dotnet\\dotnet.exe and reported installed SDK/desktop runtime |
+| Automated development check | ./scripts/dev.ps1 check passed: restore, Release build (0 warnings / 0 errors), discovery, dotnet format --verify-no-changes and documentation validation |
+| Behavioral tests | **Zero discovered cases** in Core.Tests. Empty Core has no domain behavior; no passing sample/placeholder test or coverage claim |
+| Dependencies | Exact Microsoft.NET.Test.Sdk 18.12.0, xunit 2.9.3 and adapter 4.0.1 restored; dotnet list ChatApplication.slnx package --vulnerable --include-transitive found no known vulnerable direct/transitive packages against official nuget.org at the time |
+| Actual EXE lifecycle | Started each Release Server/Client EXE independently; found its real role window and expected initialization labels using Win32 enumeration; requested WM_CLOSE; both exited normally with code 0 within bounded waits |
+| References / targets | Per-project reference queries and project XML inspection: both apps and Core.Tests reference only Core; Core has no project reference. Core/tests net10.0; apps net10.0-windows |
+| Hosted CI | Exact final-head runs/results are recorded in the P00 PR after publication; local execution does not imply hosted success |
+
+Lifecycle verification was a scripted Windows check, not human appearance acceptance or a behavioral test case. The first probe relied on WaitForInputIdle and looked for the window too early; it was corrected to poll the actual expected window/label conditions with a deadline. The failed probe's owned process was cleaned up; the corrected probe passed both programs. The probe remains ignored under .local and is not part of application code.
+
+A PATH containing multiple dotnet executables exposed a script-selection issue during initial doctor execution. The script now selects the first application explicitly; doctor/full check subsequently passed. It scopes SDK-root/CLI-home/certificate-generation settings and restores inherited state/location even when a tool fails.
+
+### Additional local tooling/repository checks
+
+- Invoked doctor by absolute script path from another directory and confirmed inherited working directory, DOTNET_ROOT, DOTNET_CLI_HOME and certificate-generation setting were restored.
+- Injected a temporary local dotnet command returning exit 23: restore threw as expected and still restored the inherited environment/location. This probe is ignored local tooling verification, not a Core behavioral case.
+- Narrow git check-ignore probes passed for bin/obj/.local/TestResults, credentials/personal settings/transcripts, and confirmed source, shared VS Code files and documentation TXT remain trackable.
+- Final documentation check passed with 24 required artifacts, 22 Markdown files, 102 local file links, 29 task definitions / 92 references, 10 contrast pairs and 2 labeled SVG proposals. git diff --check passed.
+- Inspected project references, target frameworks and shared configuration; no runtime external package, future layer/model or generated output is intended for the commits.
+
+### Remaining P00 owner checks
+
+- Human review of both initialization windows and resizing/default/minimum appearance.
+- Physical VS Code F5 (Server, Client and compound), debugger stop, keyboard/focus and normal manual close.
+- Display scaling at 100%, 125%, 150% and monitor transitions where available.
+- P00 PR review/merge before P01.
+
+No chat functionality, full P01 interface, physical DPI/F5, second-computer verification or genuine application screenshots are claimed. Later acceptance scenarios remain pending.
+
+## Historical documentation preparation — 2026-11-20
 
 Current scope contains documentation, original SVG proposals, tokens and documentation tooling only. Application behavior tests: **not created/not executed**. No app was built, connected, run or visually accepted.
 
@@ -38,7 +75,7 @@ Record actual date, exact commit, Windows/SDK and result for each:
 7. Different Windows computer: clone exact commit, doctor/check/run, repeat representative connection/message/error checks.
 8. Two genuine screenshots reviewed by owner with source/date/method/DPI/hashes.
 
-All application/manual checks are currently pending. SVG mockups and a docs CI pass cannot complete them.
+These final chat/physical acceptance checks remain pending. P00 scripted initialization results above do not complete them.
 
 ## Failure/reporting policy
 
@@ -51,12 +88,12 @@ Keep failures reproducible with synthetic content. Record steps, expected/actual
 - git diff --check passed. Original Client/Server SVGs were rendered with an isolated headless Edge profile and visually reviewed; previews remain under ignored .local. These are design previews, not Windows Forms/application checks.
 - Application build/behavior tests, physical UI and second-computer results remain not performed because source has not been implemented. Hosted exact-head results are recorded on the foundation PR after execution.
 
-## Published foundation receipt — 2026-11-20
+## Historical published foundation receipt — 2026-11-20
 
-- [PR #1](https://github.com/alaamadii/chatApplication/pull/1) targets main from docs/project-foundation and is ready for owner documentation/design review.
+- [PR #1](https://github.com/alaamadii/chatApplication/pull/1) targets main from docs/project-foundation and was published for owner documentation/design review and is now merged.
 - Published tooling candidate bef1ec485bb4307d4fe4e073ffbd1d40cfabc45d passed documentation CI run 44729812668.
 - A fresh isolated checkout of that exact candidate passed the same docs check: 24 required artifacts, 22 Markdown files, 87 local targets, 29 tasks/93 references, 10 contrast pairs and 2 labeled SVGs. The clone stayed clean.
 - Anonymous README/index/PLAN/TASKS/Client-SVG/Server-SVG URLs returned HTTP 200. Existing public visibility was preserved.
 - Final publication-receipt SHA and exact hosted run/results are recorded on PR #1; later edits reconcile documentation status only.
 
-These are documentation and design checks. Application functionality, native WinForms/physical acceptance and another Windows computer remain unperformed. Owner acceptance is still pending.
+These are documentation and design checks. Application functionality, native WinForms/physical acceptance and another Windows computer remain unperformed. This historical receipt predates owner merge of PR #1; P00 acceptance remains pending.

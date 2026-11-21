@@ -1,6 +1,17 @@
-# Planned frontend file guide
+# Frontend file guide
 
-All C# paths below are **planned**, shown as code rather than broken source links. Create them only in the named phase when behavior is needed. The documentation directory is separate from application source.
+## Existing P00 files
+
+| Existing source | Current responsibility |
+| --- | --- |
+| [Server Program](../../src/ChatApplication.Server/Program.cs) | STA, PerMonitorV2, visual styles and ServerForm composition |
+| [ServerForm](../../src/ChatApplication.Server/Forms/ServerForm.cs) | Resizable role/initialization labels; owns native controls, no custom font |
+| [Client Program](../../src/ChatApplication.Client/Program.cs) | Separate STA/DPI entry point and ClientForm composition |
+| [ClientForm](../../src/ChatApplication.Client/Forms/ClientForm.cs) | Resizable role/initialization labels; no connection/message behavior |
+
+The two small Forms intentionally repeat their minimal label layout. Extract shared Presentation in P01 when real shared controls/theme exist. No service, font wrapper or empty future partial file is created now.
+
+The inventory below describes target responsibilities. Only the four files linked above exist; all Layout/Connection/Messaging partials, shared Presentation and native app tests remain planned.
 
 ## App composition and screens
 
@@ -43,4 +54,4 @@ Current design assets:
 - [Server wireframe](assets/server-wireframe.svg)
 - [Token source](theme.json)
 
-See [UX](UX.md), [architecture](../architecture/ARCHITECTURE.md) and [tasks](../planning/TASKS.md) for sequencing. No source directory is created by this file inventory.
+See [UX](UX.md), [architecture](../architecture/ARCHITECTURE.md) and [tasks](../planning/TASKS.md) for sequencing. Future source paths are an inventory, not evidence that later phases are implemented.

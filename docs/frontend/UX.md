@@ -67,3 +67,7 @@ Keep latest 500 visible messages/window. Before dropping older items show a pers
 On close, disable actions, cancel the window lifetime, await bounded transport cleanup and then dispose. Show only meaningful current state; no callback may update a disposed control.
 
 See [design tokens](DESIGN_SYSTEM.md), [planned UI files](FILE_GUIDE.md), [protocol](../architecture/PROTOCOL.md) and [test strategy](../quality/TESTING.md).
+
+## P00 implementation boundary — 2026-11-21
+
+The existing ServerForm and ClientForm display only role, phase and unavailable-networking/messaging labels using native system styling. They resize and use PerMonitorV2; no connection actions, composer, participants, sample messages or complete two-pane layout exists. The screens and state/action rules above remain the P01+ target. Owner appearance, keyboard, DPI and physical F5 review remains pending.

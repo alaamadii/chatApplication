@@ -4,12 +4,12 @@ PLAN owns sequence, deliverables and review gates. [TASKS](TASKS.md) owns indivi
 
 ## Current documentation preparation
 
-This PR creates the requirements/design foundation only. Owner review is pending. No application phase is complete, and no working UI/network/message result is claimed.
+Foundation PR #1 was merged by the owner before P00. P00 implementation and local validation now exist; publication/hosted evidence is recorded in its PR. Owner acceptance of P00 remains pending. No full chat interface, networking or message result is claimed.
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
-| Preparation | Organized docs, frontend proposals, architecture/protocol and backlog | Owner's current request | Published on PR #1; owner review pending |
-| P00 | Solution, initialization windows, environment and .NET CI | Foundation reviewed/requested | Pending |
+| Preparation | Organized docs, frontend proposals, architecture/protocol and backlog | Owner's current request | PR #1 merged by owner; foundation reviewed |
+| P00 | Solution, initialization windows, environment and .NET CI | Foundation reviewed/requested | Implemented; owner review pending |
 | P01 | Server/Client interfaces and shared presentation | P00 accepted | Pending |
 | P02 | Bounded TCP protocol and real connection/username lifecycle | P01 accepted | Pending |
 | P03 | Real-time timestamped messaging and UI integration | P02 accepted | Pending |
