@@ -38,6 +38,12 @@ Native/visual checks exposed early scaling of an incompletely constructed base F
 
 Regression checks were retained. The navigation fixture was corrected to treat NumericUpDown's internal editor as part of one native setting; final traversal checks pass both roles.
 
+### Hosted minimum-layout regression
+
+Initial P01 candidate 3d0eab5f463e59f9282d0421dd77593ff2b970fc passed documentation CI but failed [Windows run 44873823732](https://github.com/alaamadii/chatApplication/actions/runs/44873823732): 13 native cases passed and the two 900 x 620 minimum-size cases failed at DPI 96. Measured required content height was 627 rather than 620, producing unwanted root scrollbars.
+
+Reduced only the title/header gaps by 8 logical pixels, retaining all font sizes, controls, readable transcript space and regression assertions. Local full checks and hosted results after the fix are recorded after execution. This CI geometry result is not physical owner acceptance at 100%.
+
 ### Repository and dependency review
 
 - Official nuget.org direct/transitive advisory query passed for all six projects with no known vulnerable packages reported at execution time.

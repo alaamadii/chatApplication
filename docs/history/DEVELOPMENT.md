@@ -68,3 +68,9 @@ Branch: feat/server-client-ui. Confirmed owner merge of PR #2 at a4f5acb6fd1e90d
 - Updated organized frontend, architecture/decisions, setup/stack, requirements, plan/tasks and evidence. Wireframes remain labeled future proposals.
 - Publication/hosted receipts are added only after actual execution. No merge, P02 behavior, optional feature, Classroom submission or student number.
 - Final local repository/dependency review passed: official direct/transitive advisory query for all six projects found no known vulnerable packages; references, Core independence, narrow exclusions, limited credential scan and diff inspected. Docs check passed with 118 local links and 29 tasks / 92 references.
+
+### Hosted minimum-layout correction
+
+- Published UI implementation 9741c3a and docs candidate 3d0eab5f463e59f9282d0421dd77593ff2b970fc in [PR #3](https://github.com/alaamadii/chatApplication/pull/3). Documentation run 44873823803 passed; Windows run 44873823732 found 2 minimum-layout failures at DPI 96 (13 other native cases passed).
+- Required content measured 627 pixels for the 620-pixel client minimum. Reduced title/header gaps by 8 logical pixels without shrinking text or relaxing assertions. Revalidation receipts follow actual execution; physical 100% acceptance is still pending.
+- After the spacing fix, full local check passed again (15 native cases, zero Core cases, 0 build warnings/errors, format/docs). Actual EXE lifecycle and final 125% captures were repeated; both closed with exit 0 and the revised layouts were inspected.

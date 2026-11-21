@@ -14,7 +14,7 @@ public abstract partial class ChatWindow
             ColumnCount = 2,
             RowCount = 1,
             AutoSize = true,
-            Margin = new Padding(0, 0, 0, 16),
+            Margin = new Padding(0, 0, 0, 12),
             ColumnStyles =
             {
                 new ColumnStyle(SizeType.Percent, 100F),
@@ -22,7 +22,9 @@ public abstract partial class ChatWindow
             }
         };
         var identity = UiLayout.Column();
-        UiLayout.AddRow(identity, UiLayout.Text("Chat Application", _fonts.Title));
+        var title = UiLayout.Text("Chat Application", _fonts.Title);
+        title.Margin = new Padding(0, 0, 0, 8);
+        UiLayout.AddRow(identity, title);
         UiLayout.AddRow(identity, UiLayout.Text(
             role == "Server" ? "SERVER  /  Listener and client overview" : "CLIENT  /  Your connection and conversation",
             _fonts.Metadata, secondary: true));
