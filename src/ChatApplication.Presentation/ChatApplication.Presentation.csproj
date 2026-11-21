@@ -4,6 +4,7 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../ChatApplication.Core/ChatApplication.Core.csproj" />
     <InternalsVisibleTo Include="ChatApplication.App.Tests" />
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@ public abstract partial class ChatWindow : Form
 
     protected ChatWindow(string role)
     {
+        _isServer = role == "Server";
         SuspendLayout();
         Text = $"Chat Application - {role}";
         AutoScaleDimensions = new SizeF(96F, 96F);
@@ -48,7 +49,7 @@ public abstract partial class ChatWindow : Form
         };
         _content.Controls.Add(CreateHeader(role), 0, 0);
         _content.Controls.Add(UiLayout.Text(
-            "TCP connections are available. Messaging is not implemented until P03.",
+            "Real-time text messages · Server-assigned names and times · One connected client",
             _fonts.Body, secondary: true), 0, 1);
 
         _body = new TableLayoutPanel
@@ -78,7 +79,7 @@ public abstract partial class ChatWindow : Form
         sidebarViewport.Controls.Add(Sidebar);
 
         Feedback = UiLayout.Text(
-            "Connection controls are ready. Messaging arrives in P03.",
+            "Connect to exchange messages. Enter sends; Shift+Enter adds a new line.",
             _fonts.Metadata, secondary: true);
         Feedback.Name = "Feedback";
         Feedback.AccessibleName = "Connection and message guidance";

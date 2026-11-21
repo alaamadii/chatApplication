@@ -32,7 +32,7 @@ internal sealed partial class ClientForm : ChatWindow
 
     public ClientForm() : base("Client")
     {
-        _client = new(OnConnectionAsync);
+        _client = new(OnConnectionAsync, onMessage: OnMessageAsync);
         BuildLayout();
         CompleteLayout();
         _connectButton.Click += ConnectClicked;

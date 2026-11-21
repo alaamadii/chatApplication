@@ -151,7 +151,7 @@ public sealed class InterfaceTests
         });
 
     [Fact]
-    public void Actual_forms_complete_handshake_reconnect_and_close_without_enabling_messaging() =>
+    public void Actual_forms_complete_handshake_reconnect_and_close_with_empty_send_disabled() =>
         StaWindow.Run(() =>
         {
             using var reservation = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);

@@ -52,7 +52,7 @@ public static class UiLayout
         Text = text,
         Name = name,
         AccessibleName = text.Replace("&", ""),
-        AccessibleDescription = "Availability follows connection state. Messaging is unavailable until P03.",
+        AccessibleDescription = "Availability follows connection state and input validation.",
         Enabled = false,
         Dock = DockStyle.Fill,
         Height = 36,
