@@ -19,7 +19,7 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 | ID | Task | Depends on | Evidence / acceptance | Status |
 | --- | --- | --- | --- | --- |
 | P00-001 | Create Server/Client/Core solution and explicit references | DOC-005 + owner review | Four-project solution, correct references/targets, Release build; TESTING | Done |
-| P00-002 | Add truthful initialization windows, dev script, VS Code and Windows CI | P00-001 | doctor/check, actual EXE start/close, shared configs; hosted receipt in phase PR | In progress |
+| P00-002 | Add truthful initialization windows, dev script, VS Code and Windows CI | P00-001 | doctor/check, actual EXE start/close, shared configs; hosted checks passed, exact receipt in PR #2 | Done |
 | P00-003 | Pin/audit test packages; prepare meaningful test infrastructure | P00-001 | STACK pins; restore/advisory query; zero cases, no placeholders; TESTING | Done |
 
 ## P01 — Interfaces
@@ -75,4 +75,4 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 ## Update rule
 
-When a task changes, add evidence and update the phase gate in PLAN. P00 artifacts/checks may be Done while P00 owner acceptance remains pending. P00-002 stays In progress until exact-head hosted verification is recorded. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.
+When a task changes, add evidence and update the phase gate in PLAN. P00 artifacts/checks may be Done while P00 owner acceptance remains pending. P00-002 artifacts and hosted verification are complete; owner phase acceptance remains pending. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.

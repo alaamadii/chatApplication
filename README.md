@@ -2,7 +2,7 @@
 
 A C#/.NET Windows Forms client-server chat assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: P00 initialization implemented; owner review pending.** Foundation [PR #1](https://github.com/alaamadii/chatApplication/pull/1) is merged. Server and Client open as separate resizable Windows Forms programs with truthful initialization notices. Networking, usernames, messaging and participant tracking are not implemented. SVG previews remain design proposals, not screenshots of working software.
+**Current status: P00 initialization implemented in [PR #2](https://github.com/alaamadii/chatApplication/pull/2); owner review pending.** Foundation [PR #1](https://github.com/alaamadii/chatApplication/pull/1) is merged. Server and Client open as separate resizable Windows Forms programs with truthful initialization notices. Networking, usernames, messaging and participant tracking are not implemented. SVG previews remain design proposals, not screenshots of working software.
 
 ## Idea and required outcome
 

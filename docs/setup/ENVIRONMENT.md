@@ -42,7 +42,7 @@ Open two terminals to use the separate programs:
 
 Each shows its role and an initialization notice. Networking, usernames, connection actions, message exchange and participant tracking do not exist yet. No port is opened by either application.
 
-The script selects the first dotnet application on PATH, temporarily sets its matching DOTNET_ROOT and repository-local DOTNET_CLI_HOME under .local, and restores inherited values and location in finally. Native tool failures throw and fail CI. Build output, CLI state and test results stay ignored; no personal environment settings are committed.
+The script selects the first dotnet application on PATH, temporarily sets its matching DOTNET_ROOT and repository-local DOTNET_CLI_HOME under .local, suppresses first-run ASP.NET certificate generation for the invocation, and restores inherited values and location in finally. Native tool failures throw and fail CI. Build output, CLI state and test results stay ignored; no personal environment settings are committed.
 
 ## Shared VS Code workflow
 

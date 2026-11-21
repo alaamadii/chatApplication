@@ -8,13 +8,13 @@ Environment: Windows 10.0.22631, PowerShell 5.1.22621.6133, Git 2.53.0.windows.1
 
 | Evidence category | Actually executed / result |
 | --- | --- |
-| Local prerequisite check | ./scripts/dev.ps1 doctor passed; selected C:\\Program Files\\dotnet\\dotnet.exe and reported installed SDK/desktop runtime |
+| Local prerequisite check | ./scripts/dev.ps1 doctor passed; selected `C:\Program Files\dotnet\dotnet.exe` and reported installed SDK/desktop runtime |
 | Automated development check | ./scripts/dev.ps1 check passed: restore, Release build (0 warnings / 0 errors), discovery, dotnet format --verify-no-changes and documentation validation |
 | Behavioral tests | **Zero discovered cases** in Core.Tests. Empty Core has no domain behavior; no passing sample/placeholder test or coverage claim |
 | Dependencies | Exact Microsoft.NET.Test.Sdk 18.12.0, xunit 2.9.3 and adapter 4.0.1 restored; dotnet list ChatApplication.slnx package --vulnerable --include-transitive found no known vulnerable direct/transitive packages against official nuget.org at the time |
 | Actual EXE lifecycle | Started each Release Server/Client EXE independently; found its real role window and expected initialization labels using Win32 enumeration; requested WM_CLOSE; both exited normally with code 0 within bounded waits |
 | References / targets | Per-project reference queries and project XML inspection: both apps and Core.Tests reference only Core; Core has no project reference. Core/tests net10.0; apps net10.0-windows |
-| Hosted CI | Exact final-head runs/results are recorded in the P00 PR after publication; local execution does not imply hosted success |
+| Hosted CI | Candidate 6b6092181d33637d89f63d0e6e7e955b13eb62d3 passed [Windows .NET run 44870930094](https://github.com/alaamadii/chatApplication/actions/runs/44870930094) and [documentation run 44870930105](https://github.com/alaamadii/chatApplication/actions/runs/44870930105); final receipt-commit SHA/results are maintained in [PR #2](https://github.com/alaamadii/chatApplication/pull/2) |
 
 Lifecycle verification was a scripted Windows check, not human appearance acceptance or a behavioral test case. The first probe relied on WaitForInputIdle and looked for the window too early; it was corrected to poll the actual expected window/label conditions with a deadline. The failed probe's owned process was cleaned up; the corrected probe passed both programs. The probe remains ignored under .local and is not part of application code.
 

@@ -4,7 +4,7 @@ PLAN owns sequence, deliverables and review gates. [TASKS](TASKS.md) owns indivi
 
 ## Current documentation preparation
 
-Foundation PR #1 was merged by the owner before P00. P00 implementation and local validation now exist; publication/hosted evidence is recorded in its PR. Owner acceptance of P00 remains pending. No full chat interface, networking or message result is claimed.
+Foundation PR #1 was merged by the owner before P00. P00 implementation, local validation and passing hosted candidate checks now exist in [PR #2](https://github.com/alaamadii/chatApplication/pull/2); exact final-head evidence is maintained in that PR. Owner acceptance of P00 remains pending. No full chat interface, networking or message result is claimed.
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
