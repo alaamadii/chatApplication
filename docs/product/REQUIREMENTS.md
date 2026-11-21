@@ -43,4 +43,4 @@ The earlier brief recommends group chat; a recommendation is not mandatory scope
 
 Product decisions: separate Server/Client executables, shared native presentation, one-client baseline, server-authoritative message echo/time, bounded frames/input/transcripts and loopback by default. These are proposed engineering choices, not professor-prescribed class names.
 
-Every functional requirement is currently **Not implemented**. See [tasks](../planning/TASKS.md) and [test matrix](../quality/TESTING.md); passing documentation checks cannot accept application behavior.
+Required chat behavior remains **Not implemented**. P01 supplies the FR-004 action controls and partial NFR-002 presentation evidence; those controls are disabled, so this does not satisfy connection/send/disconnect behavior or physical accessibility acceptance. See [tasks](../planning/TASKS.md) and [test matrix](../quality/TESTING.md); passing documentation checks cannot accept application behavior.

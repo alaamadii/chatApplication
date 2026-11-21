@@ -1,6 +1,6 @@
 # Frontend UX specification
 
-Status: original design proposal, not an implemented UI. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a future connected state with synthetic content.
+Status: P01 implements the native layout, editable settings and unavailable actions. Real connection/message states below remain future specifications, not existing behavior. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a future connected state with synthetic content.
 
 ## Shared layout
 
@@ -68,6 +68,12 @@ On close, disable actions, cancel the window lifetime, await bounded transport c
 
 See [design tokens](DESIGN_SYSTEM.md), [planned UI files](FILE_GUIDE.md), [protocol](../architecture/PROTOCOL.md) and [test strategy](../quality/TESTING.md).
 
-## P00 implementation boundary — 2026-11-21
+## Implemented P01 boundary — 2026-11-21
 
-The existing ServerForm and ClientForm display only role, phase and unavailable-networking/messaging labels using native system styling. They resize and use PerMonitorV2; no connection actions, composer, participants, sample messages or complete two-pane layout exists. The screens and state/action rules above remain the P01+ target. Owner appearance, keyboard, DPI and physical F5 review remains pending.
+Both roles now use shared header, Interface preview badge, visible P02/P03 guidance, a connection sidebar, empty conversation and disabled composer/Send. Client has an empty username plus 127.0.0.1:5000 defaults; Server has loopback bind/port and an empty native client-information list. Native port editing is limited to 1–65535; no input is accepted by a server or protocol.
+
+Connect/Disconnect and Start/Stop are disabled with no placeholder handlers. Inputs may be edited locally; editing never changes a badge, connects, sends or inserts a client. No error is fabricated. Feedback is separate from the empty transcript; ampersands remain literal outside intentional mnemonics.
+
+The main canvas scales from 96 DPI. Construction is layout-suspended until both base and role controls exist. A docked virtual canvas uses measured wrapped guidance and an empty-transcript minimum; long feedback grows reachable scrollable content. The sidebar scrolls independently when needed, and the empty client list has native horizontal access to its metadata columns. An undersized working area bounds the outer window while preserving scroll access to the design canvas.
+
+Actual native checks cover no-overlap/reachability at default/minimum/wide sizes, small working areas, long guidance, unavailable actions, programmatic Tab traversal and independent font lifetime. Actual EXE captures were reviewed at the existing 125% display setting. Physical keyboard/IME/mnemonics, high contrast/screen reader, F5, 100%/150% and monitor transitions remain pending. See TESTING for the distinction between executed checks and owner acceptance.

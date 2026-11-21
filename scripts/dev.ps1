@@ -30,7 +30,7 @@ function Build-Solution {
 }
 
 function Test-Solution {
-    Write-Host 'P00: Core has no behavior. Zero discovered cases is expected, not coverage.'
+    Write-Host 'Core has no behavior and discovers zero cases. App.Tests exercises native UI contracts; no chat/transport coverage is claimed.'
     Invoke-Dotnet @('test', 'ChatApplication.slnx', '--configuration', 'Release', '--no-build',
         '--no-restore', '--logger', 'trx', '--results-directory', 'TestResults')
 }

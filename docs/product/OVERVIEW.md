@@ -36,6 +36,6 @@ Transcript retention is bounded to the latest 500 messages per window, with a vi
 
 ## Current state and review
 
-Foundation PR #1 is merged. P00 now provides separate Server/Client initialization windows, empty Core, prepared test infrastructure and build/run/CI tooling. The owner reviews this scaffold before P01. The demonstration journey above remains future behavior: no connection, message exchange or participant tracking exists yet.
+Foundation and P00 PRs are merged. P01 provides native Server/Client interface shells, shared Presentation, editable local settings, honest empty states and disabled actions, with native integration checks. Owner P01 review remains pending. The demonstration journey above is still future behavior: no connection, accepted username, message exchange or participant tracking exists.
 
 See [requirements](REQUIREMENTS.md), [frontend UX](../frontend/UX.md), [architecture](../architecture/ARCHITECTURE.md) and [plan](../planning/PLAN.md).

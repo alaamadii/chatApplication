@@ -52,3 +52,32 @@ Branch: chore/project-initialization. Foundation PR #1 was confirmed merged at b
 - Published implementation 8bf57d6 and documentation 6b6092181d33637d89f63d0e6e7e955b13eb62d3 to the authorized phase branch and opened [PR #2](https://github.com/alaamadii/chatApplication/pull/2), targeting main.
 - Candidate 6b6092181d33637d89f63d0e6e7e955b13eb62d3 passed [Windows .NET run 44870930094](https://github.com/alaamadii/chatApplication/actions/runs/44870930094) and [documentation run 44870930105](https://github.com/alaamadii/chatApplication/actions/runs/44870930105). Inspected Windows job logs: SDK 10.0.402, Release build 0 warnings/0 errors, zero discovered cases and successful docs/format checks.
 - Full 37-file phase diff, shared JSON parsing, output exclusions and limited credential-pattern scan passed. Final receipt-commit exact SHA and CI results are maintained in PR #2 after execution. Owner acceptance remains pending; no merge or next-phase work.
+
+## 2026-11-21 — P01 Server and Client interfaces
+
+Branch: feat/server-client-ui. Confirmed owner merge of PR #2 at a4f5acb6fd1e90df55f8c68dd2a1658d24f29599, inspected a clean tree/correct origin, fetched/fast-forwarded main and created the phase branch. Preserved owner changes and sibling assignments.
+
+- Added actual shared Presentation: ChatWindow and layout, UiLayout builders, semantic ChatTheme, per-window OwnedFonts, preview badge and empty TranscriptView.
+- Implemented native Server listener settings/empty client list and Client username/endpoint settings; shared empty conversation, disabled composer/actions and persistent P02/P03 guidance. No handlers simulate connections, accepted identity or messages.
+- Retained independent STA/PerMonitorV2 executables and empty Core. Apps reference Presentation; Presentation needs no Core reference. Added native App.Tests with the existing exact test-tool pins; no new package/version upgrade.
+- Added 15 serial bounded STA integration cases for supported-size layout, small working areas, long literal guidance, unavailable-action behavior, Tab traversal and independently disposed window/font lifetime.
+- Resolved initial DPI scaling of incomplete controls, minimum-size scrollbars and long-guidance overlap using suspended construction, native docking/virtual canvas and measured minimum content height. Retained regression assertions. Corrected the fixture's classification of the port spinner's internal editor.
+- Doctor and full development check passed: restore, Release build 0 warnings/0 errors, 15 App cases passed, zero Core cases, format and docs validation.
+- Started both actual Release EXEs, verified honest empty states/3 disabled actions and normal WM_CLOSE exit 0. Captured and reviewed both roles at default/minimum/wide on the current 125% display, without changing settings. Corrected only the ignored probe's native-class/DPI capture assumptions before final captures.
+- Captures/probes remain ignored under .local. Physical keyboard/IME/mnemonics/high contrast/F5, 100%/150%, monitor transitions and another computer remain pending; no owner acceptance was inferred.
+- Updated organized frontend, architecture/decisions, setup/stack, requirements, plan/tasks and evidence. Wireframes remain labeled future proposals.
+- Publication/hosted receipts are added only after actual execution. No merge, P02 behavior, optional feature, Classroom submission or student number.
+- Final local repository/dependency review passed: official direct/transitive advisory query for all six projects found no known vulnerable packages; references, Core independence, narrow exclusions, limited credential scan and diff inspected. Docs check passed with 118 local links and 29 tasks / 92 references.
+
+### Hosted minimum-layout correction
+
+- Published UI implementation 9741c3a and docs candidate 3d0eab5f463e59f9282d0421dd77593ff2b970fc in [PR #3](https://github.com/alaamadii/chatApplication/pull/3). Documentation run 44873823803 passed; Windows run 44873823732 found 2 minimum-layout failures at DPI 96 (13 other native cases passed).
+- Required content measured 627 pixels for the 620-pixel client minimum. Reduced title/header gaps by 8 logical pixels without shrinking text or relaxing assertions. Revalidation receipts follow actual execution; physical 100% acceptance is still pending.
+- After the spacing fix, full local check passed again (15 native cases, zero Core cases, 0 build warnings/errors, format/docs). Actual EXE lifecycle and final 125% captures were repeated; both closed with exit 0 and the revised layouts were inspected.
+
+### P01 publication receipt
+
+- Fixed implementation d138862c7d4db957bad902de7fc276542c6bddc7 passed [Windows run 44874348238](https://github.com/alaamadii/chatApplication/actions/runs/44874348238) and [documentation run 44874348287](https://github.com/alaamadii/chatApplication/actions/runs/44874348287). Inspected job 136755626271 logs: 0 build warnings/errors, 15 passed native cases, zero Core cases, format/docs success.
+- Initial Git HTTPS pushes of the fix encountered transient connectivity failures; an ordinary HTTP/1.1 retry succeeded. No force push, history rewrite, network-policy or TLS weakening.
+- Reconciled README/PLAN/TASKS/TESTING with [PR #3](https://github.com/alaamadii/chatApplication/pull/3) and passing implementation checks. Corrected only stale wireframe accessibility descriptions to identify synthetic proposals; wireframe visuals/labels remain unchanged.
+- Final documentation receipt is checked/published separately; its exact final SHA and hosted runs belong in PR #3 after execution. P01 owner acceptance and physical F5/keyboard/accessibility/remaining DPI checks stay pending.

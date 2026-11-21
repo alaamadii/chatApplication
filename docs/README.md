@@ -1,6 +1,6 @@
 # Documentation map
 
-Status: P00 initialization implemented on 2026-11-21; owner review pending. Product, protocol and complete frontend designs remain proposals until their named phases implement them.
+Status: P01 native interfaces implemented on 2026-11-21; owner review pending. P00 PR #2 is merged. Transport, message behavior and connected-state designs remain proposals until their named phases implement them.
 
 Read in the following order. Each file owns one concern so frontend, technology, architecture, planning and evidence stay separate.
 
@@ -14,7 +14,7 @@ Read in the following order. Each file owns one concern so frontend, technology,
 | [architecture/DECISIONS](architecture/DECISIONS.md) | Why choices were made and consequences | Task status |
 | [frontend/UX](frontend/UX.md) | Screen layout, actions, states and copy | Colors/tokens |
 | [frontend/DESIGN_SYSTEM](frontend/DESIGN_SYSTEM.md) | Palette, type, spacing, contrast and DPI | Actual visual acceptance |
-| [frontend/FILE_GUIDE](frontend/FILE_GUIDE.md) | Existing initialization and planned UI files | Implementation evidence |
+| [frontend/FILE_GUIDE](frontend/FILE_GUIDE.md) | Existing interface and planned UI files | Implementation evidence |
 | [planning/PLAN](planning/PLAN.md) | Milestones, sequence and review gates | Granular backlog |
 | [planning/TASKS](planning/TASKS.md) | Task IDs, dependencies, status and evidence | Strategy |
 | [planning/WORKFLOW](planning/WORKFLOW.md) | Branch/PR/validation process | Owner approval |
@@ -27,4 +27,4 @@ Read in the following order. Each file owns one concern so frontend, technology,
 
 Frontend assets are [client](frontend/assets/client-wireframe.svg), [server](frontend/assets/server-wireframe.svg) and [machine-readable tokens](frontend/theme.json). They are planning artifacts.
 
-FILE_GUIDE links the existing P00 source files and labels future paths as planned. Current file links point to real repository files. Any change to a requirement must update its tasks, design decisions, protocol/UI implications and validation plan.
+FILE_GUIDE links existing P01 source/tests and labels future paths as planned. Current file links point to real repository files. Any change to a requirement must update its tasks, design decisions, protocol/UI implications and validation plan.

@@ -1,6 +1,6 @@
 # Planned security and data boundaries
 
-Status: P00 has initialization windows and build tooling only. Applications open no sockets, accept no usernames/messages and write no transcript. The transport/data safeguards below remain design requirements, not implemented security guarantees.
+Status: P01 has editable native interface shells and build/test tooling only. Applications open no sockets, perform no username handshake/message exchange and write no transcript. The transport/data safeguards below remain design requirements, not implemented security guarantees.
 
 ## Trust model
 

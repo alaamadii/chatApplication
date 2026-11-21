@@ -1,16 +1,40 @@
 # Architecture
 
-## Implemented P00 structure
+## Implemented P01 structure
 
-[ChatApplication.slnx](../../ChatApplication.slnx) contains four projects only. [Core](../../src/ChatApplication.Core/ChatApplication.Core.csproj) is an empty net10.0 assembly. [Server](../../src/ChatApplication.Server/ChatApplication.Server.csproj) and [Client](../../src/ChatApplication.Client/ChatApplication.Client.csproj) are independent net10.0-windows WinExe projects referencing Core. [Core.Tests](../../tests/ChatApplication.Core.Tests/ChatApplication.Core.Tests.csproj) references Core with pinned test tooling and no cases.
+[ChatApplication.slnx](../../ChatApplication.slnx) contains six projects. Core is still empty and independent; no Networking project exists.
 
-Each executable has its own STA entry point, PerMonitorV2 initialization and role Form. Forms own their native layout/labels through the control tree; no custom fonts/drawing resources are allocated. DPI autoscaling starts at 96 logical DPI, the client area is 800 x 480 and the minimum outer size is 640 x 400. Anchored, wrapping labels use the system font and remain within a fill-docked TableLayoutPanel. Physical scaling review is pending.
+```text
+Server ------> Core
+       ------> Presentation
+Client ------> Core
+       ------> Presentation
+Core.Tests --> Core
+App.Tests ---> Server, Client, Presentation
+```
 
-Actual dependency direction is Server -> Core, Client -> Core and Core.Tests -> Core. Core contains no models or Windows/drawing/socket/timer/clock dependencies. There are no background tasks, listeners or gameplay-style timers. Networking and shared Presentation do not exist yet.
+| Existing project | Target and current responsibility |
+| --- | --- |
+| [Core](../../src/ChatApplication.Core/ChatApplication.Core.csproj) | net10.0; behavior-free assembly, no UI/drawing/socket/timer/clock dependencies |
+| [Server](../../src/ChatApplication.Server/ChatApplication.Server.csproj) | net10.0-windows WinExe; editable listener settings and empty client context |
+| [Client](../../src/ChatApplication.Client/ChatApplication.Client.csproj) | net10.0-windows WinExe; editable username/endpoint settings |
+| [Presentation](../../src/ChatApplication.Presentation/ChatApplication.Presentation.csproj) | net10.0-windows; shared native shell, layout, theme, per-window fonts and empty transcript |
+| [Core.Tests](../../tests/ChatApplication.Core.Tests/ChatApplication.Core.Tests.csproj) | net10.0; pinned test tooling, zero cases while Core is empty |
+| [App.Tests](../../tests/ChatApplication.App.Tests/ChatApplication.App.Tests.csproj) | net10.0-windows; serial bounded native UI integration checks |
 
-The remainder describes the target architecture for future phases; only the initialization entry points/Forms and four projects above exist.
+### Presentation ownership
 
-## Dependency direction
+Each STA entry point still enables PerMonitorV2 and visual styles. ServerForm/ClientForm inherit ChatWindow and own their local inputs. Their Layout partials compose role-specific sidebars; there are no Connection/Messaging partials or placeholder handlers.
+
+ChatWindow owns the common header, preview badge, conversation shell, disabled composer, feedback and scrollable canvas. It owns one OwnedFonts instance per window. Controls are disposed before those fonts; closing another window does not invalidate resources. Presentation references no application service, socket or Core type.
+
+Layout construction is suspended until the role controls exist, then resumes against the 96-DPI baseline. Native autoscaling handles point fonts and logical spacing. The default client is 1120 x 720 logical pixels; the design minimum is 900 x 620. The actual outer minimum/default are clamped to the current working area. DPI changes refit to the scaled default within the destination working area; physical monitor transitions remain pending.
+
+A docked virtual canvas takes the larger of the design minimum and measured header/conversation/composer/feedback requirements. Expanded guidance can grow scrollable space without overlapping siblings. A separate sidebar viewport keeps its longer settings/client list reachable. The empty native list uses horizontal scrolling for metadata columns. No messages, peer rows, accepted identity or network state are synthesized.
+
+Native App.Tests use internal access to the role Forms/working-area fit operation without adding application test hooks. Tests exercise actual layout/lifetime/no-op/navigation contracts. Core's zero discovery is reported separately.
+
+## Future dependency direction
 
 ```text
 ChatApplication.Server ──┬──> ChatApplication.Networking ──> ChatApplication.Core
@@ -20,7 +44,7 @@ ChatApplication.Client ──┬──> ChatApplication.Networking ──> ChatA
                         └──> ChatApplication.Presentation ─> ChatApplication.Core
 ```
 
-Server/Client may also reference Core directly. Core must never reference another project. Networking must never reference WinForms/Presentation. Presentation must never open sockets.
+Server/Client currently reference Core directly. The target diagram permits a future Presentation-to-Core dependency only when real shared types require it; none is needed now. Core must never reference another project. Networking must never reference WinForms/Presentation. Presentation must never open sockets.
 
 | Project | Target / responsibility | Create when |
 | --- | --- | --- |
@@ -32,11 +56,11 @@ Server/Client may also reference Core directly. Core must never reference anothe
 | Core.Tests / Networking.Tests | net10.0; pure and bounded loopback cases | P00 infrastructure / P02 behavior |
 | App.Tests | net10.0-windows; native STA presentation/lifecycle | P01 when meaningful contracts exist |
 
-Do not create empty future classes. P00 implements only the four projects listed above; the Networking/Presentation/App.Tests/Networking.Tests rows remain planned.
+The target table includes future classes/projects. Presentation and App.Tests now exist as described above; Networking and Networking.Tests remain planned. Message models/cards, transport and state machines remain future behavior.
 
 ## Class ownership
 
-| Planned class | Responsibility | Must not own |
+| Class / target role (implemented subset above) | Responsibility | Must not own |
 | --- | --- | --- |
 | ChatMessage | Immutable message ID, author role/name, text, server UTC time | Controls, socket, clock |
 | ChatInputRules | Pure username/text validation | Dialogs or disk |

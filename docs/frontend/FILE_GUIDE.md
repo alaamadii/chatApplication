@@ -1,57 +1,47 @@
 # Frontend file guide
 
-## Existing P00 files
+## Implemented P01 files
 
-| Existing source | Current responsibility |
+| Existing file | Responsibility and owner |
 | --- | --- |
-| [Server Program](../../src/ChatApplication.Server/Program.cs) | STA, PerMonitorV2, visual styles and ServerForm composition |
-| [ServerForm](../../src/ChatApplication.Server/Forms/ServerForm.cs) | Resizable role/initialization labels; owns native controls, no custom font |
-| [Client Program](../../src/ChatApplication.Client/Program.cs) | Separate STA/DPI entry point and ClientForm composition |
-| [ClientForm](../../src/ChatApplication.Client/Forms/ClientForm.cs) | Resizable role/initialization labels; no connection/message behavior |
+| [Server Program](../../src/ChatApplication.Server/Program.cs) | Separate STA/PerMonitorV2 entry point and visual styles |
+| [ServerForm](../../src/ChatApplication.Server/Forms/ServerForm.cs) | Listener inputs and empty client-information list; no listener/session |
+| [Server layout](../../src/ChatApplication.Server/Forms/ServerForm.Layout.cs) | Sidebar labels, native fields, unavailable actions and empty peer context |
+| [Client Program](../../src/ChatApplication.Client/Program.cs) | Separate STA/PerMonitorV2 entry point and visual styles |
+| [ClientForm](../../src/ChatApplication.Client/Forms/ClientForm.cs) | Editable username/endpoint inputs; no accepted identity or connection |
+| [Client layout](../../src/ChatApplication.Client/Forms/ClientForm.Layout.cs) | Connection sidebar, explicit unavailable actions and explanatory copy |
+| [Presentation project](../../src/ChatApplication.Presentation/ChatApplication.Presentation.csproj) | Shared native WinForms library; no Core/socket/service dependency |
+| [ChatWindow](../../src/ChatApplication.Presentation/ChatWindow.cs) | Shared Form lifetime, per-window fonts, scrollable canvas and working-area/DPI sizing |
+| [Shared window layout](../../src/ChatApplication.Presentation/ChatWindow.Layout.cs) | Header, empty conversation, unavailable composer and inline guidance |
+| [UiLayout](../../src/ChatApplication.Presentation/Layout/UiLayout.cs) | Small native label/field/action/column builders; no application actions |
+| [ChatTheme](../../src/ChatApplication.Presentation/Theme/ChatTheme.cs) | Semantic canvas/surface/sidebar/text palette and system-color fallback |
+| [OwnedFonts](../../src/ChatApplication.Presentation/Theme/OwnedFonts.cs) | Per-window point-unit body/title/section/metadata fonts; disposed after controls |
+| [ConnectionBadge](../../src/ChatApplication.Presentation/Controls/ConnectionBadge.cs) | Literal Interface preview label; does not model or change connection state |
+| [TranscriptView](../../src/ChatApplication.Presentation/Controls/TranscriptView.cs) | Readable empty conversation shell only; no message collection/cards |
+| [App test project](../../tests/ChatApplication.App.Tests/ChatApplication.App.Tests.csproj) | Windows-only integration checks; same pinned tooling as Core.Tests |
+| [Interface tests](../../tests/ChatApplication.App.Tests/InterfaceTests.cs) | Layout/reachability, no-op actions, Tab traversal and independent window lifetime |
+| [STA helper](../../tests/ChatApplication.App.Tests/StaWindow.cs) | Serial, bounded STA execution and explicit Form disposal through test ownership |
 
-The two small Forms intentionally repeat their minimal label layout. Extract shared Presentation in P01 when real shared controls/theme exist. No service, font wrapper or empty future partial file is created now.
+Role Forms inherit ChatWindow. Layout partials organize the same object; they are not additional controllers or windows. Each Form owns its controls and its own OwnedFonts instance. Fonts remain valid while the other executable/window closes. Native system fonts/colors are never disposed.
 
-The inventory below describes target responsibilities. Only the four files linked above exist; all Layout/Connection/Messaging partials, shared Presentation and native app tests remain planned.
+The shared library contains presentation only. Apps retain their direct Core references from P00 and add Presentation; Presentation does not reference empty Core merely to follow a diagram.
 
-## App composition and screens
-
-| Planned path | Responsibility | Phase |
-| --- | --- | --- |
-| src/ChatApplication.Server/Program.cs | STA entry point, DPI/visual styles and ServerForm composition | P00 |
-| src/ChatApplication.Server/Forms/ServerForm.cs | Form identity, owned services/fonts/lifetime and disposal | P00/P01 |
-| src/ChatApplication.Server/Forms/ServerForm.Layout.cs | Listener/client-info/conversation/composer layout | P01 |
-| src/ChatApplication.Server/Forms/ServerForm.Connection.cs | Start/stop, state projection, client information and close guard | P02/P04 |
-| src/ChatApplication.Server/Forms/ServerForm.Messaging.cs | Operator send and awaited transcript updates | P03 |
-| src/ChatApplication.Client/Program.cs | STA/DPI entry point and ClientForm composition | P00 |
-| src/ChatApplication.Client/Forms/ClientForm.cs | Form identity, ownership and disposal | P00/P01 |
-| src/ChatApplication.Client/Forms/ClientForm.Layout.cs | Identity/endpoint/transcript/composer controls | P01 |
-| src/ChatApplication.Client/Forms/ClientForm.Connection.cs | Connect/cancel/disconnect and state projection | P02/P04 |
-| src/ChatApplication.Client/Forms/ClientForm.Messaging.cs | Explicit send, server echo rendering and plain-text errors | P03 |
-
-Partial files organize one Form object; they are not separate controllers/instances. No socket parsing in a layout method and no Control passed to Networking.
-
-## Shared Presentation
+## Future files — not created
 
 | Planned path | Responsibility | Phase |
 | --- | --- | --- |
-| src/ChatApplication.Presentation/Theme/ChatTheme.cs | Reviewed palette, spacing and high-contrast fallback | P01 |
-| src/ChatApplication.Presentation/Theme/OwnedFonts.cs | Per-window point-unit fonts and disposal | P01 |
-| src/ChatApplication.Presentation/Controls/ConnectionBadge.cs | Text-backed state badge; no network state mutation | P01 |
-| src/ChatApplication.Presentation/Controls/TranscriptView.cs | Scrollable bounded collection of visible message cards | P01 shell / P03 messages |
-| src/ChatApplication.Presentation/Controls/MessageCard.cs | Plain sender/time/body and accessible text; no HTML/RTF execution | P03 |
+| src/ChatApplication.Server/Forms/ServerForm.Connection.cs | Real Start/Stop, state projection, peer lifecycle and close guard | P02/P04 |
+| src/ChatApplication.Server/Forms/ServerForm.Messaging.cs | Awaited operator send and authoritative message display | P03 |
+| src/ChatApplication.Client/Forms/ClientForm.Connection.cs | Real Connect/Cancel/Disconnect and accepted identity | P02/P04 |
+| src/ChatApplication.Client/Forms/ClientForm.Messaging.cs | Explicit send, server echo rendering and errors | P03 |
+| src/ChatApplication.Presentation/Controls/MessageCard.cs | Plain author/time/body with accessible message content | P03 |
 
-Use native controls/original simple drawing. Measure wrapping against available width, dispose removed cards and keep a visible 500-message trim notice. Validate actual performance/accessibility before accepting the renderer. If a simpler native transcript is needed, record the tradeoff and update the wireframes/UX instead of claiming pixel equivalence.
+There are no empty Connection/Messaging handlers, message models, fake participants or sample conversation. Networking is deferred to P02. Future transcript retention, trim notices, message accessibility and actual async notifications must be implemented and tested with the behavior they serve.
 
-## State, resources and tests
+## Design assets and evidence
 
-Forms bind presentation to explicit connection state and immutable notifications. Shared controls do not connect, retry, save or invent messages. Parent Forms own services/cancellation/fonts; controls own only components they create.
+- [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) remain labeled proposals with synthetic future content.
+- [theme.json](theme.json) is the design inventory; only the P01 subset described in DESIGN_SYSTEM is applied.
+- P01 local review captures are ignored under .local, not published submission images.
 
-Planned native tests: tests/ChatApplication.App.Tests for state/action/layout, focus/mnemonics, literal message content, duplicate-free echo display and close/callback behavior. Run serial STA windows with bounded waits and synthetic content; manual UI acceptance is separate.
-
-Current design assets:
-
-- [Client wireframe](assets/client-wireframe.svg)
-- [Server wireframe](assets/server-wireframe.svg)
-- [Token source](theme.json)
-
-See [UX](UX.md), [architecture](../architecture/ARCHITECTURE.md) and [tasks](../planning/TASKS.md) for sequencing. Future source paths are an inventory, not evidence that later phases are implemented.
+See [UX](UX.md), [design system](DESIGN_SYSTEM.md), [architecture](../architecture/ARCHITECTURE.md) and [testing](../quality/TESTING.md).

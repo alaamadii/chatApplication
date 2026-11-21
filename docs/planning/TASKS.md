@@ -26,9 +26,9 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 | ID | Task | Depends on | Evidence / acceptance | Status |
 | --- | --- | --- | --- | --- |
-| P01-001 | Shared theme/font ownership and Server role layout | P00-002, P00-003 + owner review | UX state/action matrix; unavailable behavior disabled | Pending |
-| P01-002 | Client identity/endpoint/transcript/composer layout | P01-001 | Native controls, clear empty/error states and accessible names | Pending |
-| P01-003 | Review navigation, minimum/wide/DPI and long text | P01-001, P01-002 | Native assertions plus actual available visual/manual checks | Pending |
+| P01-001 | Shared theme/font ownership and Server role layout | P00-002, P00-003 + owner review | Presentation/Server layout, disabled actions, resource lifetime assertions; TESTING | Done |
+| P01-002 | Client identity/endpoint/transcript/composer layout | P01-001 | Client layout, accessible native fields, empty transcript and guidance; TESTING | Done |
+| P01-003 | Review navigation, minimum/wide/DPI and long text | P01-001, P01-002 | 15 native UI cases; actual EXE/visual review at 125%; passing hosted checks in PR #3; physical owner checks remain pending | Done |
 
 ## P02 — Transport and connection
 
@@ -75,4 +75,4 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 ## Update rule
 
-When a task changes, add evidence and update the phase gate in PLAN. P00 artifacts/checks may be Done while P00 owner acceptance remains pending. P00-002 artifacts and hosted verification are complete; owner phase acceptance remains pending. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.
+When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 artifacts/checks may be Done while owner acceptance remains pending. P01-003 has passing local/hosted evidence; physical checks and phase acceptance remain explicit owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.

@@ -1,45 +1,40 @@
+using ChatApplication.Presentation;
+
 namespace ChatApplication.Server.Forms;
 
-internal sealed class ServerForm : Form
+internal sealed partial class ServerForm : ChatWindow
 {
-    public ServerForm()
+    private readonly TextBox _bindAddress = new()
     {
-        Text = "Chat Application - Server";
-        AutoScaleDimensions = new SizeF(96F, 96F);
-        AutoScaleMode = AutoScaleMode.Dpi;
-        ClientSize = new Size(800, 480);
-        MinimumSize = new Size(640, 400);
-        StartPosition = FormStartPosition.CenterScreen;
-
-        // Native controls inherit the system font; the form owns their lifetime.
-        var layout = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            Padding = new Padding(24),
-            ColumnCount = 1,
-            RowCount = 4
-        };
-        layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-
-        layout.Controls.Add(CreateLabel("YMH219 Chat Application | Server"), 0, 0);
-        layout.Controls.Add(CreateLabel("Phase P00 - project initialization"), 0, 1);
-        layout.Controls.Add(CreateLabel(
-            "Networking and messaging are not implemented yet. "
-            + "The complete interface arrives in Phase P01."), 0, 2);
-
-        Controls.Add(layout);
-    }
-
-    private static Label CreateLabel(string text) => new()
-    {
-        Text = text,
-        AutoSize = true,
-        Dock = DockStyle.Fill,
-        Margin = new Padding(0, 0, 0, 16),
-        UseMnemonic = false
+        Name = "BindAddress",
+        AccessibleName = "Bind IPv4 address",
+        Text = "127.0.0.1"
     };
+    private readonly NumericUpDown _port = new()
+    {
+        Name = "Port",
+        AccessibleName = "Listener port",
+        Minimum = 1,
+        Maximum = 65535,
+        Value = 5000
+    };
+    private readonly ListView _clients = new()
+    {
+        Name = "ConnectedClients",
+        AccessibleName = "Connected client information",
+        AccessibleDescription = "No clients. Client information is unavailable until connections are implemented.",
+        View = View.Details,
+        Height = 96,
+        Dock = DockStyle.Top,
+        Margin = new Padding(0, 0, 0, 12),
+        TabStop = false,
+        FullRowSelect = true,
+        HideSelection = false
+    };
+
+    public ServerForm() : base("Server")
+    {
+        BuildLayout();
+        CompleteLayout();
+    }
 }
