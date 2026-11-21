@@ -1,6 +1,6 @@
 # Documentation map
 
-Status: P02 connections/username handshake implemented on 2026-11-21; owner review pending. PR #3 is merged. Chat messages and complete participant metadata remain future behavior.
+Status: P03 real-time timestamped messaging implemented on 2026-11-21; owner review pending. PR #4 is merged. Detailed participant metadata remains P04.
 
 Read in the following order. Each file owns one concern so frontend, technology, architecture, planning and evidence stay separate.
 
@@ -27,4 +27,4 @@ Read in the following order. Each file owns one concern so frontend, technology,
 
 Frontend assets are [client](frontend/assets/client-wireframe.svg), [server](frontend/assets/server-wireframe.svg) and [machine-readable tokens](frontend/theme.json). They are planning artifacts.
 
-FILE_GUIDE links existing P02 source/tests and labels future paths as planned. Current file links point to real repository files. Any change to a requirement must update its tasks, design decisions, protocol/UI implications and validation plan.
+FILE_GUIDE links existing P03 source/tests and labels future paths as planned. Current file links point to real repository files. Any change to a requirement must update its tasks, design decisions, protocol/UI implications and validation plan.

@@ -16,7 +16,7 @@ internal sealed partial class ClientForm
         UiLayout.AddRow(Sidebar, UiLayout.Field("&Port", _port));
         UiLayout.AddRow(Sidebar, UiLayout.Actions(_connectButton, _disconnectButton));
         UiLayout.AddRow(Sidebar, UiLayout.Text(
-            "Connect completes only after the server accepts your name. Messaging arrives in P03.",
+            "Connect completes after the server accepts your name. Messages are kept only in this window.",
             Fonts.Metadata, secondary: true));
     }
 }

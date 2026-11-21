@@ -1,6 +1,6 @@
 # Frontend UX specification
 
-Status: P02 implements real connection actions, accepted identity and owned cleanup. Message composition/rendering below remains a P03 specification; Send is always disabled in P02. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a future connected state with synthetic content.
+Status: P03 implements real connection actions, timestamped message rendering and composition. P03 owner review is pending; detailed client metadata remains P04. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a future connected state with synthetic content.
 
 ## Shared layout
 
@@ -42,13 +42,13 @@ Default bind is loopback. Stopping closes the owned peer and listener, updates t
 | --- | --- | --- | --- | --- |
 | Disconnected | Valid fields only | Disabled | Disabled | Enabled |
 | Connecting / handshaking | Disabled | Cancel action | Disabled | Locked |
-| Connected | Disabled | Enabled | Disabled until P03 | Locked |
+| Connected | Disabled | Enabled | Valid text and no pending send | Locked |
 | Disconnecting / closing | Disabled | Disabled | Disabled | Locked |
 | Failed -> Disconnected | Valid fields/retry | Disabled | Disabled | Enabled |
 
 Server Start is available only when stopped with valid bind/port. Stop is available while running; it may cancel Starting. Send requires a handshaken live client. State transitions are serialized, not triggered by decorative badges.
 
-P02 enables actual Start/Stop and Connect/Cancel/Disconnect according to these states. Connected requires validated welcome, while Listening is distinct from accepted-peer state. P03 enables messaging; currently composer/Send stay disabled. No connected state or transcript entry is fabricated.
+Actual Start/Stop and Connect/Cancel/Disconnect follow these states. Connected requires validated welcome; Listening alone is insufficient for sending without an accepted peer. Composer and Send lock while a submission is pending. A valid matching echo confirms a client send; unrelated messages do not clear it. Text/remaining length use UTF-16 code units. No connected state or transcript entry is fabricated.
 
 ## Compose, keyboard and error behavior
 
@@ -62,14 +62,14 @@ Errors are inline, actionable and separate from the transcript: invalid name, un
 
 Server stamps once in UTC; display local HH:mm:ss and expose full date/UTC offset accessibly. Preserve arrival order across clock changes.
 
-Keep latest 500 visible messages/window. Before dropping older items show a persistent trimmed-history notice; do not imply full saved history. No autosave or automatic replay after reconnect.
+Keep latest 500 visible messages/window. When older items are removed, show a persistent trimmed-history notice and dispose their controls. Scroll to the latest message on append. Reconnect retains this bounded window view; close releases it. No autosave or automatic replay.
 
 On close, disable actions, cancel the window lifetime, await bounded transport cleanup and then dispose. Show only meaningful current state; no callback may update a disposed control.
 
 See [design tokens](DESIGN_SYSTEM.md), [planned UI files](FILE_GUIDE.md), [protocol](../architecture/PROTOCOL.md) and [test strategy](../quality/TESTING.md).
 
 
-## Implemented P02 connection boundary — 2026-11-21
+## Historical P02 connection boundary — 2026-11-21
 
 Start/Stop and Connect/Cancel/Disconnect now invoke real services. Valid local inputs enable actions, but the server independently validates hello. Client stays Connecting/Handshaking until welcome is verified, then locks identity/endpoint inputs while connected. Cancel/Disconnect restores editing after owned cleanup.
 
@@ -88,3 +88,11 @@ Connect/Disconnect and Start/Stop are disabled with no placeholder handlers. Inp
 The main canvas scales from 96 DPI. Construction is layout-suspended until both base and role controls exist. A docked virtual canvas uses measured wrapped guidance and an empty-transcript minimum; long feedback grows reachable scrollable content. The sidebar scrolls independently when needed, and the empty client list has native horizontal access to its metadata columns. An undersized working area bounds the outer window while preserving scroll access to the design canvas.
 
 Actual native checks cover no-overlap/reachability at default/minimum/wide sizes, small working areas, long guidance, unavailable actions, programmatic Tab traversal and independent font lifetime. Actual EXE captures were reviewed at the existing 125% display setting. Physical keyboard/IME/mnemonics, high contrast/screen reader, F5, 100%/150% and monitor transitions remain pending. See TESTING for the distinction between executed checks and owner acceptance.
+
+## Implemented P03 messaging boundary — 2026-11-21
+
+Both roles now display real server-authoritative messages, explicit authors, local HH:mm:ss and separate literal bodies. The transcript follows the latest append; it retains arrival order and latest 500 cards only. IDs and removed controls are bounded/disposed; the trim notice remains once any entry is removed. Full local time/date/offset is accessible.
+
+The remaining-length hint counts UTF-16 units; emoji consumes a surrogate pair. Invalid/whitespace text cannot be submitted. One pending operation locks composer/Send; unrelated incoming messages still appear. Confirmation clears only that unchanged draft. Failure retains text, ends the affected connection and asks for explicit reconnect/retry. No human-read/delivery tick is implied.
+
+Actual separate EXEs exchanged Unicode/multiline and repeated equal text, then disconnected/reconnected and stopped/closed during messaging activity. Current 125% captures were reviewed. Synthetic Enter/button tests are automated evidence, not physical keyboard/IME/F5 or accessibility acceptance.

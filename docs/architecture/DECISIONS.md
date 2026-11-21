@@ -1,6 +1,6 @@
 # Design decisions
 
-Decisions are proposals until implemented/validated in their named phase. P00 implements the initialization subset. P01 implements shared native presentation in ADR-014/015. P02 implements the connection protocol and lifetime/UI boundary in ADR-016/017/018; message behavior remains a P03 proposal.
+Decisions are proposals until implemented/validated in their named phase. P00 implements the initialization subset. P01 implements shared native presentation in ADR-014/015. P02 implements the connection protocol and lifetime/UI boundary in ADR-016/017/018. P03 implements authoritative messages, pending acceptance and native message presentation in ADR-019/020/021.
 
 | ADR | Decision / date | Rationale and consequence |
 | --- | --- | --- |
@@ -64,3 +64,19 @@ ConnectionOptions implements connect/handshake/send/shutdown 5-second defaults a
 Immutable snapshots and serialized awaited observers contain no controls. Apps use cancellable InvokeAsync with closing guards and own command Tasks; framework async-void event handlers await handled operations. Normal close aborts I/O, joins commands, awaits service disposal, then disposes controls/fonts. Presentation remains independent of Networking/Core.
 
 Enable only real connection actions; retain disabled composer/Send and empty transcript. Show accepted name/state without claiming P04 detailed metadata completion. Local friendly messages map controlled codes, never arbitrary peer strings. Native tests were updated where P01 all-disabled/Tab assumptions became obsolete, while layout/resource regressions remain.
+
+## ADR-019 — Authoritative ordered messaging — 2026-11-21
+
+P03 implements ADR-005/006 message contracts with immutable validated ChatMessage and pure MessageRules. Core does not generate time/IDs. ClientSession derives author, stamps once using injectable TimeProvider and serializes peer/operator write plus local notification through one dispatch gate. Client renders only the server echo. Equal text with distinct GUIDs remains distinct. Strict framing, duplicate-key/depth/direction/deadline protections remain.
+
+## ADR-020 — One pending submission and explicit uncertain failure — 2026-11-21
+
+Allow one client submission, bound to generation/session/text, and reject parallel sends instead of queuing. Confirm after awaited display of the matching own echo. Unrelated Server messages do not confirm it. Cancel/fault pending work on close; uncertain write/acceptance failure cancels that captured lifetime/socket and joins its reader. No retry/reconnect/replay is automated. Register send ownership under the lifecycle gate, perform I/O outside it and never make a reader await its pending sender.
+
+Recent receive IDs and visible-card IDs are each bounded to 500. This prevents recent duplicate rows without storing an unbounded replay ledger or claiming exactly-once delivery across sessions.
+
+## ADR-021 — Native bounded message view and composer — 2026-11-21
+
+Presentation now references Core because it renders actual immutable values, superseding ADR-018's P02 no-Core-reference boundary. It remains independent of Networking. Separate literal author/time/body labels expose full local date/offset, use per-window fonts and apply incoming/outgoing tokens. Keep latest 500 cards; remove/dispose older controls and show a persistent notice. Reconnect keeps this bounded view; close releases it.
+
+One guarded UI send path serves button/Enter, locks composition during acceptance, counts UTF-16 units and clears only a confirmed unchanged draft. Respect Shift+Enter, Tab and active IME composition. Cache width/DPI measurement to avoid remeasuring every card on each append. Tests distinguish synthetic key/native automation from physical keyboard/IME acceptance.

@@ -1,52 +1,50 @@
 # Frontend and integration file guide
 
-## Existing role and shared files
+## Role and shared presentation
 
 | File | Implemented ownership |
 | --- | --- |
-| [ServerForm](../../src/ChatApplication.Server/Forms/ServerForm.cs) | Listener inputs, action fields, owned ChatServer and UI event subscriptions |
-| [Server layout](../../src/ChatApplication.Server/Forms/ServerForm.Layout.cs) | Listener sidebar and explicitly deferred detailed peer list |
-| [Server connection](../../src/ChatApplication.Server/Forms/ServerForm.Connection.cs) | Start/Stop commands, real listening/accepted-peer projection and awaited close |
-| [ClientForm](../../src/ChatApplication.Client/Forms/ClientForm.cs) | Identity/endpoint inputs, action fields and owned ChatClient |
-| [Client layout](../../src/ChatApplication.Client/Forms/ClientForm.Layout.cs) | Identity/endpoint sidebar |
-| [Client connection](../../src/ChatApplication.Client/Forms/ClientForm.Connection.cs) | Connect/Cancel/Disconnect, input locks, accepted identity and awaited close |
-| [ChatWindow](../../src/ChatApplication.Presentation/ChatWindow.cs) | Shared geometry, measured scrolling and per-window fonts |
-| [Window layout](../../src/ChatApplication.Presentation/ChatWindow.Layout.cs) | Header, real status/context, empty transcript and unavailable composer |
-| [Window connection boundary](../../src/ChatApplication.Presentation/ChatWindow.Connection.cs) | Cancellable guarded UI dispatch, reusable close sequencing and presentation-only status setter |
-| [ConnectionFeedback](../../src/ChatApplication.Presentation/ConnectionFeedback.cs) | Local controlled-code guidance; never renders remote error prose |
-| [ConnectionBadge](../../src/ChatApplication.Presentation/Controls/ConnectionBadge.cs) | Actual text-backed neutral/success/warning/error tones |
-| [TranscriptView](../../src/ChatApplication.Presentation/Controls/TranscriptView.cs) | Empty conversation only; no message collection/cards |
-| [ChatTheme](../../src/ChatApplication.Presentation/Theme/ChatTheme.cs) | Semantic shell palette and system-color fallback |
-| [OwnedFonts](../../src/ChatApplication.Presentation/Theme/OwnedFonts.cs) | Per-window point fonts disposed after controls |
-| [UiLayout](../../src/ChatApplication.Presentation/Layout/UiLayout.cs) | Native field/label/action builders without network behavior |
+| [ServerForm](../../src/ChatApplication.Server/Forms/ServerForm.cs) / [layout](../../src/ChatApplication.Server/Forms/ServerForm.Layout.cs) | Listener settings, role composition and deferred P04 information list |
+| [Server connection](../../src/ChatApplication.Server/Forms/ServerForm.Connection.cs) | Start/Stop commands, real state, peer summary and awaited close |
+| [Server messaging](../../src/ChatApplication.Server/Forms/ServerForm.Messaging.cs) | Service Send and awaited message-to-UI callback |
+| [ClientForm](../../src/ChatApplication.Client/Forms/ClientForm.cs) / [layout](../../src/ChatApplication.Client/Forms/ClientForm.Layout.cs) | Identity/endpoint settings and composition |
+| [Client connection](../../src/ChatApplication.Client/Forms/ClientForm.Connection.cs) | Connect/Cancel/Disconnect, accepted state and awaited close |
+| [Client messaging](../../src/ChatApplication.Client/Forms/ClientForm.Messaging.cs) | Echo-based Send and awaited message-to-UI callback |
+| [ChatWindow](../../src/ChatApplication.Presentation/ChatWindow.cs) / [layout](../../src/ChatApplication.Presentation/ChatWindow.Layout.cs) | Shared measured canvas, native controls and per-window fonts |
+| [Window connection](../../src/ChatApplication.Presentation/ChatWindow.Connection.cs) | Guarded cancellable UI dispatch and close sequencing |
+| [Window messaging](../../src/ChatApplication.Presentation/ChatWindow.Messaging.cs) | One pending UI send, validation/count, confirmation clearing, failure retention and role alignment |
+| [TranscriptView](../../src/ChatApplication.Presentation/Controls/TranscriptView.cs) | Latest 500 cards/IDs, visible count, scrolling, persistent trim notice and removed-card disposal |
+| [MessageCard](../../src/ChatApplication.Presentation/Controls/MessageCard.cs) | Literal separate author/time/body labels, wrapping and borrowed fonts |
+| [MessageComposer](../../src/ChatApplication.Presentation/Controls/MessageComposer.cs) | Native multiline input, shared Enter request and IME composition guard |
+| [ChatTheme](../../src/ChatApplication.Presentation/Theme/ChatTheme.cs) / [OwnedFonts](../../src/ChatApplication.Presentation/Theme/OwnedFonts.cs) | Shared semantic colors/system fallback; fonts owned per window |
+| [UiLayout](../../src/ChatApplication.Presentation/Layout/UiLayout.cs) | Native label/field/action builders |
+| [ConnectionBadge](../../src/ChatApplication.Presentation/Controls/ConnectionBadge.cs) / [ConnectionFeedback](../../src/ChatApplication.Presentation/ConnectionFeedback.cs) | Real state text/tones and local controlled-code guidance |
 
-STA/PerMonitorV2 entry points remain separate. Role Forms own Networking; Presentation owns no socket/service and references no Networking/Core project. Networking never receives a Control.
+STA/PerMonitorV2 entry points remain separate. Apps own Networking services; Presentation references Core message values and no Networking project. Normal close guards callbacks, aborts I/O, joins commands/service and pending send, then disposes child controls before fonts. Direct disposal aborts I/O; awaited normal close is the verified application path.
 
-Normal Form close first guards callbacks, aborts owned I/O, joins outstanding UI commands and awaits service disposal. Direct Form disposal aborts I/O and prevents disposed-control callbacks. Normal close is the tested awaited application lifecycle.
+Message cards are original native rectangular panels. They own their labels, borrow fonts and use theme tokens; they allocate no disposable static drawing resources. Transcript resize/DPI wrapping reflows existing cards, while stable-width append measures only the new card. Dropped cards are removed from all live transcript collections and disposed immediately.
 
-## Connection implementation
+## Domain and network implementation
 
 | File | Responsibility |
 | --- | --- |
-| [UsernameRules](../../src/ChatApplication.Core/UsernameRules.cs) | Pure supported-name validation/normalization |
-| [MessageProtocol](../../src/ChatApplication.Networking/Protocol/MessageProtocol.cs) | Strict bounded JSON connection packets and directions |
-| [FramedConnection](../../src/ChatApplication.Networking/Protocol/FramedConnection.cs) | Exact framed I/O, first-byte deadline and serialized writes |
-| [ConnectionPacket](../../src/ChatApplication.Networking/Protocol/ConnectionPacket.cs) | Implemented hello/welcome/error/disconnect values and phases |
-| [ChatServer](../../src/ChatApplication.Networking/ChatServer.cs) | Listener, one reserved peer, bounded busy rejection and joined stop |
-| [ClientSession](../../src/ChatApplication.Networking/ClientSession.cs) | Accepted socket/stream, validated handshake and idle connection read |
-| [ChatClient](../../src/ChatApplication.Networking/ChatClient.cs) | Owned connect/handshake/read/cancel/disconnect lifetime |
-| [ConnectionSnapshot](../../src/ChatApplication.Networking/ConnectionSnapshot.cs) | Immutable state/name/session/error notification |
-| [ConnectionUpdates](../../src/ChatApplication.Networking/ConnectionUpdates.cs) | Serialized awaited observer updates with cancellation |
-| [ConnectionOptions](../../src/ChatApplication.Networking/ConnectionOptions.cs) | Verified defaults and short configurable test deadlines |
-| [EndpointInput](../../src/ChatApplication.Networking/EndpointInput.cs) | Production dotted-decimal IPv4/nonzero-port parsing |
-| [ConnectionFailureException](../../src/ChatApplication.Networking/ConnectionFailureException.cs) | Controlled protocol/local failure code and preserved exception cause |
+| [UsernameRules](../../src/ChatApplication.Core/UsernameRules.cs) | Pure canonical display-name rules |
+| [MessageRules](../../src/ChatApplication.Core/MessageRules.cs) | Pure 2,000 UTF-16-unit, whitespace, surrogate and control checks |
+| [ChatMessage](../../src/ChatApplication.Core/ChatMessage.cs) | Immutable validated ID/author/body/UTC value and author-role enum |
+| [MessageProtocol](../../src/ChatApplication.Networking/Protocol/MessageProtocol.cs) / [ConnectionPacket](../../src/ChatApplication.Networking/Protocol/ConnectionPacket.cs) | Strict directional v1 hello/welcome/error/disconnect/chat/message |
+| [FramedConnection](../../src/ChatApplication.Networking/Protocol/FramedConnection.cs) | Bounded exact framed I/O, first-byte completion deadline and serialized writer |
+| [ChatServer](../../src/ChatApplication.Networking/ChatServer.cs) | Listener/admission, injected TimeProvider, operator Send and owned stop |
+| [ClientSession](../../src/ChatApplication.Networking/ClientSession.cs) | Accepted peer/name, continuous read and single authoritative dispatch gate |
+| [ChatClient](../../src/ChatApplication.Networking/ChatClient.cs) | Connect/read, one generation/session-bound pending echo, bounded recent IDs and joined disconnect |
+| [MessageUpdates](../../src/ChatApplication.Networking/MessageUpdates.cs) | Awaited message observer with cancellation/deadline and controlled failure |
+| [ConnectionSnapshot](../../src/ChatApplication.Networking/ConnectionSnapshot.cs) / [ConnectionUpdates](../../src/ChatApplication.Networking/ConnectionUpdates.cs) | Immutable state and serialized awaited notifications |
+| [ConnectionOptions](../../src/ChatApplication.Networking/ConnectionOptions.cs) / [EndpointInput](../../src/ChatApplication.Networking/EndpointInput.cs) | Validated deadline defaults and dotted-decimal IPv4/port input |
+| [ConnectionFailureException](../../src/ChatApplication.Networking/ConnectionFailureException.cs) | Controlled failure code with preserved internal cause |
 
-Tests live in [Core.Tests](../../tests/ChatApplication.Core.Tests/UsernameRulesTests.cs), [Networking protocol tests](../../tests/ChatApplication.Networking.Tests/ProtocolTests.cs), [Networking lifecycle tests](../../tests/ChatApplication.Networking.Tests/ConnectionTests.cs) and [native App tests](../../tests/ChatApplication.App.Tests/InterfaceTests.cs).
+## Tests and remaining work
 
-## Future files — not created
+Pure assertions: [username](../../tests/ChatApplication.Core.Tests/UsernameRulesTests.cs) and [messages](../../tests/ChatApplication.Core.Tests/MessageTests.cs). Networking: [framing](../../tests/ChatApplication.Networking.Tests/ProtocolTests.cs), [lifecycle](../../tests/ChatApplication.Networking.Tests/ConnectionTests.cs), [message protocol](../../tests/ChatApplication.Networking.Tests/MessagingProtocolTests.cs) and [real messaging](../../tests/ChatApplication.Networking.Tests/MessagingTests.cs). Native Windows: [interface regressions](../../tests/ChatApplication.App.Tests/InterfaceTests.cs) and [messaging/retention/lifetime](../../tests/ChatApplication.App.Tests/MessagingInterfaceTests.cs).
 
-ServerForm.Messaging.cs, ClientForm.Messaging.cs, ChatMessage/message validation and MessageCard remain P03. Detailed participant metadata/list population remains P04. No empty future handler or simulated message is introduced.
-
-[Client](assets/client-wireframe.svg) and [Server](assets/server-wireframe.svg) wireframes remain synthetic design proposals; [tokens](theme.json) retain their design inventory role. Local review captures stay ignored.
+Detailed participant metadata/list population remains P04. No empty future handler, persistence or optional room model is introduced. [Client](assets/client-wireframe.svg) and [Server](assets/server-wireframe.svg) wireframes remain proposals; [tokens](theme.json) remain a design inventory. Local genuine review captures are ignored.
 
 See [UX](UX.md), [architecture](../architecture/ARCHITECTURE.md) and [testing](../quality/TESTING.md).

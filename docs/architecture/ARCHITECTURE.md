@@ -1,115 +1,64 @@
 # Architecture
 
-## Implemented P02 structure
+## Implemented P03 structure
 
-[ChatApplication.slnx](../../ChatApplication.slnx) contains eight projects:
+[ChatApplication.slnx](../../ChatApplication.slnx) contains eight projects.
 
-| Project | Actual target / responsibility |
+| Project | Ownership |
 | --- | --- |
-| Core | net10.0; pure UsernameRules, no UI/drawing/socket/timer/clock dependency |
-| Networking | net10.0; framed connection protocol, validation, service/session ownership and cancellation |
-| Presentation | net10.0-windows; native shell/theme/fonts, guarded UI dispatch/close and local error copy; no Networking/Core reference |
-| Server / Client | net10.0-windows WinExe; separate composition, inputs/actions and real connection state projection |
-| Core.Tests | net10.0; actual supported-name behavior |
-| Networking.Tests | net10.0; codec/endpoint/deadline/real loopback lifecycle cases |
-| App.Tests | net10.0-windows; bounded serial native layout/action/handshake/close cases |
+| Core | Pure UsernameRules, MessageRules and immutable ChatMessage; no clock, socket, drawing or Windows dependency |
+| Networking | TCP, framing, strict directional protocol, connection/session resources and authoritative dispatch |
+| Presentation | Native shared window/theme/fonts, transcript/cards, composer and guarded UI dispatch; references Core, never Networking |
+| Server / Client | Separate Windows executables; compose services with role Forms and bind explicit user commands |
+| Core.Tests / Networking.Tests | Pure validation and bounded protocol/real loopback behavior |
+| App.Tests | Serial native STA layout, message/input, retention, resource and close behavior |
 
-Actual dependencies: Networking -> Core; Apps -> Core/Networking/Presentation; Core.Tests -> Core; Networking.Tests -> Networking; App.Tests -> Apps/Presentation (Networking transitively). Core and Presentation have no project references.
+Dependencies: Networking -> Core; Presentation -> Core; Apps -> Core/Networking/Presentation; tests reference their actual subjects. Core has no project references. Networking never receives controls. Presentation opens no socket.
 
-### Wire and state ownership
+## Connection ownership
 
-MessageProtocol/ConnectionPacket implement only hello, welcome, error and disconnect. FramedConnection owns its stream and one-reader contract, bounds allocation/JSON and serializes full writes. The name MessageProtocol describes the wire protocol; it contains no chat message model. See [PROTOCOL](PROTOCOL.md) for exact byte/direction rules.
+ChatServer owns its listener, accept task and at most one pending/accepted ClientSession task. Admission is reserved before handshake I/O. The accept loop handles busy rejection serially with a bounded initial-frame drain; it creates no unbounded arrival tasks.
 
-ChatServer owns the listener, accept task and at most one pending/accepted ClientSession task. It reserves that slot before handshake I/O. Busy arrivals are processed serially by the accept loop: send server_busy and consume at most one bounded initial frame before close, avoiding a TCP reset discarding the response. No unbounded rejection/handshake task is created.
+ClientSession owns its socket, framed stream, accepted name and cancellation source. PeerCompletion releases the peer slot only after its read loop and any active operator dispatch have unwound. ChatClient owns one connect/handshake/continuous-read task. Connected requires a validated welcome, matching canonical name and nonempty session GUID. EOF/disconnect clears live peer state; reconnect is explicit.
 
-ClientSession owns accepted socket/stream, server-side name validation, welcome and accepted idle read. PeerCompletion exposes the owned task; cleanup releases the slot after task completion. Listening is the server state; an accepted peer name/session is separate data.
+FramedConnection has one reader and a serialized complete-frame writer. It bounds allocation and parsing and owns stream disposal. See [PROTOCOL](PROTOCOL.md).
 
-ChatClient owns one connect/handshake/read task. ConnectAsync completes successfully only after a validated welcome with the requested normalized name and a nonempty GUID. Completion remains active during the idle read. EOF/disconnect clears live-peer data; reconnect is explicit and creates a new session.
+## Authoritative message flow and order
 
-### Notifications, cancellation and cleanup
+Core validates supplied values; it does not generate IDs or read a clock. The server session derives a client's author from its accepted name. The Server operator has role server and fixed name Server.
 
-ConnectionSnapshot is immutable state/name/session/error data. ConnectionUpdates serializes awaited observer calls with cancellation. Observers must honor cancellation and never perform network cleanup reentrantly from the notification. Unexpected observer exceptions are converted to notification_failed and disable that failed observer; failures are not represented as successful connection.
+One per-session dispatch semaphore handles both incoming chat requests and operator sends. Under that gate, validate live admission, generate GUID/time once through the server's injectable TimeProvider, write the authoritative message, then await the local message observer. Both transcripts therefore see the same acceptance order. UTC clock changes never sort or reorder entries.
 
-Deadlines are configured in ConnectionOptions: connect/handshake/send/shutdown 5 seconds; frame completion 10 seconds after its first byte. Idle accepted reads do not expire. Shutdown uses an overall budget including lifecycle gate, orderly-close attempt, joined tasks and final notification. Owned I/O is canceled/closed before joining; a failed deadline retains observable completion rather than reporting successful cleanup.
+Client sends no optimistic transcript copy. Its continuous reader validates the authoritative message, awaits its UI callback, then completes the matching pending submission for its own echo. Server messages enter that same receive/render path without completing a client submission. Distinct GUIDs preserve intentional equal text.
 
-Apps marshal snapshots with cancellable Control.InvokeAsync and closing/disposal guards. Async-void is limited to framework UI event boundaries, whose command Tasks are stored/awaited and errors controlled. Normal Form close guards updates, aborts I/O, joins outstanding commands, awaits service disposal, then closes/disposes controls and per-window fonts. Direct Form disposal aborts I/O; normal awaited close is the verified application path.
+## Pending sends and session boundaries
 
-### Presentation
+ChatClient allows one pending send, identified by connection generation, accepted session and submitted text. Parallel API submissions are rejected rather than queued. The send gate is registered while holding the lifecycle gate, but I/O and echo waits happen outside the lifecycle gate.
 
-The inherited ChatWindow owns per-window fonts and the shared measured virtual canvas. Construction remains layout-suspended until role controls exist. Default/minimum/wide and small-working-area behavior retain the P01 regression coverage.
+A single send budget covers write plus authoritative acceptance/display. Cancellation, timeout, write failure or peer close faults/cancels pending work and terminates the affected socket; no automatic resend. Failure cleanup captures that socket/task, so it cannot close a future connection. New Connect waits for previous lifetime/send ownership to finish. Disconnect cancels/joins the reader and pending send without making the reader await its sender.
 
-Connection badges display actual state in text with neutral/success/warning/error tones and system-color fallback. Client input locks and Connect/Cancel/Disconnect follow real state. Server settings lock while active. Composer/Send remain disabled, transcript stays empty, and the detailed metadata list is clearly deferred to P04 even while an accepted name is shown elsewhere.
+A per-read-loop queue/set remembers at most 500 recent message IDs. Repeated recent IDs are ignored. This bounded protection is not an indefinite replay ledger or an exactly-once guarantee against a malicious server.
 
-## Future dependency direction
+## Notifications and shutdown
 
-```text
-ChatApplication.Server ──┬──> ChatApplication.Networking ──> ChatApplication.Core
-                        └──> ChatApplication.Presentation ─> ChatApplication.Core
+ConnectionUpdates serializes awaited immutable state notifications. MessageUpdates awaits immutable messages with cancellation/deadline tokens. Observers must honor cancellation and must not reenter service cleanup from a notification. A failed message callback fails the session; owned Forms use cancellable InvokeAsync.
 
-ChatApplication.Client ──┬──> ChatApplication.Networking ──> ChatApplication.Core
-                        └──> ChatApplication.Presentation ─> ChatApplication.Core
-```
+Default deadlines: connect/handshake/send/shutdown 5 seconds; frame completion 10 seconds after its first byte. Idle accepted reads do not expire. Shutdown budgets include lifecycle admission, close attempt, joining and final state notification. Failure retains observable completion instead of claiming successful cleanup.
 
-Server/Client currently reference Core directly. The target diagram permits a future Presentation-to-Core dependency only when real shared types require it; none is needed now. Core must never reference another project. Networking must never reference WinForms/Presentation. Presentation must never open sockets.
+Forms own their command Tasks and pending UI send. Async-void is confined to framework event boundaries that await handled commands. Normal close guards UI callbacks, aborts I/O, joins commands/service disposal and pending UI send, then disposes controls and fonts. Direct Form disposal aborts I/O; normal awaited close is the verified application path.
 
-| Project | Target / responsibility | Create when |
-| --- | --- | --- |
-| ChatApplication.Core | net10.0; immutable messages and pure input validation | P00 scaffold, behavior only when needed |
-| ChatApplication.Server | net10.0-windows; operator Form/composition | P00 |
-| ChatApplication.Client | net10.0-windows; user Form/composition | P00 |
-| ChatApplication.Presentation | net10.0-windows library; shared theme/cards/transcript | P01 when shared UI is built |
-| ChatApplication.Networking | net10.0; protocol and async transport/lifetime | P02 |
-| Core.Tests / Networking.Tests | net10.0; pure and bounded loopback cases | P00 infrastructure / P02 behavior |
-| App.Tests | net10.0-windows; native STA presentation/lifecycle | P01 when meaningful contracts exist |
+## Presentation and resource ownership
 
-The target table includes future classes/projects. The P02 projects exist as described above; Networking and Networking.Tests now exist; only messaging/full metadata behavior remains planned. Chat models/cards, message dispatch and complete participant metadata remain future behavior; the P02 transport/connection states are implemented above.
+ChatWindow owns shared geometry, role composition, per-window fonts, TranscriptView and MessageComposer. MessageCard separates literal author, local time and body labels; outgoing alignment/color supplement explicit author text. Point fonts are borrowed from the window, disposed after its children.
 
-## Class ownership
+The transcript retains only the latest 500 cards and corresponding IDs. Removing a card removes its collection/control references and disposes it immediately. A persistent trim notice explains the loss. Reconnect retains this bounded window view; closing the window releases it. There is no other transcript, history file or global message collection.
 
-| Class / target role (implemented subset above) | Responsibility | Must not own |
-| --- | --- | --- |
-| ChatMessage | Immutable message ID, author role/name, text, server UTC time | Controls, socket, clock |
-| ChatInputRules | Pure username/text validation | Dialogs or disk |
-| MessageProtocol / FrameCodec | Directional packet/JSON validation; framed bytes | UI or connection retries |
-| ChatServer | Bind/listen, one-client admission, ordered accepted-message flow | Forms or global transcript history |
-| ClientSession | Accepted TcpClient/stream, username/endpoint/time, read task/cancellation/write gate | Verified user authentication |
-| ChatClient | Connect/handshake/read/send/disconnect | UI controls |
-| ServerForm / ClientForm | Explicit actions/state/input and safe UI dispatch | Parsing network bytes or socket lifetime internals |
-| TranscriptView / MessageCard | Bounded visible message layout/accessibility | Transport or persistence |
-| ChatTheme / OwnedFonts | Shared tokens and explicit resource ownership | Global disposable fonts reused after disposal |
+Native scrolling follows the latest appended message. Resize/DPI changes remeasure wrapping. At stable width only the new card is measured; width/DPI caches avoid repeated measurement of retained cards. Default/minimum/working-area and small-display scrolling retain P01 regressions.
 
-Use concrete classes first; add only small interfaces justified by test seams. Avoid generic repositories, service containers and speculative layers.
+Composer/button share one guarded async send path. It disables editing during a pending submission, displays UTF-16 remaining length, clears only a successfully confirmed unchanged draft and retains failed/newer text. Enter sends, Shift+Enter inserts a line, Tab navigates. IME composition suppresses Enter submission while active; physical input/assistive verification remains pending.
 
-## Server/client baseline
+## Remaining scope
 
-One server and one client provide two conversation endpoints. The Server operator can reply, so group chat is not needed to demonstrate bidirectional messaging. Reject an extra client with bounded server_busy handling until optional multi-client scope is approved.
+P04 completes detailed participant metadata/list and the wider robustness/LAN review. Optional rooms/private messages/history remain deferred. P06 owns final images, clean checkout, another computer and submission review. Passing CI does not provide owner acceptance.
 
-Connected means socket plus accepted username handshake. Only then can messages be sent and peer information be shown. Store one session's metadata in memory; remove it exactly once on disconnect.
-
-## Message flow and duplicate prevention
-
-Client Send validates text and writes a chat request without trusting a client-supplied author/time. Do not append an optimistic local transcript copy. Server stamps an accepted message, shows it once and echoes the authoritative message to Client. Client appends that echo once as its outgoing message.
-
-A Server operator message enters the same serialized dispatch path, is stamped/sent and shown once. Serialization must keep each frame intact and prevent differing local/remote ordering. Do not echo a received message back again.
-
-Write completion is not a proof that a human received/read the message. No read receipts, automatic retry or exactly-once delivery across reconnect is promised. Reconnect creates a new session; do not replay uncertain messages silently.
-
-## Async ownership and UI boundary
-
-Each connection has one read loop and a serialized frame writer. Own every running Task and CancellationTokenSource. No .Result/.Wait on the UI thread and no async-void networking event handlers.
-
-Networking emits immutable notifications through an awaited async callback. App's callback awaits UI dispatch before accepting the next notification, providing backpressure rather than an unbounded posted-control queue. Network code has no Control parameter.
-
-Server dispatch serializes stamping/send/notification across local/operator and remote/client sources. Never hold a synchronous lock while awaiting; use cancellable async gates. Keep UI handlers asynchronous so stop/close can make progress.
-
-Start/connect returns after the intended state is reached, while owned lifetime tasks remain observed. Stop/disconnect cancels, closes owned streams/clients/listener, awaits work and clears session state. Closing Forms first prevent late callbacks, await cleanup without blocking the UI and then close. Detailed shutdown deadline behavior is tested in P04.
-
-## Limits, time and resources
-
-Target limits: one active client, 16,384 UTF-8 bytes/frame, 2,000 UTF-16 code units/message, 24 code units/username and 500 visible messages/window. A trimmed-history notice appears when older visible messages are removed; there is no hidden persistent transcript.
-
-Server supplies UTC DateTimeOffset through TimeProvider. UI converts for local display, retains arrival order and exposes full date/offset in accessible text. Clock changes do not trigger message reordering.
-
-Each Form owns its fonts/components/cancellation and removes subscriptions on disposal. Each ClientSession owns both stream and TcpClient; close both deliberately rather than depending on implicit ownership. All resource rules must be verified in code, not inferred from this proposal.
-
-See [protocol](PROTOCOL.md), [decisions](DECISIONS.md), [frontend file guide](../frontend/FILE_GUIDE.md) and [test strategy](../quality/TESTING.md).
+See [decisions](DECISIONS.md), [frontend file guide](../frontend/FILE_GUIDE.md) and [testing](../quality/TESTING.md).

@@ -30,9 +30,10 @@ internal sealed partial class ClientForm
         var tone = snapshot.ErrorCode is not null ? ConnectionTone.Error
             : snapshot.State == ConnectionState.Connected ? ConnectionTone.Success
             : disconnected ? ConnectionTone.Neutral : ConnectionTone.Warning;
+        SetMessagingAvailable(snapshot.State == ConnectionState.Connected);
         SetConnectionPresentation(snapshot.State.ToString(), context, tone);
         Feedback.Text = snapshot.ErrorCode is not null ? ConnectionFeedback.For(snapshot.ErrorCode)
-            : disconnected && !validName ? "Enter a supported username before connecting. Messaging arrives in P03."
+            : disconnected && !validName ? "Enter a supported username before connecting."
             : disconnected && !validEndpoint ? "Enter a dotted IPv4 address and a port from 1 to 65535."
             : ConnectionFeedback.For(null);
     }

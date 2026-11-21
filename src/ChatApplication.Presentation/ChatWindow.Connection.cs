@@ -43,7 +43,9 @@ public abstract partial class ChatWindow
         _closing = true;
         try
         {
+            UpdateComposer();
             await CloseConnectionAsync();
+            await _sendOperation;
             _closeApproved = true;
             Close();
         }

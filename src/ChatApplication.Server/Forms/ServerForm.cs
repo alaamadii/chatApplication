@@ -24,7 +24,7 @@ internal sealed partial class ServerForm : ChatWindow
     {
         Name = "ConnectedClients",
         AccessibleName = "Connected client information",
-        AccessibleDescription = "No clients. Client information is unavailable until connections are implemented.",
+        AccessibleDescription = "No accepted peer. Detailed client information is planned for P04.",
         View = View.Details,
         Height = 96,
         Dock = DockStyle.Top,
@@ -40,7 +40,7 @@ internal sealed partial class ServerForm : ChatWindow
 
     public ServerForm() : base("Server")
     {
-        _server = new(OnConnectionAsync);
+        _server = new(OnConnectionAsync, onMessage: OnMessageAsync);
         BuildLayout();
         CompleteLayout();
         _startButton.Click += StartClicked;

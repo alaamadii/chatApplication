@@ -1,6 +1,61 @@
 # Validation strategy and current evidence
 
-## P02 connection evidence — 2026-11-21
+## P03 messaging evidence — 2026-11-21
+
+Status: implementation complete, owner acceptance pending. Confirmed [PR #4](https://github.com/alaamadii/chatApplication/pull/4) merged at **7e1f95c6167280e017e4a8bf006cfc51cf2f7456**. Inspected a clean tree/correct origin, fetched, fast-forwarded main and created **feat/realtime-messaging**. Sibling assignments were not changed.
+
+| Evidence | Executed result |
+| --- | --- |
+| Environment | ./scripts/dev.ps1 doctor passed: Windows 10.0.22631, PowerShell 5.1.22621.6133, Git 2.53.0.windows.1, SDK 10.0.402, .NET/WindowsDesktop 10.0.13 |
+| Behavioral suite | ./scripts/dev.ps1 check passed: **124 passed, 0 failed, 0 skipped** — Core 31, Networking 70, native App 23 |
+| Build | Release build passed, 0 warnings/0 errors |
+| Formatting | dotnet format ChatApplication.slnx --no-restore applied whitespace; final verify is recorded below |
+| Dependencies | dotnet list ChatApplication.slnx package --vulnerable --include-transitive used official nuget.org and reported no known vulnerable packages in all eight projects at execution time |
+| Full check | ./scripts/dev.ps1 check passed: restore, Release build, all 124 cases, format verification and documentation validation (24 artifacts, 22 Markdown files, 138 local links, 29 tasks/91 references, 10 contrast pairs, 2 labeled SVG proposals) |
+| Hosted CI | Exact final commit and Windows/documentation results are maintained in the phase PR after publication; local results are not hosted evidence |
+
+### Coverage and regression evidence
+
+Core verifies verbatim text, 1/2,000/2,001 UTF-16-unit boundaries, emoji pairs, Arabic/Turkish/multiline/tab, whitespace/control/NUL/unpaired-surrogate rejection and immutable model author/ID/UTC validation.
+
+Networking preserves P02 framing/depth/strict encoding/duplicate/direction/deadline/lifecycle coverage. Final review added explicit UTC-suffix validation and a no-zone timestamp rejection case so behavior does not depend on the machine's local timezone. Added chat/message round trips and field rejection, encoded Unicode limits, raw forged identity and server-only packet rejection, real two-way exchange, injectable server clock, identical text with distinct IDs and concurrent operator/client sends with matching endpoint order.
+
+Pending-send cases cover peer close, acceptance timeout, caller cancellation, explicit disconnect, rejection of parallel submissions and fresh-session reconnect. An unrelated Server message does not confirm a client's text; recent duplicate IDs are suppressed. A cancellation-aware in-flight display observer is canceled/joined on acceptance failure. Server Stop joins an active message observer before releasing owned session work.
+
+Native tests retain layout/resource/connection regressions and add separate literal author/body/time, accessible complete time, wrapping/order, duplicate IDs, one pending send, button/synthetic Enter, no optimistic copy, unchanged/newer draft handling, failed text retention, close during pending send and real-Form bidirectional exchange. Retention pre-fills 500 cards before showing the Form, then trims live native cards; it verifies the cap, persistent notice and removed/remaining control disposal.
+
+An empty hidden label initially broke the font-lifetime regression; it now has meaningful zero-count text. The initial full-visible 502-message burst exceeded the fixture's 20-second deadline. Stable-width measurement was cached, and retention validation now separates prefill from the live trim boundary. This is not a bulk-throughput benchmark or physical usability acceptance.
+
+### Actual two-process check
+
+An ignored probe launched the actual Release Server and Client EXEs as separate processes, using synthetic data and an owned port-0 loopback reservation. Native Unicode character messages filled composition, UI Automation invoked actions, and bounded conditions waited for states/counts rather than fixed delays.
+
+The first complete pass used **127.0.0.1:57185**; a repeat after the final source build used **127.0.0.1:49887** and passed the same checks:
+1. Real listen/username welcome with Alaa_Test.
+2. Client -> Server Arabic/Turkish/emoji, multiline, ampersand and literal markup; Server -> Client reply.
+3. Exactly four entries at each window after four sends, including two deliberate sends of repeat.
+4. Exact author/body labels and four separate local HH:mm:ss timestamps.
+5. Explicit disconnect/reconnect and a fifth message accepted once at both windows.
+6. Stop during representative send activity, observed disconnect and explicit server/client restart.
+7. Close Client during representative messaging activity, peer removal, then close Server; both exited **0**.
+
+An interrupted send may be delivered or uncertain; these shutdown checks do not assert delivery of interrupted text. The probe waits for the composer to become available after prior confirmation.
+
+Earlier fixture attempts used WM_SETTEXT without a multiline change notification, then an ANSI character-message P/Invoke that corrupted synthetic Unicode. The final fixture uses Unicode WM_CHAR and readiness conditions. Failed attempts cleaned up only their own processes; no production test hook or physical keystroke claim was introduced.
+
+Captured and inspected actual Server/Client windows via PrintWindow at measured **DPI 120 (125%)**. Source: this branch's P03 Release working tree on 2026-11-21. Images/probe remain ignored under .local/p03-review; no published screenshot or owner approval is claimed. The final repeat also captured and reviewed the first Unicode/multiline exchange before later repeated messages, showing literal markup, separate author/time and incoming/outgoing alignment.
+
+### Owner checks still pending
+
+- Review P03 appearance, messaging and PR before P04.
+- Physical Enter/Shift+Enter/Tab, held keys, focus switching, Turkish/Arabic IME and mnemonic behavior.
+- High contrast/screen reader, actual 100%/150% and monitor transitions.
+- VS Code role/compound F5 and debugger stop.
+- Actual trusted LAN, another Windows computer, final completed-app screenshots and owner image approval.
+
+The detailed client-information list, broader P04 robustness matrix and optional features are outside this phase.
+
+## Historical P02 connection evidence — 2026-11-21
 
 Status: implemented connection subset; owner acceptance pending. Confirmed [PR #3](https://github.com/alaamadii/chatApplication/pull/3) merged at e0cb64aa8fc6ff97c782dcd91eb2ec057338a69d, inspected a clean tree/correct origin, fast-forwarded main and created feat/tcp-connections.
 

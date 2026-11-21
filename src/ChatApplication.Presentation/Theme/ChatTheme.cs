@@ -17,12 +17,16 @@ public static class ChatTheme
     public static Color Sidebar => SystemInformation.HighContrast ? SystemColors.Control : Color.FromArgb(247, 249, 252);
     public static Color TextPrimary => SystemInformation.HighContrast ? SystemColors.ControlText : Color.FromArgb(23, 37, 61);
     public static Color TextSecondary => SystemInformation.HighContrast ? SystemColors.ControlText : Color.FromArgb(82, 97, 120);
+    public static Color Incoming => SystemInformation.HighContrast ? SystemColors.Window : Color.FromArgb(241, 245, 249);
     public static Color Information => SystemInformation.HighContrast ? SystemColors.Control : Color.FromArgb(232, 238, 255);
 
     public static void Apply(Control root)
     {
         switch (root)
         {
+            case MessageCard card:
+                card.ApplyTheme();
+                break;
             case ConnectionBadge badge:
                 badge.ApplyTheme();
                 break;

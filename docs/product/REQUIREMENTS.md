@@ -21,7 +21,7 @@ Course source: supplied YMH219_Ek_Uygulama_Odevleri_Ogrenci_Foyu.pdf, pages 1, 3
 
 | ID | Criterion | Evidence / tasks |
 | --- | --- | --- |
-| SUB-001 | Separate public repository with source and .gitignore | Existing public chatApplication; initialization source added in P00-001; chat functionality pending |
+| SUB-001 | Separate public repository with source and .gitignore | Existing public chatApplication; initialization source added in P00-001; P03 chat implemented; P04 metadata/robustness and P06 evidence pending |
 | SUB-002 | README purpose/tech/setup/features/limitations | Actual initialization/build/run steps in README and ENVIRONMENT (P00-002); final chat guide pending P06-001 |
 | SUB-003 | At least two authentic application screenshots | P06-002; wireframes never count |
 | SUB-004 | Meaningful staged commits/PRs | Each phase follows WORKFLOW; no fabricated history |
@@ -41,6 +41,6 @@ Deadline: 2026-11-30, 23:59; institutional timezone unspecified. Assessment: fun
 
 The earlier brief recommends group chat; a recommendation is not mandatory scope or evidence of approval.
 
-Product decisions: separate Server/Client executables, shared native presentation, one-client baseline, server-authoritative message echo/time, bounded frames/input/transcripts and loopback by default. These are proposed engineering choices, not professor-prescribed class names.
+Product decisions: separate Server/Client executables, shared native presentation, one-client baseline, server-authoritative message echo/time, bounded frames/input/transcripts and loopback by default. These are implemented baseline engineering choices, not professor-prescribed class names.
 
-P02 implements real listener/client username handshake, Connect/Cancel/Disconnect/Start/Stop and basic bounded error/cleanup evidence. FR-001 remains partial because bidirectional text and actual LAN are pending; FR-002 has implemented/tested handshake evidence, awaiting owner acceptance. FR-003 messaging and FR-006 detailed client information remain unimplemented. FR-004 is partial because Send is unavailable. P04's full robustness matrix and physical accessibility acceptance remain pending. See [tasks](../planning/TASKS.md) and [test matrix](../quality/TESTING.md); passing documentation checks cannot accept application behavior.
+P02 PR #4 is merged. P03 implements FR-003 and the Send portion of FR-004: authoritative names/IDs/UTC time, one visible entry per accepted message, real bidirectional Unicode/multiline exchange and pending-send failure handling. Current evidence is 124 local cases and actual separate EXEs; P03 owner acceptance remains pending. FR-001 has real loopback exchange evidence, while actual LAN remains pending. FR-006 detailed client information remains P04. The full robustness matrix, physical accessibility, final images and second-computer evidence remain pending. See [tasks](../planning/TASKS.md) and [test matrix](../quality/TESTING.md); passing documentation checks cannot accept application behavior.

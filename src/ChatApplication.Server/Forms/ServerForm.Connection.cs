@@ -28,6 +28,7 @@ internal sealed partial class ServerForm
         var tone = snapshot.ErrorCode is not null ? ConnectionTone.Error
             : snapshot.State == ConnectionState.Listening ? ConnectionTone.Success
             : stopped ? ConnectionTone.Neutral : ConnectionTone.Warning;
+        SetMessagingAvailable(snapshot.State == ConnectionState.Listening && snapshot.SessionId is not null);
         SetConnectionPresentation(snapshot.State.ToString(), peer, tone);
         Feedback.Text = valid || !stopped ? ConnectionFeedback.For(snapshot.ErrorCode)
             : "Enter a dotted IPv4 address and a port from 1 to 65535.";

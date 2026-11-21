@@ -61,7 +61,8 @@ public abstract partial class ChatWindow
         _context = UiLayout.Text("No active connection.", _fonts.Metadata, secondary: true);
         UiLayout.AddRow(heading, _context);
         conversation.Controls.Add(heading, 0, 0);
-        conversation.Controls.Add(new TranscriptView(_fonts), 0, 1);
+        _transcript = new TranscriptView(_fonts);
+        conversation.Controls.Add(_transcript, 0, 1);
         conversation.Controls.Add(CreateComposer(), 0, 2);
         Feedback.Margin = Padding.Empty;
         conversation.Controls.Add(Feedback, 0, 3);
@@ -72,11 +73,11 @@ public abstract partial class ChatWindow
     {
         var composer = UiLayout.Column();
         composer.Name = "Composer";
-        var text = new TextBox
+        var text = _messageInput = new MessageComposer
         {
             Name = "MessageInput",
             AccessibleName = "Message",
-            AccessibleDescription = "Message input is unavailable until messaging is implemented in P03.",
+            AccessibleDescription = "Enter sends, Shift+Enter adds a line, Tab moves focus. Available after connection; 2000 UTF-16 units maximum.",
             Multiline = true,
             Enabled = false,
             Height = 64,
@@ -97,10 +98,13 @@ public abstract partial class ChatWindow
                 new ColumnStyle(SizeType.Absolute, 104F)
             }
         };
-        var hint = UiLayout.Text("Text messages arrive in P03.", _fonts.Metadata, secondary: true);
+        var hint = _lengthHint = UiLayout.Text("2000 remaining · Enter: send · Shift+Enter: new line", _fonts.Metadata, secondary: true);
         hint.TextAlign = ContentAlignment.MiddleLeft;
         hint.Margin = new Padding(0, 0, 12, 0);
-        var send = UiLayout.ActionButton("&Send", "SendMessage");
+        var send = _sendButton = UiLayout.ActionButton("&Send", "SendMessage");
+        text.TextChanged += (_, _) => UpdateComposer();
+        text.SendRequested += RequestSend;
+        send.Click += RequestSend;
         send.Margin = Padding.Empty;
         action.Controls.Add(hint, 0, 0);
         action.Controls.Add(send, 1, 0);

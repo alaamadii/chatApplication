@@ -4,15 +4,15 @@ PLAN owns sequence, deliverables and review gates. [TASKS](TASKS.md) owns indivi
 
 ## Current delivery
 
-PR #3 was merged by the owner before P02. Real TCP connection/username handshake, bounded framing and owned async cleanup are now implemented and locally exercised with actual separate executables. Fixed implementation publication and both hosted workflows have passed in [PR #4](https://github.com/alaamadii/chatApplication/pull/4); owner P02 acceptance remains pending. Physical UI/F5/assistive/LAN checks carry forward; no message exchange or detailed participant-list completion is claimed.
+The owner merged [PR #4](https://github.com/alaamadii/chatApplication/pull/4) before P03. Real-time bidirectional text now uses server-assigned identity/ID/time, ordered dispatch, echo-only outgoing display, a pending-send lifecycle and bounded native transcripts. Local/actual separate-EXE evidence is in TESTING; exact publication/CI receipts belong in the phase PR. P03 owner acceptance remains pending. Physical UI/F5/assistive/LAN checks carry forward; detailed participant information remains P04.
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
 | Preparation | Organized docs, frontend proposals, architecture/protocol and backlog | Owner's current request | PR #1 merged by owner; foundation reviewed |
 | P00 | Solution, initialization windows, environment and .NET CI | Foundation reviewed/requested | PR #2 merged by owner |
 | P01 | Server/Client interfaces and shared presentation | P00 accepted | PR #3 merged by owner |
-| P02 | Bounded TCP protocol and real connection/username lifecycle | P01 accepted | Implemented; owner review pending |
-| P03 | Real-time timestamped messaging and UI integration | P02 accepted | Pending |
+| P02 | Bounded TCP protocol and real connection/username lifecycle | P01 accepted | PR #4 merged by owner |
+| P03 | Real-time timestamped messaging and UI integration | P02 accepted | Implemented; owner review pending |
 | P04 | Client information, disconnect/error/retry and resource regression | P03 accepted | Pending |
 | P05 | Separately selected optional features | Mandatory baseline accepted and explicit owner choice | Deferred |
 | P06 | Final QA, actual screenshots, clean checkout and submission review | P04 accepted; selected optional work reviewed | Pending |
