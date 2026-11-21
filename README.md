@@ -2,7 +2,7 @@
 
 A C#/.NET Windows Forms client-server chat assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: P01 interfaces implemented; owner review pending.** Initialization [PR #2](https://github.com/alaamadii/chatApplication/pull/2) is merged. Separate Server and Client windows now provide editable connection settings, a shared conversation layout and explicit unavailable actions. Networking, username acceptance, messaging and participant tracking are not implemented. SVG wireframes remain design proposals.
+**Current status: P01 interfaces implemented in [PR #3](https://github.com/alaamadii/chatApplication/pull/3); owner review pending.** Initialization [PR #2](https://github.com/alaamadii/chatApplication/pull/2) is merged. Separate Server and Client windows now provide editable connection settings, a shared conversation layout and explicit unavailable actions. Networking, username acceptance, messaging and participant tracking are not implemented. SVG wireframes remain design proposals.
 
 ## Idea and required outcome
 

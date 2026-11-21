@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1120" height="760" viewBox="0 0 1120 760" role="img" aria-labelledby="title desc">
   <title id="title">Client UI design proposal - not an application screenshot</title>
-  <desc id="desc">Original planned Windows Forms layout. Synthetic connected-state demonstration; no application exists yet.</desc>
+  <desc id="desc">Original planned Windows Forms layout with synthetic connected-state content. This design proposal is not an application screenshot.</desc>
   <rect width="1120" height="760" fill="#F4F6FA"/>
   <g font-family="Segoe UI, Arial, sans-serif">
     <rect x="0" y="0" width="1120" height="46" fill="#FEF3C7"/>

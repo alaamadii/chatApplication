@@ -74,3 +74,10 @@ Branch: feat/server-client-ui. Confirmed owner merge of PR #2 at a4f5acb6fd1e90d
 - Published UI implementation 9741c3a and docs candidate 3d0eab5f463e59f9282d0421dd77593ff2b970fc in [PR #3](https://github.com/alaamadii/chatApplication/pull/3). Documentation run 44873823803 passed; Windows run 44873823732 found 2 minimum-layout failures at DPI 96 (13 other native cases passed).
 - Required content measured 627 pixels for the 620-pixel client minimum. Reduced title/header gaps by 8 logical pixels without shrinking text or relaxing assertions. Revalidation receipts follow actual execution; physical 100% acceptance is still pending.
 - After the spacing fix, full local check passed again (15 native cases, zero Core cases, 0 build warnings/errors, format/docs). Actual EXE lifecycle and final 125% captures were repeated; both closed with exit 0 and the revised layouts were inspected.
+
+### P01 publication receipt
+
+- Fixed implementation d138862c7d4db957bad902de7fc276542c6bddc7 passed [Windows run 44874348238](https://github.com/alaamadii/chatApplication/actions/runs/44874348238) and [documentation run 44874348287](https://github.com/alaamadii/chatApplication/actions/runs/44874348287). Inspected job 136755626271 logs: 0 build warnings/errors, 15 passed native cases, zero Core cases, format/docs success.
+- Initial Git HTTPS pushes of the fix encountered transient connectivity failures; an ordinary HTTP/1.1 retry succeeded. No force push, history rewrite, network-policy or TLS weakening.
+- Reconciled README/PLAN/TASKS/TESTING with [PR #3](https://github.com/alaamadii/chatApplication/pull/3) and passing implementation checks. Corrected only stale wireframe accessibility descriptions to identify synthetic proposals; wireframe visuals/labels remain unchanged.
+- Final documentation receipt is checked/published separately; its exact final SHA and hosted runs belong in PR #3 after execution. P01 owner acceptance and physical F5/keyboard/accessibility/remaining DPI checks stay pending.

@@ -60,7 +60,7 @@ The target table includes future classes/projects. Presentation and App.Tests no
 
 ## Class ownership
 
-| Planned class | Responsibility | Must not own |
+| Class / target role (implemented subset above) | Responsibility | Must not own |
 | --- | --- | --- |
 | ChatMessage | Immutable message ID, author role/name, text, server UTC time | Controls, socket, clock |
 | ChatInputRules | Pure username/text validation | Dialogs or disk |

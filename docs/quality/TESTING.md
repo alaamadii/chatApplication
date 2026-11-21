@@ -16,7 +16,7 @@ Status: presentation implemented; owner acceptance pending. P00 [PR #2](https://
 | Unavailable actions | Local input editing plus PerformClick attempts leave transcript labels unchanged, client rows empty and composer empty; disabled native buttons cannot perform connection/message work |
 | Navigation / resource lifetime | Programmatic Tab traversal reaches editable settings and skips unavailable controls; closing/disposal of Server leaves Client fonts, repaint and resizing valid |
 | Actual EXE lifecycle | Started each Release executable independently, found its actual role window/empty-state labels, verified all 3 action buttons disabled, requested WM_CLOSE and observed normal exit 0 within bounded waits |
-| Hosted CI | Exact candidate/final commit runs and outcomes are maintained in the P01 PR after execution |
+| Hosted CI | Fixed implementation d138862c7d4db957bad902de7fc276542c6bddc7 passed [Windows run 44874348238](https://github.com/alaamadii/chatApplication/actions/runs/44874348238) and [documentation run 44874348287](https://github.com/alaamadii/chatApplication/actions/runs/44874348287); exact final receipt-commit results are maintained in [PR #3](https://github.com/alaamadii/chatApplication/pull/3) |
 
 ### Actual visual review
 
@@ -42,7 +42,7 @@ Regression checks were retained. The navigation fixture was corrected to treat N
 
 Initial P01 candidate 3d0eab5f463e59f9282d0421dd77593ff2b970fc passed documentation CI but failed [Windows run 44873823732](https://github.com/alaamadii/chatApplication/actions/runs/44873823732): 13 native cases passed and the two 900 x 620 minimum-size cases failed at DPI 96. Measured required content height was 627 rather than 620, producing unwanted root scrollbars.
 
-Reduced only the title/header gaps by 8 logical pixels, retaining all font sizes, controls, readable transcript space and regression assertions. Local full checks and hosted results after the fix are recorded after execution. This CI geometry result is not physical owner acceptance at 100%.
+Reduced only the title/header gaps by 8 logical pixels, retaining all font sizes, controls, readable transcript space and regression assertions. After the fix, local full check passed all 15 native cases and fixed implementation d138862c7d4db957bad902de7fc276542c6bddc7 passed both hosted workflows; Windows job 136755626271 logs confirmed 0 build warnings/errors, 15 passing App cases, zero Core cases and successful format/docs checks. This CI geometry result is not physical owner acceptance at 100%.
 
 ### Repository and dependency review
 

@@ -28,7 +28,7 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 | --- | --- | --- | --- | --- |
 | P01-001 | Shared theme/font ownership and Server role layout | P00-002, P00-003 + owner review | Presentation/Server layout, disabled actions, resource lifetime assertions; TESTING | Done |
 | P01-002 | Client identity/endpoint/transcript/composer layout | P01-001 | Client layout, accessible native fields, empty transcript and guidance; TESTING | Done |
-| P01-003 | Review navigation, minimum/wide/DPI and long text | P01-001, P01-002 | 15 native UI cases; actual EXE/visual review at 125%; CI receipt pending; physical checks remain owner actions | In progress |
+| P01-003 | Review navigation, minimum/wide/DPI and long text | P01-001, P01-002 | 15 native UI cases; actual EXE/visual review at 125%; passing hosted checks in PR #3; physical owner checks remain pending | Done |
 
 ## P02 — Transport and connection
 
@@ -75,4 +75,4 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 ## Update rule
 
-When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 artifacts/checks may be Done while owner acceptance remains pending. P01-003 awaits hosted verification; physical checks remain explicit owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.
+When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 artifacts/checks may be Done while owner acceptance remains pending. P01-003 has passing local/hosted evidence; physical checks and phase acceptance remain explicit owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.

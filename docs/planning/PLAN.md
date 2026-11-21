@@ -4,7 +4,7 @@ PLAN owns sequence, deliverables and review gates. [TASKS](TASKS.md) owns indivi
 
 ## Current delivery
 
-Foundation PR #1 and initialization PR #2 are merged by the owner. P01 now implements the Server/Client presentation shells, shared theme/resources and native UI integration checks. Owner acceptance of P01 remains pending. Physical UI/F5/assistive checks carry forward honestly; merged P00 does not invent those results. No networking or message exchange is claimed.
+Foundation PR #1 and initialization PR #2 are merged by the owner. P01 now implements the Server/Client presentation shells, shared theme/resources and native UI integration checks in [PR #3](https://github.com/alaamadii/chatApplication/pull/3), with passing hosted checks for the fixed implementation. Owner acceptance of P01 remains pending. Physical UI/F5/assistive checks carry forward honestly; merged P00 does not invent those results. No networking or message exchange is claimed.
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
