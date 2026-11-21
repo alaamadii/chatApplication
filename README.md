@@ -2,7 +2,7 @@
 
 A C#/.NET Windows Forms client-server assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: P02 TCP connections and username handshake implemented; owner review pending.** Interface PR #3 is merged. Separate Server and Client programs now start/listen, connect with a validated display name, cancel/disconnect and close with owned async cleanup. Messaging and detailed participant information remain P03/P04.
+**Current status: P02 TCP connections and username handshake implemented in [PR #4](https://github.com/alaamadii/chatApplication/pull/4); owner review pending.** Interface PR #3 is merged. Separate Server and Client programs now start/listen, connect with a validated display name, cancel/disconnect and close with owned async cleanup. Messaging and detailed participant information remain P03/P04.
 
 ## Idea and required outcome
 

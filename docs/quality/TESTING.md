@@ -14,7 +14,7 @@ Status: implemented connection subset; owner acceptance pending. Confirmed [PR #
 | Build | Release build passed with 0 warnings/0 errors |
 | Full check | ./scripts/dev.ps1 check passed after reported whitespace corrections: restore, Release build, all 82 tests, format and documentation validation |
 | Dependencies | Explicit official nuget.org direct/transitive advisory query for all eight projects reported no known vulnerable packages at execution time; versions remain pinned |
-| Hosted CI | Exact candidate/final SHA, workflow runs and results are recorded in the phase PR after execution |
+| Hosted CI | Candidate efe9b58b06745e4261337cf8a55be3c0ee521321 passed [Windows run 44906284347](https://github.com/alaamadii/chatApplication/actions/runs/44906284347) and [documentation run 44906284332](https://github.com/alaamadii/chatApplication/actions/runs/44906284332); exact final receipt-commit runs/results are maintained in [PR #4](https://github.com/alaamadii/chatApplication/pull/4) |
 
 ### Actual two-process demonstration
 

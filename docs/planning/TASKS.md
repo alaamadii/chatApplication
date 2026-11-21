@@ -37,7 +37,7 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 | P02-001 | Implement bounded codec and hello/welcome contract | P01-003 + owner review | Core/Networking tests: length/UTF-8/JSON/depth/directions; TESTING | Done |
 | P02-002 | Add ChatServer/ClientSession with one-client admission | P02-001 | Real loopback admission/busy/timeout/restart and joined tasks; TESTING | Done |
 | P02-003 | Add ChatClient username handshake and real connect/disconnect UI | P02-001, P02-002 | Native and actual EXE handshake/reconnect/close with disabled Send; TESTING | Done |
-| P02-004 | Prove async ownership, stop/cancel and loopback lifecycle | P02-002, P02-003 | 82 local cases; two-process checks passed; exact hosted receipt pending | In progress |
+| P02-004 | Prove async ownership, stop/cancel and loopback lifecycle | P02-002, P02-003 | 82 local/hosted cases; actual two-process checks passed; exact receipt in PR #4 | Done |
 
 ## P03 — Messaging
 
@@ -75,4 +75,4 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 ## Update rule
 
-When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 was merged in PR #3. P02 artifacts/checks may be Done while owner acceptance remains pending. P02-004 awaits the exact hosted receipt; physical checks remain owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.
+When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 was merged in PR #3. P02 artifacts/checks may be Done while owner acceptance remains pending. P02-004 has local/hosted evidence; exact final-head receipt is in PR #4. Physical checks and phase acceptance remain owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.
