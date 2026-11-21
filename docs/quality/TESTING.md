@@ -1,6 +1,63 @@
 # Validation strategy and current evidence
 
-## P00 initialization evidence — 2026-11-21
+## P01 interface evidence — 2026-11-21
+
+Status: presentation implemented; owner acceptance pending. P00 [PR #2](https://github.com/alaamadii/chatApplication/pull/2) was merged at a4f5acb6fd1e90df55f8c68dd2a1658d24f29599 before the phase branch was created. The P00/foundation receipts below are historical.
+
+| Evidence category | Executed result |
+| --- | --- |
+| Environment | Windows 10.0.22631, PowerShell 5.1.22621.6133, Git 2.53.0.windows.1, selected SDK 10.0.402 and .NET/WindowsDesktop 10.0.13 |
+| Prerequisites | ./scripts/dev.ps1 doctor passed |
+| Full automated check | ./scripts/dev.ps1 check passed: restore, Release build with 0 warnings/0 errors, test execution/discovery, format verification and existing docs check |
+| Native App.Tests | **15 passed, 0 failed, 0 skipped**; serial bounded STA checks, actual Forms owned/disposed by each test |
+| Core.Tests | **Zero cases**; no Core behavior was added and no placeholder case/coverage is claimed |
+| Layout assertions | Both roles at 1120 x 720, 900 x 620 and 1440 x 900 logical client sizes: reachable controls, nonoverlap, wrapped labels and no unnecessary root scrollbars |
+| Small display / long guidance | A supplied 640 x 480 physical working area bounds the actual Form and supports both scroll directions; expanded literal feedback remains reachable without overlapping the transcript/composer |
+| Unavailable actions | Local input editing plus PerformClick attempts leave transcript labels unchanged, client rows empty and composer empty; disabled native buttons cannot perform connection/message work |
+| Navigation / resource lifetime | Programmatic Tab traversal reaches editable settings and skips unavailable controls; closing/disposal of Server leaves Client fonts, repaint and resizing valid |
+| Actual EXE lifecycle | Started each Release executable independently, found its actual role window/empty-state labels, verified all 3 action buttons disabled, requested WM_CLOSE and observed normal exit 0 within bounded waits |
+| Hosted CI | Exact candidate/final commit runs and outcomes are maintained in the P01 PR after execution |
+
+### Actual visual review
+
+Captured each real executable's window through PrintWindow using an isolated DPI-aware probe, then visually inspected both roles at default/minimum/wide sizes. Existing monitor DPI was **120 (125%)**; no machine display setting was changed.
+
+| Layout | Logical client | Measured physical client at 125% |
+| --- | --- | --- |
+| Default | 1120 x 720 | 1400 x 900 |
+| Minimum | 900 x 620 | 1125 x 775 |
+| Wide capture | 1360 x 800 | 1700 x 1000 |
+
+Reviewed clear hierarchy, role/status guidance, native settings, disabled actions, empty conversation and composer, wrapping and available scrolling. The Server sidebar scrolls at minimum height; its empty native metadata list exposes columns through horizontal scrolling. These captures are ignored in .local/p01-review, not published course screenshots or owner approval.
+
+The first capture helper was DPI-unaware and cropped physical pixels; it was corrected to scope/restore its own thread DPI context before recapturing. Native button class detection was also made case-insensitive. Probe failures cleaned up only their owned process; final probes passed. These were probe defects, not accepted UI screenshots.
+
+### Defects found and resolved
+
+Native/visual checks exposed early scaling of an incompletely constructed base Form, unnecessary minimum-size root scrollbars and long-guidance overlap. Layout construction is now suspended until role controls exist. A docked virtual canvas and measured content minimum preserve readable transcript/composer space and grow reachable scrolling for long text.
+
+Regression checks were retained. The navigation fixture was corrected to treat NumericUpDown's internal editor as part of one native setting; final traversal checks pass both roles.
+
+### Repository and dependency review
+
+- Official nuget.org direct/transitive advisory query passed for all six projects with no known vulnerable packages reported at execution time.
+- Inspected actual references/targets: Apps -> Core/Presentation; Presentation and Core have no project references; App.Tests -> both Apps/Presentation. Core source/test infrastructure is unchanged.
+- Narrow ignore probes passed for build/obj/TestResults/local captures/personal settings/credentials/transcripts and confirmed source/shared configuration/documentation TXT remain trackable.
+- Limited credential-pattern scan and staged source/diff review passed. No generated output, local capture, future Networking project or transport/background implementation is included.
+- Updated docs check passed: 24 required artifacts, 22 Markdown files, 118 local file links, 29 task definitions / 92 references, 10 contrast pairs and 2 labeled SVG proposals.
+
+### Remaining owner/manual checks
+
+- Owner review/acceptance of real appearance, editing and resizing before P02.
+- Physical Tab/Shift+Tab, Alt mnemonics, focus switching, Turkish/Arabic/IME input and assistive reading.
+- Physical high contrast/screen reader; system-color fallback is implemented but not manually accepted.
+- Physical VS Code F5 for both roles and compound launch, breakpoints/debug stop.
+- Actual 100%/150% scaling and monitor transitions. The 125% capture review does not supply these results.
+- Second Windows computer and final working-chat screenshots remain later-phase evidence.
+
+No transport, handshake, connection state machine, message exchange, message rendering or participant tracking was implemented/tested. Scripted native checks and captured-window review are separate from human/physical acceptance.
+
+## Historical P00 initialization evidence — 2026-11-21
 
 Status: implemented initialization; owner acceptance pending. Foundation PR #1 is merged. This section supersedes the historical documentation-only current-state statements below.
 

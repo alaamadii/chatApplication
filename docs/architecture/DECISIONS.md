@@ -1,6 +1,6 @@
 # Design decisions
 
-Decisions are proposals until implemented/validated in their named phase. P00 implements ADR-002's two executables, ADR-003's Core boundary, ADR-004's SDK/tooling subset and ADR-013 below; it does not implement the transport/protocol/UI proposals.
+Decisions are proposals until implemented/validated in their named phase. P00 implements the initialization subset. P01 implements shared native presentation, shell theme/resources and layout in ADR-014/015; transport, protocol and message behavior remain proposals.
 
 | ADR | Decision / date | Rationale and consequence |
 | --- | --- | --- |
@@ -32,3 +32,19 @@ Implemented: separate WinForms WinExe projects reference only empty Core; Core.T
 Both programs explicitly use STA, PerMonitorV2 and visual styles. Native labels/system fonts are owned through the Form control tree; no custom drawing/font disposal is needed. A fill-docked table wraps initialization text; resizing is allowed with a sensible minimum. Physical F5/DPI acceptance remains pending.
 
 global.json pins stable SDK 10.0.402 with latestPatch. Shared properties enforce nullable references, deterministic builds, warnings as errors and all-dependency NuGet audit. Official sources are explicit. The development script scopes DOTNET_ROOT/CLI state to the invocation, restores inherited state and fails on nonzero tools. Windows CI runs the same check. Actual EXE open/normal-close and zero-case discovery are reported separately from behavioral/manual coverage. See STACK and TESTING for execution evidence.
+
+## ADR-014 — Shared native interface shell — 2026-11-21
+
+Implemented P01: both role Forms inherit a shared ChatWindow, with role Layout partials and small native layout builders. Presentation now exists because both apps use real shared code; it has no unnecessary Core reference. Apps retain Core references from P00. No Networking, message models/cards, Connection/Messaging stubs or fake state is added.
+
+Editable local settings coexist with disabled Start/Stop/Connect/Disconnect/composer/Send. Persistent visible P02/P03 guidance explains unavailable actions. Plain labels keep ampersands literal, while field/action labels deliberately use distinct mnemonics. Native controls preserve focus and disabled behavior; no enabled-primary button is simulated.
+
+Each window owns Segoe UI point-unit fonts and disposes controls before those fonts. Semantic theme roles use the reviewed shell palette and reapply system-color fallback on system-color changes. High-contrast/assistive acceptance remains a physical owner check.
+
+## ADR-015 — Measured, reachable DPI layout — 2026-11-21
+
+Suspend construction until base and role controls exist, then resume DPI layout from the 96-DPI design baseline. This avoids scaling an incomplete Form and leaving later controls at inconsistent sizes. Fit outer default/minimum bounds to the working area while retaining a scrollable design canvas for smaller displays.
+
+Use native docking/AutoScrollMinSize with measured wrapped content. Independent sidebar scrolling and a readable empty-transcript minimum prevent clipped guidance and overlapping composer/transcript content. DPI changes refit within the destination working area. Native regressions cover supported sizes, small working areas and long literal text; actual 125% captures were reviewed. No 100%/150% or monitor-transition result is inferred.
+
+The initial minimum-size/long-guidance checks exposed layout defects; the final 15-case native suite verifies the fixes. Follow [Microsoft automatic scaling guidance](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/forms/autoscale) and keep physical acceptance separate from scripted geometry checks.

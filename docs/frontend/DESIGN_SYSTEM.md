@@ -1,6 +1,6 @@
 # Visual design system
 
-Status: proposed tokens, not a claim of implemented accessibility or exact final pixels. [theme.json](theme.json) is the machine-readable design source for current contrast checks. P01 maps reviewed tokens into shared Presentation code and verifies them there.
+Status: P01 applies the native shell subset below; remaining message/connection-state tokens are proposals. This is not complete accessibility acceptance or a claim of pixel identity with the wireframes. [theme.json](theme.json) is the machine-readable design source for current contrast checks. P01 maps reviewed tokens into shared Presentation code and verifies them there.
 
 ## Palette
 
@@ -48,6 +48,12 @@ English shell labels; Turkish/Arabic/English message content. Keep sender, times
 
 The illustrative [Client](assets/client-wireframe.svg) and [Server](assets/server-wireframe.svg) assets are marked DESIGN PROPOSAL. They contain invented demo conversation for layout review, not execution evidence or copied WhatsApp assets.
 
-## Current implementation boundary — P00
+## Implemented P01 subset
 
-The palette/tokens/wireframes above remain design proposals for P01. P00 uses native system fonts and labels in two simple resizable initialization windows, with no custom colors, cards or shared Presentation library. Explicit PerMonitorV2 configuration exists, but physical 100%/125%/150% and monitor transitions have not been tested.
+ChatTheme maps canvas, surface, sidebar, primary/secondary text and the neutral blue-tinted preview surface into shared code. Body/title/section/metadata Segoe UI point fonts are owned per window. Padding, gaps, the 280-logical-pixel sidebar and 36-logical-pixel action height scale with the fully constructed Form. Inputs and disabled buttons retain native borders/disabled drawing rather than custom enabled-primary styling.
+
+Primary hover/pressed actions, success/warning/error connection badges and incoming/outgoing message cards are not implemented. theme.json keeps its design-proposal status because the complete inventory is not implemented; original wireframes remain proposals.
+
+On system-color changes the shell reapplies semantic colors. High contrast uses system Control/Window backgrounds with matching foregrounds, native disabled appearance and focus behavior. This branch is implemented but physical high-contrast/screen-reader acceptance has not been performed.
+
+Default/minimum/wide actual window captures were reviewed on the current 125% display. Root/independent sidebar scrolling keeps smaller working areas and expanded guidance reachable. Automated native checks found and verified fixes for initial scaling, minimum-size scrollbars and long-guidance overlap. Physical keyboard/F5, 100%/150% scaling and monitor transitions remain pending.

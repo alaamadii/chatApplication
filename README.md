@@ -2,7 +2,7 @@
 
 A C#/.NET Windows Forms client-server chat assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: P00 initialization implemented in [PR #2](https://github.com/alaamadii/chatApplication/pull/2); owner review pending.** Foundation [PR #1](https://github.com/alaamadii/chatApplication/pull/1) is merged. Server and Client open as separate resizable Windows Forms programs with truthful initialization notices. Networking, usernames, messaging and participant tracking are not implemented. SVG previews remain design proposals, not screenshots of working software.
+**Current status: P01 interfaces implemented; owner review pending.** Initialization [PR #2](https://github.com/alaamadii/chatApplication/pull/2) is merged. Separate Server and Client windows now provide editable connection settings, a shared conversation layout and explicit unavailable actions. Networking, username acceptance, messaging and participant tracking are not implemented. SVG wireframes remain design proposals.
 
 ## Idea and required outcome
 
@@ -31,13 +31,22 @@ The mandatory baseline is **one server and at least one client** on the same com
 | [Environment](docs/setup/ENVIRONMENT.md) | Prerequisites, build/run/debug commands and troubleshooting |
 | [Submission](docs/submission/CHECKLIST.md) | Final evidence and owner actions |
 
+## Current interfaces
+
+| Window | Available presentation | Unavailable actions |
+| --- | --- | --- |
+| Server | Editable loopback bind/port, empty client-information list, empty conversation and guidance | Start, Stop, composer and Send |
+| Client | Empty username, editable loopback address/port, empty conversation and guidance | Connect, Disconnect, composer and Send |
+
+Inputs only edit local controls. No port is opened, no username accepted and no messages or client rows are created. Connection actions arrive in P02; messaging arrives in P03.
+
 ## Design previews
 
-[Client design proposal](docs/frontend/assets/client-wireframe.svg) and [Server design proposal](docs/frontend/assets/server-wireframe.svg) show the intended light desktop layout. Their illustrative conversation is synthetic. The complete layout, palette and controls are planned for later phases. P00 uses simple native labels; it does not implement these full layouts.
+[Client design proposal](docs/frontend/assets/client-wireframe.svg) and [Server design proposal](docs/frontend/assets/server-wireframe.svg) show the intended light desktop layout. Their illustrative conversation is synthetic. P01 implements the light sidebar/conversation layout with empty states. Connected-state badges, conversation examples and message cards in the wireframes remain future designs.
 
 ## Technology
 
-SDK 10.0.402 with stable latestPatch selection; C#/.NET 10 and native Windows Forms. Server and Client target net10.0-windows and reference a behavior-free net10.0 Core. Exact test tooling pins are documented in [STACK](docs/technology/STACK.md). Networking and shared Presentation projects will be introduced in P02 and P01 when needed. TCP/async messaging is planned; no database, cloud service or external UI framework is required.
+SDK 10.0.402 with stable latestPatch selection; C#/.NET 10 and native Windows Forms. Server and Client target net10.0-windows and reference a behavior-free net10.0 Core. Exact test tooling pins are documented in [STACK](docs/technology/STACK.md). Shared Presentation now owns native layout/theme/fonts. Networking will be introduced in P02. TCP/async messaging is planned; no database, cloud service or external UI framework is required.
 
 ## What runs now
 
@@ -55,13 +64,13 @@ In another PowerShell terminal, run:
 ./scripts/dev.ps1 run-client
 ```
 
-Use Windows with a compatible .NET 10 SDK/WindowsDesktop runtime. The check command restores, builds Release, discovers tests, verifies formatting and runs the existing documentation checker. Core has no domain behavior and discovery currently finds **zero cases**; this is infrastructure verification, not behavioral coverage.
+Use Windows with a compatible .NET 10 SDK/WindowsDesktop runtime. The check command restores, builds Release, discovers tests, verifies formatting and runs the existing documentation checker. Core has no domain behavior and still discovers **zero cases**. App.Tests separately runs **15 native UI cases** covering layout, scrolling, unavailable actions, Tab traversal and window/font lifetime. These are presentation checks, not chat/transport coverage.
 
-Both executables use STA, PerMonitorV2, visual styles and native resizable layouts. Scripted window/label checks and normal close passed locally. Shared VS Code build/check tasks, role launches and a compound launch are included; physical F5/DPI review remains pending. Windows .NET CI runs the same development check alongside preserved docs CI. See [TESTING](docs/quality/TESTING.md) for exact evidence and [ENVIRONMENT](docs/setup/ENVIRONMENT.md) for setup.
+Both executables use STA, PerMonitorV2, visual styles and native resizable layouts. The shared canvas supports a 1120 x 720 logical default, 900 x 620 design minimum, working-area bounds and scrolling for smaller displays/expanded guidance. Actual EXE startup/disabled-action/normal-close checks passed; captured default/minimum/wide layouts were visually reviewed at the existing 125% display setting. Shared VS Code role/compound launches remain available; physical F5, keyboard/assistive review, 100%/150% and monitor transitions remain pending. Windows .NET CI runs the same development check alongside preserved docs CI. See [TESTING](docs/quality/TESTING.md) for exact evidence and [ENVIRONMENT](docs/setup/ENVIRONMENT.md) for setup.
 
 ## Screenshots, identity and submission
 
-Actual application screenshots are pending. Final delivery needs at least two genuine Server/Client captures; wireframes do not satisfy that requirement.
+Final submission screenshots remain pending. Local P01 window captures were used for review and remain ignored; final delivery needs at least two genuine captures of the completed application with owner approval. Wireframes do not satisfy that requirement.
 
 The selected public repository is [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication). The instructor recommends YMH219-ChatApp; the owner's selected name is retained. The course deadline is **2026-11-30, 23:59**, with institutional timezone unspecified.
 

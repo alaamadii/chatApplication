@@ -1,6 +1,6 @@
 # Course submission and owner evidence
 
-Current state: P00 initialization implemented, owner review pending. The application is not ready for course submission; required chat functionality remains unimplemented.
+Current state: P00 PR #2 merged; P01 interfaces implemented, owner review pending. The application is not ready for course submission; required chat functionality remains unimplemented.
 
 Repository: [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication), currently public. The instructor recommends YMH219-ChatApp; retain the owner's selected repository and do not create another copy.
 
@@ -24,7 +24,7 @@ Author: Alaa Madi, as supplied. The original sheet requires name/student number;
 - [ ] Owner approves final PR/course readiness.
 - [ ] Owner submits GitHub profile link in Classroom.
 
-P00 restore/build/discovery/format/docs and scripted EXE window/normal-close checks have been executed; see TESTING. There are zero behavioral cases. Physical UI, F5/DPI, final chat behavior and second-computer evidence remain pending. Wireframes do not complete any of these checks.
+P01 restore/build/format/docs, 15 native UI cases and actual EXE/normal-close checks have been executed; see TESTING. Core still has zero cases. Captured-window review covers the current 125% display setting only. Physical UI, F5/DPI, final chat behavior and second-computer evidence remain pending. Wireframes do not complete any of these checks.
 
 ## Screenshots and final record
 
