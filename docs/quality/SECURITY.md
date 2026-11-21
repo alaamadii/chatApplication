@@ -1,6 +1,6 @@
-# Planned security and data boundaries
+# Security and data boundaries
 
-Status: P02 implements bounded framing/strict JSON/directions, supported-name validation, one pending/accepted peer, cancellation/deadlines and controlled connection failures. Applications open explicitly configured TCP listeners/connections. There is no chat payload or transcript persistence. Later message/data safeguards below remain future requirements, not a security certification.
+Status: P03 implements bounded framing/strict JSON/directions, supported names/text, authoritative server metadata, one pending/accepted peer, cancellation/deadlines and literal message rendering. There is no transcript persistence. These safeguards are not authentication, encryption or a security certification.
 
 ## Trust model
 
@@ -21,11 +21,11 @@ Do not scan networks, change firewall/router rules or bind broadly automatically
 | Diagnostic failure | Controlled code/guidance without message bodies, credentials or stack dumps |
 | History files | Not implemented; separate optional decision/format/permissions policy required |
 
-No automatic transcript saving, hidden message log, analytics service or remote telemetry is planned. Tests/wireframes use synthetic content. Public screenshots/issues/PRs must not contain actual private conversations or student numbers.
+No automatic transcript saving, hidden message log, analytics service or remote telemetry exists. Latest-window cards retain message bodies/metadata until trimmed or closed, including across explicit reconnect; only accepted-session live peer data is cleared on disconnect. The pending submission holds one text/TCS until confirmation or failure. Core holds no global data. Tests/wireframes use synthetic content. Public screenshots/issues/PRs must not contain actual private conversations or student numbers.
 
 ## Input/resource limits
 
-Implemented connection limits cap frame bytes at 16,384, JSON depth at 8, supported username length at 24 and pending/accepted clients at one. Message text 2,000-code-unit and 500-visible-message retention limits remain P03 targets. Validate length before allocation, valid Unicode and required fields before display. Timeouts/cancellation bound incomplete handshakes/frames/writes.
+Implemented connection limits cap frame bytes at 16,384, JSON depth at 8, supported username length at 24 and pending/accepted clients at one. Message text is limited to 2,000 UTF-16 code units and each visible transcript to 500 cards/IDs. Client receive duplicate suppression is also bounded to 500 recent IDs per connection. These sets are not permanent replay ledgers. Validate length before allocation, valid Unicode and required fields before display. Timeouts/cancellation bound incomplete handshakes/frames/writes.
 
 Display plain text, never concatenate received text into RTF/HTML, execute commands, load remote images or open arbitrary links automatically. Preserve literal ampersands. Resource bounds do not authenticate a malicious peer or make a deployed public service safe.
 

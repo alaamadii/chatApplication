@@ -43,9 +43,9 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 | ID | Task | Depends on | Evidence / acceptance | Status |
 | --- | --- | --- | --- | --- |
-| P03-001 | Add immutable messages, text rules and server stamping/dispatch | P02-004 + owner review | Correct author/time/order and serialized frames | Pending |
-| P03-002 | Bind one rendering path and awaited UI dispatch for both roles | P03-001 | No local-copy/echo duplicates or disposed-control callbacks | Pending |
-| P03-003 | Verify actual two-process Unicode/multiline bidirectional exchange | P03-002 | One accepted send/one visible message; timestamps and input retention | Pending |
+| P03-001 | Add immutable messages, text rules and server stamping/dispatch | P02-004 + owner review | Core/protocol/real loopback assertions; authoritative identity/clock, matching order, equal-text distinct IDs | Done |
+| P03-002 | Bind one rendering path and awaited UI dispatch for both roles | P03-001 | Echo-only native UI; pending send, literal labels, retention/disposal and close regressions; TESTING | Done |
+| P03-003 | Verify actual two-process Unicode/multiline bidirectional exchange | P03-002 | Actual separate EXEs: both directions, Unicode/multiline, author/time/count, equal text twice, reconnect/stop/close; TESTING | Done |
 
 ## P04 — Peer information and robustness
 
@@ -75,4 +75,4 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 ## Update rule
 
-When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 was merged in PR #3. P02 artifacts/checks may be Done while owner acceptance remains pending. P02-004 has local/hosted evidence; exact final-head receipt is in PR #4. Physical checks and phase acceptance remain owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.
+When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 was merged in PR #3. P02 is accepted through owner merge of PR #4. P03 artifacts/checks are Done while owner acceptance remains pending; exact final-head publication/CI receipt is maintained in the P03 PR. Physical checks and phase acceptance remain owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.

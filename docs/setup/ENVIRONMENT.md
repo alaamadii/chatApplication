@@ -7,13 +7,13 @@ Use Windows, Git, PowerShell 5.1+ and a stable .NET 10 SDK allowed by global.jso
 ```powershell
 git clone https://github.com/alaamadii/chatApplication.git
 cd chatApplication
-# While the P02 PR is open:
-git switch feat/tcp-connections
+# While the P03 PR is open:
+git switch feat/realtime-messaging
 ./scripts/dev.ps1 doctor
 ./scripts/dev.ps1 check
 ```
 
-After owner merge, use main and a fast-forward pull. The local P02 environment on 2026-11-21 reported SDK 10.0.402, .NET/WindowsDesktop 10.0.13, Windows 10.0.22631, PowerShell 5.1.22621.6133 and Git 2.53.0.windows.1.
+After owner merge, use main and a fast-forward pull. The local P03 environment on 2026-11-21 reported SDK 10.0.402, .NET/WindowsDesktop 10.0.13, Windows 10.0.22631, PowerShell 5.1.22621.6133 and Git 2.53.0.windows.1.
 
 | Command | Implemented behavior |
 | --- | --- |
@@ -71,7 +71,7 @@ Physical F5/debug stop, keyboard/IME/mnemonics, high contrast/screen reader, 100
 | server_busy | Disconnect the pending/accepted peer, then retry explicitly |
 | Handshake/frame deadline | The incomplete operation is canceled/closed; no hidden reconnect |
 | Stop/close deadline failure | Failure is reported; owned completion remains observable, not falsely marked successful |
-| No chat text | Expected P02 scope; messaging arrives in P03 |
+| Send unavailable | Requires an accepted peer, nonblank valid text and no pending submission |
 
 Production deadlines: connect/handshake/send/shutdown 5 seconds each; frame completion 10 seconds after its first byte. An idle accepted connection does not expire merely because no packet starts. Awaited observers must honor their cancellation token; Forms use cancellable UI dispatch.
 
@@ -82,3 +82,13 @@ dotnet list ChatApplication.slnx package --vulnerable --include-transitive
 ```
 
 See [protocol](../architecture/PROTOCOL.md), [testing](../quality/TESTING.md), [security](../quality/SECURITY.md) and [workflow](../planning/WORKFLOW.md).
+
+## P03 two-process message demonstration
+
+Build/check first, then run Server and Client from separate terminals with the commands above. Choose matching 127.0.0.1 and an available nonzero port. Enter a synthetic supported username, start Server, then Connect Client.
+
+Send Turkish/Arabic, emoji and an ampersand from Client; use Shift+Enter for a second line, then reply from Server. Each accepted send should produce one entry at both windows with the real author and local time. Send the same text twice intentionally: expect two entries, not suppression. A pending submission locks its composer until confirmation/failure.
+
+Disconnect/reconnect explicitly and send again. Stop Server or close a window during representative send activity; verify recovery/shutdown without claiming every interrupted message was delivered. Failed/unconfirmed text remains for review, and no automatic resend occurs. Transcripts retain latest 500 in that window only; closing releases them.
+
+Actual scripted separate-EXE checks on 2026-11-21 used an owned ephemeral loopback port, native Unicode character messages/UI Automation and condition-based waits. This is separate from physical keyboard/IME/F5, actual LAN or another-computer checks. See TESTING for results and capture provenance.

@@ -1,66 +1,62 @@
-# TCP protocol v1 — implemented connection subset
+# TCP protocol v1
 
-Status: P02 framing, strict connection-packet validation and hello/welcome/error/disconnect are implemented. chat/message payloads, message IDs/timestamps/author stamping and message rendering remain P03 target contracts below. The full target must not be read as completed messaging.
+Status: P03 implements connection packets plus real-time chat/message flow. One accepted client and the Server operator form the baseline.
 
-## Framing
+## Framing and parsing
 
-A frame is a **4-byte signed big-endian payload length**, followed by exactly that many UTF-8 JSON bytes. Length excludes the prefix and must be 1..16,384. Reject zero, negative and oversized values before allocating a payload.
+A frame is a **4-byte signed big-endian payload length** followed by exactly that many UTF-8 JSON bytes. Length excludes the prefix and must be 1..16,384. Reject invalid sizes before allocating. TCP fragments/coalesces bytes: read prefix/payload exactly, classifying EOF before the first byte as clean close and partial-frame EOF as failure.
 
-TCP reads may split a prefix/payload or combine multiple frames. Loop until the required bytes are available; do not assume one read equals one message. EOF before any prefix byte is a clean remote close; partial prefix/payload EOF is a truncated-frame error. [ReadExactlyAsync](https://learn.microsoft.com/en-us/dotnet/api/system.io.stream.readexactlyasync?view=net-10.0) illustrates exact buffered reading/cancellation, but initial EOF classification still needs explicit handling.
+Require strict UTF-8, one JSON object, version=1, camelCase fields and maximum JSON depth 8. Reject recursively duplicated property names, invalid Unicode, malformed fields and wrong directions. Unknown extra fields are ignored within those limits. One reader owns the stream; a semaphore serializes complete-frame writes.
 
-Use strict UTF-8, one complete JSON object with no duplicate property names, camelCase fields, version=1 and a bounded JSON depth of 8. Reject invalid encoding/JSON, unsupported version/type, wrong-direction packets and missing/invalid required fields. Extra fields may be ignored within those limits; do not execute/render markup.
+## Packets and permitted phases
 
-One reader per stream; an async gate serializes prefix+payload writes as one logical operation. No concurrent partial-frame writes.
+| Type | Direction / phase | Required fields besides version/type |
+| --- | --- | --- |
+| hello | Client -> Server handshake only | userName |
+| welcome | Server -> Client handshake only | sessionId, userName |
+| error | Server -> Client handshake or accepted | code |
+| chat | Client -> Server accepted only | text |
+| message | Server -> Client accepted only | messageId, authorRole, authorName, text, sentAtUtc |
+| disconnect | Either accepted peer | None |
 
-## Packet directions
-
-| Type | Direction | Required data | Meaning |
-| --- | --- | --- | --- |
-| hello | Client -> Server, first packet | version, type, userName | Request display name |
-| welcome | Server -> Client | version, type, sessionId, userName | Accepted name/session; now Connected |
-| chat | Client -> Server after welcome | version, type, text | P03 target; rejected as unsupported in P02 |
-| message | Server -> Client | version, type, messageId, authorRole, authorName, text, sentAtUtc | P03 target; rejected as unsupported in P02 |
-| error | Server -> Client | version, type, code | Controlled failure, no stack/private data |
-| disconnect | Either accepted peer | version, type | Best-effort orderly close, not a delivery guarantee |
-
-Reserve the one admission slot before awaiting a handshake; release it on timeout/failure/disconnect, so pending handshakes cannot grow without bound.
-
-P02 accepts hello only before server admission, welcome/error during client handshake, disconnect after server acceptance and disconnect/error after client acceptance. Names in welcome must be normalized and match the client's requested name; GUID must be nonempty. chat/message behavior arrives in P03. Do not present the full target as implemented in earlier phases.
-
-Example payloads below are illustrative, not execution evidence. Prefix values must be calculated from encoded byte length, not characters:
+Examples are illustrative payloads, not execution evidence. Prefixes use encoded byte counts.
 
 ```json
-{"version":1,"type":"hello","userName":"Alaa"}
+{"version":1,"type":"chat","text":"Hello!\nSecond line"}
 ```
 
 ```json
-{"version":1,"type":"message","messageId":"11111111-1111-4111-8111-111111111111","authorRole":"client","authorName":"Alaa","text":"Hello!","sentAtUtc":"2026-11-20T09:00:00+00:00"}
+{"version":1,"type":"message","messageId":"11111111-1111-4111-8111-111111111111","authorRole":"client","authorName":"Alaa","text":"Hello!","sentAtUtc":"2026-11-21T12:34:56+00:00"}
 ```
 
-IDs use GUID strings. UTC timestamps accept valid ISO-8601 offset-zero representations. Author role is client or server. Server is the fixed operator display name; reserve Server/System names case-insensitively for control identity, not account authentication.
+Client-supplied author/name/time/ID extras in a chat request have no authority. Server derives the client author from the accepted session and creates a new nonempty GUID and UTC timestamp once per accepted message. A client sending a server-only message packet is rejected. Server operator messages use authorRole=server and authorName=Server.
 
-## Validation and limits
+Client validates authoritative nonempty IDs, role client/server, canonical supported client names or fixed Server name, valid text and an ISO timestamp with **zero offset**. Its own echo must match the accepted client name and pending submitted text/session. The protocol does not authenticate names or the server.
 
-Username: reject control/format characters in the original value, trim ordinary leading/trailing spaces, then require 2..24 UTF-16 code units. Allow BMP letters/digits plus ordinary internal spaces, underscore and hyphen; reject reserved names and unsupported symbols. This supports ordinary Turkish/Arabic names; emoji/supplementary-character usernames are outside v1.
+## Input limits
 
-Message: 1..2,000 UTF-16 code units, valid Unicode, not whitespace-only. Preserve actual content; reject NUL/control characters except tab/CR/LF. Emoji is allowed when represented by valid surrogate pairs. Frame byte limit still applies after JSON escaping.
+Username: reject control/format characters in the original, trim ordinary outer spaces, require 2..24 UTF-16 code units of BMP letters/digits, internal ordinary spaces, underscore or hyphen. Server/System are reserved case-insensitively. Welcome must match the requested canonical name.
 
-Server derives the client's author from the accepted session. Do not accept forged message identity: a client sending server-only message packets is rejected. Client cannot supply authoritative timestamps/roles.
+Message: 1..2,000 **UTF-16 code units**, not whitespace-only. Preserve content including outer spaces, Turkish/Arabic, paired-surrogate emoji, multiline and tab. Reject unpaired surrogates, NUL and control characters except TAB/CR/LF. JSON escaping still counts toward the 16 KiB frame limit.
 
-Proposed controlled error codes: invalid_name, server_busy, invalid_packet, unsupported_version. Map them to local friendly text; do not trust arbitrary remote error strings.
+Controlled wire error codes: invalid_name, server_busy, invalid_packet, unsupported_version. Remote prose/stack traces are never displayed; Forms map codes to local guidance.
 
-## Session/lifetime policy
+## Admission and lifetime
 
-Default loopback endpoint: 127.0.0.1:5000. Production UI accepts four decimal IPv4 octets and nonzero ports for the baseline; leading-zero octets are decimal, not octal. DNS/IPv6 support is deferred. Test servers bind port 0 and publish their actual endpoint.
+Default endpoint: 127.0.0.1:5000. UI accepts dotted decimal IPv4 and ports 1..65535; leading-zero octets are decimal. DNS/IPv6 are outside baseline. Tests own port-0 loopback listeners.
 
-Implemented deadlines: connect 5 s, handshake 5 s, frame completion after its first byte 10 s, send 5 s, overall shutdown 5 s. An idle accepted conversation does not expire merely because no one types. Deadlines are cancellable and must not leave a blocked read/task behind.
+Reserve one peer before handshake. Extra clients receive server_busy with bounded initial-frame drain/close. After acceptance, both sides continuously read until close/error/cancellation.
 
-Send failure/EOF transitions to Disconnected, clears live-peer state and retains visible text for review. Canceling an intentional local stop is not an error popup. No automatic reconnect/resend; user action is explicit.
+Defaults: connect 5 s; handshake 5 s; frame completion 10 s after its first byte; send 5 s; overall shutdown 5 s. No idle typing timeout. Client send's budget covers both framed write and authoritative echo/display. Server dispatch's budget includes its ordering gate, write and local notification. Observer callbacks must honor cancellation. A timeout/failed write is uncertain and ends the affected session.
 
-## Delivery/UI semantics
+## Acceptance, display and duplicates
 
-Server creates message ID/time once per accepted message and serializes dispatch. Client appends only the server echo for its own send, preventing local-copy/echo duplication. Server operator messages share the dispatch path. Maintain arrival order, not sorted timestamps.
+The server's single dispatch path orders operator/client messages, stamps once, writes once and notifies its local UI once. Client renders only authoritative messages, including its outgoing echo. It does not echo them again or append locally on WriteAsync completion.
 
-A completed socket write is not a delivery/read acknowledgment. Reconnect does not replay old traffic. Optional future rooms/history require a contract review; do not silently change v1 semantics.
+Client allows one pending submission. An unrelated Server message cannot confirm it. Clear the submitted draft only after its matching echo has been displayed; retain it on failure. Recent-ID suppression is bounded to 500 IDs per connection; visible-card suppression retains at most the current 500 IDs. Equal text with distinct IDs remains distinct.
 
-Tests: byte-by-byte prefix/payload, coalesced frames, Unicode/escaping, all boundary lengths, invalid packets/directions, handshake timeout, clean/truncated EOF, cancellation and concurrent writes. See [TESTING](../quality/TESTING.md).
+Arrival order is preserved regardless of timestamps. Display local HH:mm:ss; expose complete local date/time/offset accessibly. Keep latest 500 visible entries with a persistent trim notice; no hidden saved history.
+
+A completed write/echo is not human receipt or a read acknowledgment. A disconnect can make delivery uncertain. No automatic reconnect, replay or resend, and no exactly-once guarantee across sessions. Closing a session cancels/faults pending acceptance and joins owned work; old callbacks/sends cannot migrate to a new session.
+
+See [architecture](ARCHITECTURE.md), [security](../quality/SECURITY.md) and [executed tests](../quality/TESTING.md).

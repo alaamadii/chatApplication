@@ -30,7 +30,7 @@ function Build-Solution {
 }
 
 function Test-Solution {
-    Write-Host 'Running Core username, Networking protocol/lifecycle, and native App tests. Chat messaging remains outside P02.'
+    Write-Host 'Running Core validation, Networking protocol/lifecycle/messaging, and native App tests.'
     Invoke-Dotnet @('test', 'ChatApplication.slnx', '--configuration', 'Release', '--no-build',
         '--no-restore', '--logger', 'trx', '--results-directory', 'TestResults')
 }

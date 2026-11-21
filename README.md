@@ -1,56 +1,23 @@
-# YMH219 : Chat Application
+# YMH219 · Chat Application
 
-A C#/.NET Windows Forms client-server assignment for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
+A native Windows Forms client–server chat application for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: P02 TCP connections and username handshake implemented in [PR #4](https://github.com/alaamadii/chatApplication/pull/4); owner review pending.** Interface PR #3 is merged. Separate Server and Client programs now start/listen, connect with a validated display name, cancel/disconnect and close with owned async cleanup. Messaging and detailed participant information remain P03/P04.
+**Current status: P03 real-time timestamped messaging implemented; owner review pending.** P02 [PR #4](https://github.com/alaamadii/chatApplication/pull/4) is merged. Separate Server and Client executables exchange text through a strict TCP protocol. Detailed connected-client metadata and the broader robustness review remain P04; final submission evidence remains P06.
 
-## Idea and required outcome
+## Features
 
-Run two desktop programs: a Server console and a Client. The client supplies a username, connects over TCP, exchanges timestamped text with the server operator and disconnects explicitly. The server shows its connected client's basic information. Failures must be reported without crashing or blocking the interface.
+- Start/Stop a loopback TCP server; connect with a validated display name and disconnect explicitly.
+- Exchange messages with the Server operator, with server-assigned author, GUID and UTC timestamp.
+- Display each accepted message once, in the same acceptance order at both windows. Two deliberate sends of identical text remain two distinct messages.
+- Compose Turkish, Arabic, emoji and multiline text, up to 2,000 UTF-16 code units. Enter sends; Shift+Enter adds a line; Tab moves focus.
+- Show local message times, literal plain text and the latest 500 messages per window, with a persistent notice after older entries are removed.
+- Retain a draft if a send is unconfirmed. Reconnection/retry is explicit; there is no automatic resend or saved history.
 
-The mandatory baseline is **one server and at least one client** on the same computer or trusted LAN. Multiple-client rooms, private messages and saved history are optional; they remain behind an owner decision after the baseline works.
+The baseline supports **one pending or accepted client** plus the Server operator. Additional clients receive server_busy. Multiple-client rooms, private messaging and file history remain optional and deferred.
 
-## Start with the documentation
+## Build and run
 
-| Read | Purpose |
-| --- | --- |
-| [Documentation index](docs/README.md) | Ordered guide to every document and its owner |
-| [Product overview](docs/product/OVERVIEW.md) | Users, scope and complete demonstration journey |
-| [Requirements](docs/product/REQUIREMENTS.md) | Course criteria, acceptance and traceability |
-| [Technology stack](docs/technology/STACK.md) | Frameworks, versions, dependencies and rationale |
-| [Architecture](docs/architecture/ARCHITECTURE.md) | Project boundaries, class responsibilities and lifecycle |
-| [Protocol](docs/architecture/PROTOCOL.md) | Implemented connection framing/packets and future message flow |
-| [Frontend UX](docs/frontend/UX.md) | Server/client layouts, controls, states and interactions |
-| [Design system](docs/frontend/DESIGN_SYSTEM.md) | Exact colors, typography, spacing and accessibility |
-| [Frontend file guide](docs/frontend/FILE_GUIDE.md) | Existing initialization files and planned UI responsibilities |
-| [Plan](docs/planning/PLAN.md) | Phase order, deliverables and review gates |
-| [Tasks](docs/planning/TASKS.md) | Separate actionable backlog with dependencies/status |
-| [Workflow](docs/planning/WORKFLOW.md) | Branches, commits, checks and owner review |
-| [Testing](docs/quality/TESTING.md) | Executed P00 checks and future test matrix |
-| [Security](docs/quality/SECURITY.md) | Trust boundaries, data handling and limitations |
-| [Environment](docs/setup/ENVIRONMENT.md) | Prerequisites, build/run/debug commands and troubleshooting |
-| [Submission](docs/submission/CHECKLIST.md) | Final evidence and owner actions |
-
-## Current interfaces
-
-| Window | Available presentation | Unavailable actions |
-| --- | --- | --- |
-| Server | Start/Stop, validated IPv4/port, actual Listening state and accepted peer name | Composer/Send; detailed metadata list in P04 |
-| Client | Validated name, Connect/Cancel/Disconnect, accepted identity and recoverable errors | Composer/Send; messages in P03 |
-
-Start Server on 127.0.0.1:5000 (or another available port), then enter a supported name and matching endpoint in Client and Connect. Connected requires welcome, not just a TCP socket. Disconnect/reconnect explicitly or Stop Server. Only one pending/accepted client is allowed; extra clients receive server_busy. No chat messages or participant metadata rows are created.
-
-## Design previews
-
-[Client design proposal](docs/frontend/assets/client-wireframe.svg) and [Server design proposal](docs/frontend/assets/server-wireframe.svg) show the intended light desktop layout. Their illustrative conversation is synthetic. P02 implements the sidebar/conversation shell and actual connection badges. The wireframes' conversation examples/message cards remain future designs.
-
-## Technology
-
-SDK 10.0.402 with stable latestPatch selection; C#/.NET 10 and native Windows Forms. Server and Client target net10.0-windows; Core/Networking target net10.0. Exact test tooling pins are documented in [STACK](docs/technology/STACK.md). Networking now owns async TCP, strict bounded framing/JSON and connection lifetime. Shared Presentation owns native layout/theme/fonts and guarded UI dispatch. Messaging remains P03; no database, cloud service or external UI framework is required.
-
-## What runs now
-
-From PowerShell in this repository:
+Use Windows with the .NET 10 SDK and WindowsDesktop runtime. From PowerShell in this repository:
 
 ```powershell
 ./scripts/dev.ps1 doctor
@@ -58,22 +25,45 @@ From PowerShell in this repository:
 ./scripts/dev.ps1 run-server
 ```
 
-In another PowerShell terminal, run:
+In a second terminal:
 
 ```powershell
 ./scripts/dev.ps1 run-client
 ```
 
-Use Windows with a compatible .NET 10 SDK/WindowsDesktop runtime. The check command restores, builds Release, discovers tests, verifies formatting and runs the existing documentation checker. The current suite passes **82 cases**: 19 Core username cases, 46 Networking protocol/endpoint/deadline/lifecycle cases and 17 native App cases. These verify P02 connection behavior, not chat-message delivery.
+1. Start Server on 127.0.0.1:5000, or choose another free matching port.
+2. Enter a supported username in Client and select Connect. Connected appears only after the server accepts the name.
+3. Send a message from Client, then reply from Server. Each window shows the author, body and local HH:mm:ss.
+4. Disconnect/reconnect explicitly. Stop Server or close either window to end its owned connection.
 
-Both executables use STA, PerMonitorV2, visual styles and native resizable layouts. The shared canvas supports a 1120 x 720 logical default, 900 x 620 design minimum, working-area bounds and scrolling for smaller displays/expanded guidance. Actual separate EXEs completed handshake, disconnect/reconnect, server stop/restart, occupied-port/failed-connect feedback and normal exit 0. Connected-window captures were reviewed at the existing 125% display setting. Shared VS Code role/compound launches remain available; physical F5, keyboard/assistive review, 100%/150% and monitor transitions remain pending. Windows .NET CI runs the same development check alongside preserved docs CI. See [TESTING](docs/quality/TESTING.md) for exact evidence and [ENVIRONMENT](docs/setup/ENVIRONMENT.md) for setup.
+Send is available only with an accepted peer and valid nonblank text. One submission is pending at a time; the composer locks until confirmation or failure. The client clears its submitted draft after its own authoritative server echo is displayed. A different Server message cannot confirm that submission.
 
-## Screenshots, identity and submission
+TCP is **plaintext**, and display names are **not authenticated**. Use loopback or a deliberately configured trusted LAN. No firewall/router configuration is changed automatically. Completion does not promise human receipt, a read acknowledgment or exactly-once delivery across reconnect.
 
-Final submission screenshots remain pending. Local P01/P02 window captures were used for review and remain ignored; final delivery needs at least two genuine captures of the completed application with owner approval. Wireframes do not satisfy that requirement.
+## Engineering and validation
 
-The selected public repository is [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication). The instructor recommends YMH219-ChatApp; the owner's selected name is retained. The course deadline is **2026-11-30, 23:59**, with institutional timezone unspecified.
+SDK 10.0.402, C#/.NET 10, native Windows Forms, TcpListener/TcpClient and BCL JSON/framing. Core and Networking target net10.0; the Windows executables, shared Presentation and App tests target net10.0-windows. No production package, database, cloud service or external UI framework is required.
 
-The student number is omitted by owner direction; the sheet's original requirement is recorded separately and no waiver is claimed. The owner submits their GitHub profile link through Classroom. No license is selected automatically.
+The development check restores, builds Release, runs **124 cases: 31 Core, 70 Networking and 23 native App**, verifies formatting and validates documentation. Real loopback tests cover authoritative IDs/time/identity, ordering, repeated equal text and interrupted sends. Separate actual EXEs also passed bidirectional Unicode/multiline exchange, explicit reconnect, stop/close during messaging activity and normal exit 0. Actual 125% captures were inspected. Physical keyboard/IME, accessibility, VS Code F5, 100%/150%, monitor transitions, LAN and another Windows computer remain pending. See [TESTING](docs/quality/TESTING.md) for exact evidence and limitations.
 
-See [decisions](docs/architecture/DECISIONS.md), [dated development evidence](docs/history/DEVELOPMENT.md), [sources](docs/references/SOURCES.md) and [working agreement](AGENTS.md).
+## Documentation
+
+| Document | Purpose |
+| --- | --- |
+| [Documentation index](docs/README.md) | Ordered guide and document ownership |
+| [Overview](docs/product/OVERVIEW.md) / [Requirements](docs/product/REQUIREMENTS.md) | Scope, course criteria and traceability |
+| [Stack](docs/technology/STACK.md) / [Environment](docs/setup/ENVIRONMENT.md) | Tools, versions, setup, run and demo steps |
+| [Architecture](docs/architecture/ARCHITECTURE.md) / [Protocol](docs/architecture/PROTOCOL.md) | Boundaries, lifecycle and exact wire contract |
+| [UX](docs/frontend/UX.md) / [Design system](docs/frontend/DESIGN_SYSTEM.md) / [File guide](docs/frontend/FILE_GUIDE.md) | Controls, colors, layout, accessibility and file ownership |
+| [Plan](docs/planning/PLAN.md) / [Tasks](docs/planning/TASKS.md) / [Workflow](docs/planning/WORKFLOW.md) | Phases, separate task ledger and review process |
+| [Security](docs/quality/SECURITY.md) / [Testing](docs/quality/TESTING.md) | Data boundaries, actual checks and pending owner review |
+| [Decisions](docs/architecture/DECISIONS.md) / [Development](docs/history/DEVELOPMENT.md) | Rationale and dated evidence |
+| [Submission](docs/submission/CHECKLIST.md) / [Sources](docs/references/SOURCES.md) | Remaining submission actions and course authority |
+
+## Screenshots and submission
+
+[Client](docs/frontend/assets/client-wireframe.svg) and [Server](docs/frontend/assets/server-wireframe.svg) wireframes remain **design proposals with synthetic content**. Local P03 captures are genuine review images, kept ignored; final submission still needs at least two owner-approved captures of the completed application.
+
+Repository: [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication). The instructor recommends YMH219-ChatApp; the owner's selected name is retained. Deadline: **2026-11-30, 23:59**, institutional timezone unspecified. The student number is omitted by owner direction, with no instructor waiver claimed. The owner submits their GitHub profile link; the assistant does not submit to Classroom or merge automatically.
+
+See the [working agreement](AGENTS.md).

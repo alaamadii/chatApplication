@@ -106,3 +106,25 @@ Branch: feat/tcp-connections. Confirmed owner merge of PR #3 at e0cb64aa8fc6ff97
 - Complete 55-file phase diff, narrow output exclusions, limited credential-pattern scan and clean synchronized tree were verified. No generated/local/private output was published.
 - Artifact/check tasks are complete while owner P02 acceptance remains pending. Final documentation receipt SHA and exact hosted runs are recorded in PR #4 after execution; no self-referential receipt commit is needed.
 - Physical F5/keyboard/accessibility/remaining DPI/LAN/second-computer evidence remains pending. No merge or P03 messaging.
+
+## 2026-11-21 — P03 real-time timestamped messaging
+
+Branch: feat/realtime-messaging. Verified owner merge of PR #4 at 7e1f95c6167280e017e4a8bf006cfc51cf2f7456, clean tree/correct origin and fast-forwarded main before creating the phase branch.
+
+- Added pure text rules and immutable validated messages; extended strict v1 framing/packets without relaxing P02 limits or directions.
+- Added continuous accepted read loops, injectable server UTC clock and one ordered dispatch path for client/operator text. Server owns identity/ID/time; Client renders its own authoritative echo only.
+- Added one generation/session-bound pending client submission, bounded recent-ID suppression and cancellation/failed acceptance cleanup. Failure cancels that captured lifetime/socket, joins owned work and never retries automatically.
+- Added native message cards with separate literal author/time/body, local accessible date/offset, wrapping and bounded latest-500 retention/disposal/notice. Presentation now references Core, remains socket-free and borrows window-owned fonts.
+- Connected both real composers/Send actions, UTF-16 remaining count, shared button/Enter path, Shift+Enter, Tab and IME-state guard. Pending submission locks composition; success clears only unchanged submitted text, while failure/newer input is kept.
+- Executed doctor and full development check: restore, Release build 0 warnings/errors, 124 cases (31 Core, 70 Networking, 23 native App), format verification and docs validation, all passing. Ran official direct/transitive advisory query: no known vulnerable packages at execution time. Final-head publication/CI receipts are maintained in the phase PR after execution.
+- Exercised actual separate EXEs on owned ephemeral loopback port 57185, repeated after the final source build on 49887: bidirectional Unicode/multiline, explicit author/time, one row per acceptance, equal text twice, reconnect, stop/close during messaging activity and both normal exit 0. Inspected genuine 125% window captures; local probe/images remain ignored.
+- Corrected the ignored probe's multiline change-notification, ANSI P/Invoke and post-confirmation readiness assumptions. Initial native font/retention checks exposed empty-label and burst-cost issues; cached width/DPI measurement and verified live native trim/disposal after prefill. No bulk-performance certification is claimed.
+- Reconciled organized product, architecture/protocol/decisions, frontend, setup/stack/security, plan/tasks and evidence. Physical keyboard/IME/F5/high contrast/other DPI/monitor/LAN/another computer and final images remain pending.
+- Owner acceptance remains pending. No P04/optional scope, student number, merge or Classroom action.
+
+### P03 final local review
+
+- Rejected authoritative timestamps without an explicit zero-offset suffix, with a regression case; validation is independent of the computer's local timezone.
+- Full check passed with 124 cases and docs validation: 24 artifacts, 22 Markdown files, 138 local links, 29 tasks/91 references, 10 contrast pairs and 2 labeled SVG proposals.
+- Repeated both actual EXE lifecycle/messaging checks after the final source build; both exited 0. Inspected final Unicode/multiline and repeated-message captures at DPI 120.
+- Inspected source/diff/references, excluded local/build/TRX output and ran a limited credential-pattern scan with no matches. This is not a comprehensive secret/security certification.
