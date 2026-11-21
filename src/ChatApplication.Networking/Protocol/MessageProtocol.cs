@@ -44,8 +44,8 @@ public static class MessageProtocol
             {
                 PacketPhase.ServerHandshake => type == "hello",
                 PacketPhase.ClientHandshake => type is "welcome" or "error",
-                PacketPhase.ServerAccepted => type == "disconnect",
-                PacketPhase.ClientAccepted => type is "disconnect" or "error",
+                PacketPhase.ServerAccepted => type is "disconnect" or "chat",
+                PacketPhase.ClientAccepted => type is "disconnect" or "error" or "message",
                 _ => false
             };
             if (!allowed)
@@ -59,11 +59,13 @@ public static class MessageProtocol
                 "welcome" => ReadWelcome(root),
                 "error" => ReadError(root),
                 "disconnect" => ConnectionPacket.Disconnect(),
+                "chat" => ReadChat(root),
+                "message" => ReadMessage(root),
                 _ => throw new ConnectionFailureException("invalid_packet")
             };
         }
         catch (Exception exception) when (exception is JsonException or DecoderFallbackException
-            or InvalidOperationException or FormatException)
+            or InvalidOperationException or FormatException or ArgumentException)
         {
             throw new ConnectionFailureException("invalid_packet", exception);
         }
@@ -79,6 +81,17 @@ public static class MessageProtocol
             "error" when packet.Code is not null && ErrorCodes.Contains(packet.Code) =>
                 new { version = 1, type = "error", code = packet.Code },
             "disconnect" => new { version = 1, type = "disconnect" },
+            "chat" when MessageRules.IsValid(packet.Text) => new { version = 1, type = "chat", text = packet.Text },
+            "message" when packet.Message is { } message => new
+            {
+                version = 1,
+                type = "message",
+                messageId = message.MessageId,
+                authorRole = message.AuthorRole == MessageAuthorRole.Server ? "server" : "client",
+                authorName = message.AuthorName,
+                text = message.Text,
+                sentAtUtc = message.SentAtUtc
+            },
             _ => throw new ConnectionFailureException("invalid_packet")
         };
         var bytes = JsonSerializer.SerializeToUtf8Bytes(value);
@@ -100,6 +113,34 @@ public static class MessageProtocol
         try { StrictUtf8.GetByteCount(text); }
         catch (EncoderFallbackException exception) { throw new ConnectionFailureException("invalid_packet", exception); }
         return text;
+    }
+
+    private static ConnectionPacket ReadChat(JsonElement root)
+    {
+        var text = StringField(root, "text");
+        if (!MessageRules.IsValid(text)) { throw new ConnectionFailureException("invalid_packet"); }
+        return ConnectionPacket.Chat(text);
+    }
+
+    private static ConnectionPacket ReadMessage(JsonElement root)
+    {
+        var role = StringField(root, "authorRole") switch
+        {
+            "server" => MessageAuthorRole.Server,
+            "client" => MessageAuthorRole.Client,
+            _ => throw new ConnectionFailureException("invalid_packet")
+        };
+        var stamp = StringField(root, "sentAtUtc");
+        var explicitUtc = stamp.EndsWith('Z') || stamp.EndsWith("+00:00", StringComparison.Ordinal)
+            || stamp.EndsWith("-00:00", StringComparison.Ordinal);
+        if (!explicitUtc || !Guid.TryParse(StringField(root, "messageId"), out var id)
+            || !root.TryGetProperty("sentAtUtc", out var time) || time.ValueKind != JsonValueKind.String
+            || !time.TryGetDateTimeOffset(out var utc) || utc.Offset != TimeSpan.Zero)
+        {
+            throw new ConnectionFailureException("invalid_packet");
+        }
+        return ConnectionPacket.AcceptedMessage(new(id, role, StringField(root, "authorName"),
+            StringField(root, "text"), utc));
     }
 
     private static ConnectionPacket ReadWelcome(JsonElement root)

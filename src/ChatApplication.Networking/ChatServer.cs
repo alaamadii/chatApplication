@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using ChatApplication.Core;
 using ChatApplication.Networking.Protocol;
 
 namespace ChatApplication.Networking;
@@ -7,6 +8,8 @@ namespace ChatApplication.Networking;
 public sealed class ChatServer : IAsyncDisposable
 {
     private readonly ConnectionOptions _options;
+    private readonly MessageUpdates _messages;
+    private readonly TimeProvider _clock;
     private readonly ConnectionUpdates _updates;
     private readonly SemaphoreSlim _lifecycle = new(1, 1);
     private CancellationTokenSource? _lifetime;
@@ -17,11 +20,14 @@ public sealed class ChatServer : IAsyncDisposable
     private bool _disposed;
 
     public ChatServer(Func<ConnectionSnapshot, CancellationToken, ValueTask>? observer = null,
-        ConnectionOptions? options = null)
+        ConnectionOptions? options = null,
+        Func<ChatMessage, CancellationToken, ValueTask>? onMessage = null, TimeProvider? timeProvider = null)
     {
         _options = options ?? new();
         _options.Validate();
         _updates = new(ConnectionState.Stopped, _options, observer);
+        _messages = new(onMessage, _options);
+        _clock = timeProvider ?? TimeProvider.System;
     }
 
     public ConnectionSnapshot Snapshot => _updates.Current;
@@ -100,7 +106,7 @@ public sealed class ChatServer : IAsyncDisposable
                 }
 
                 await _sessionTask.ConfigureAwait(false);
-                _session = new(socket, _options);
+                _session = new(socket, _options, _messages, _clock);
                 _sessionTask = _session.RunAsync(UpdatePeerAsync, cancellationToken);
             }
         }
@@ -128,6 +134,17 @@ public sealed class ChatServer : IAsyncDisposable
 
     private Task UpdatePeerAsync(string? name, Guid? session, string? error, CancellationToken token) =>
         _updates.PublishAsync(new(ConnectionState.Listening, name, session, error), token);
+
+    public Task<ChatMessage> SendAsync(string text, CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        var session = _session;
+        if (Snapshot.State != ConnectionState.Listening || Snapshot.SessionId is null || session is null)
+        {
+            throw new InvalidOperationException("No accepted peer.");
+        }
+        return session.DispatchAsync(text, MessageAuthorRole.Server, cancellationToken);
+    }
 
     public void Abort()
     {
