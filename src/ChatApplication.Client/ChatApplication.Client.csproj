@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../ChatApplication.Core/ChatApplication.Core.csproj" />
+    <ProjectReference Include="../ChatApplication.Networking/ChatApplication.Networking.csproj" />
     <ProjectReference Include="../ChatApplication.Presentation/ChatApplication.Presentation.csproj" />
     <InternalsVisibleTo Include="ChatApplication.App.Tests" />
   </ItemGroup>

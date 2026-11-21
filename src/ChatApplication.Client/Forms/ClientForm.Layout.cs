@@ -14,11 +14,9 @@ internal sealed partial class ClientForm
         UiLayout.AddRow(Sidebar, UiLayout.Field("&Username", _username));
         UiLayout.AddRow(Sidebar, UiLayout.Field("Server &IPv4 address", _serverAddress));
         UiLayout.AddRow(Sidebar, UiLayout.Field("&Port", _port));
-        UiLayout.AddRow(Sidebar, UiLayout.Actions(
-            UiLayout.UnavailableButton("&Connect", "Connect"),
-            UiLayout.UnavailableButton("&Disconnect", "Disconnect")));
+        UiLayout.AddRow(Sidebar, UiLayout.Actions(_connectButton, _disconnectButton));
         UiLayout.AddRow(Sidebar, UiLayout.Text(
-            "Connection handling arrives in P02. Editing these fields does not connect or accept a username.",
+            "Connect completes only after the server accepts your name. Messaging arrives in P03.",
             Fonts.Metadata, secondary: true));
     }
 }

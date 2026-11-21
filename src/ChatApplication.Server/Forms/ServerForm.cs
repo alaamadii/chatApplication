@@ -1,4 +1,6 @@
 using ChatApplication.Presentation;
+using ChatApplication.Presentation.Layout;
+using ChatApplication.Networking;
 
 namespace ChatApplication.Server.Forms;
 
@@ -32,9 +34,19 @@ internal sealed partial class ServerForm : ChatWindow
         HideSelection = false
     };
 
+    private readonly Button _startButton = UiLayout.ActionButton("S&tart server", "StartServer");
+    private readonly Button _stopButton = UiLayout.ActionButton("St&op server", "StopServer");
+    private Label _peerSummary = null!;
+
     public ServerForm() : base("Server")
     {
+        _server = new(OnConnectionAsync);
         BuildLayout();
         CompleteLayout();
+        _startButton.Click += StartClicked;
+        _stopButton.Click += StopClicked;
+        _bindAddress.TextChanged += (_, _) => RenderConnection(_server.Snapshot);
+        _port.ValueChanged += (_, _) => RenderConnection(_server.Snapshot);
+        RenderConnection(_server.Snapshot);
     }
 }

@@ -30,7 +30,7 @@ function Build-Solution {
 }
 
 function Test-Solution {
-    Write-Host 'Core has no behavior and discovers zero cases. App.Tests exercises native UI contracts; no chat/transport coverage is claimed.'
+    Write-Host 'Running Core username, Networking protocol/lifecycle, and native App tests. Chat messaging remains outside P02.'
     Invoke-Dotnet @('test', 'ChatApplication.slnx', '--configuration', 'Release', '--no-build',
         '--no-restore', '--logger', 'trx', '--results-directory', 'TestResults')
 }

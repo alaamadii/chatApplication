@@ -12,16 +12,14 @@ internal sealed partial class ServerForm
         UiLayout.AddRow(Sidebar, UiLayout.Text("Choose a local listener endpoint.", Fonts.Metadata, secondary: true));
         UiLayout.AddRow(Sidebar, UiLayout.Field("&Bind IPv4 address", _bindAddress));
         UiLayout.AddRow(Sidebar, UiLayout.Field("&Port", _port));
-        UiLayout.AddRow(Sidebar, UiLayout.Actions(
-            UiLayout.UnavailableButton("S&tart server", "StartServer"),
-            UiLayout.UnavailableButton("St&op server", "StopServer")));
+        UiLayout.AddRow(Sidebar, UiLayout.Actions(_startButton, _stopButton));
         UiLayout.AddRow(Sidebar, UiLayout.Text(
-            "Listener controls are not implemented. Available in P02.",
+            "Start a local listener, then connect one client.",
             Fonts.Metadata, secondary: true));
-        UiLayout.AddRow(Sidebar, UiLayout.Text("Connected client", Fonts.Section));
-        UiLayout.AddRow(Sidebar, UiLayout.Text(
-            "No clients connected. No client information is available.",
-            Fonts.Metadata, secondary: true));
+        UiLayout.AddRow(Sidebar, UiLayout.Text("Client information (P04)", Fonts.Section));
+        _peerSummary = UiLayout.Text("No accepted peer. Detailed client information arrives in P04.", Fonts.Metadata, secondary: true);
+        _peerSummary.Name = "PeerSummary";
+        UiLayout.AddRow(Sidebar, _peerSummary);
 
         _clients.Columns.Add("Username", 100);
         _clients.Columns.Add("Endpoint", 120);

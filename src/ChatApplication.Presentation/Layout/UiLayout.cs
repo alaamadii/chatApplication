@@ -47,12 +47,12 @@ public static class UiLayout
         return column;
     }
 
-    public static Button UnavailableButton(string text, string name) => new()
+    public static Button ActionButton(string text, string name) => new()
     {
         Text = text,
         Name = name,
         AccessibleName = text.Replace("&", ""),
-        AccessibleDescription = "Not implemented. Connection actions arrive in P02; messaging in P03.",
+        AccessibleDescription = "Availability follows connection state. Messaging is unavailable until P03.",
         Enabled = false,
         Dock = DockStyle.Fill,
         Height = 36,

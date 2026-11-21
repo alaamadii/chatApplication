@@ -48,7 +48,7 @@ public abstract partial class ChatWindow : Form
         };
         _content.Controls.Add(CreateHeader(role), 0, 0);
         _content.Controls.Add(UiLayout.Text(
-            "Networking is not implemented. Connection controls arrive in P02; messaging in P03.",
+            "TCP connections are available. Messaging is not implemented until P03.",
             _fonts.Body, secondary: true), 0, 1);
 
         _body = new TableLayoutPanel
@@ -78,7 +78,7 @@ public abstract partial class ChatWindow : Form
         sidebarViewport.Controls.Add(Sidebar);
 
         Feedback = UiLayout.Text(
-            "Connection and send actions are unavailable in this phase.",
+            "Connection controls are ready. Messaging arrives in P03.",
             _fonts.Metadata, secondary: true);
         Feedback.Name = "Feedback";
         Feedback.AccessibleName = "Connection and message guidance";
