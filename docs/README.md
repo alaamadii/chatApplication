@@ -1,6 +1,6 @@
 # Documentation map
 
-Status: P04 connected-client information and local robustness implemented on 2026-11-22; owner review and P04-004 trusted-LAN verification remain pending. PR #5 is merged.
+Status: P06 draft final-review preparation on 2026-11-22; PR #6 is merged. Genuine images and source/test audit are prepared; physical checks, P04-004 trusted LAN, another Windows computer and final owner acceptance remain pending.
 
 Read in the following order. Each file owns one concern so frontend, technology, architecture, planning and evidence stay separate.
 
@@ -25,6 +25,6 @@ Read in the following order. Each file owns one concern so frontend, technology,
 | [history/DEVELOPMENT](history/DEVELOPMENT.md) | Actual dated work and publication | Fabricated phase dates |
 | [references/SOURCES](references/SOURCES.md) | Course/primary sources and authority | Executable instructions |
 
-Frontend assets are [client](frontend/assets/client-wireframe.svg), [server](frontend/assets/server-wireframe.svg) and [machine-readable tokens](frontend/theme.json). They are planning artifacts.
+Frontend design proposals are [client](frontend/assets/client-wireframe.svg), [server](frontend/assets/server-wireframe.svg) and [tokens](frontend/theme.json). Genuine [Server](frontend/assets/screenshots/server.png), [Client](frontend/assets/screenshots/client.png) and [connection-time](frontend/assets/screenshots/server-client-details.png) captures have a [provenance/hash manifest](frontend/assets/screenshots/manifest.json). Approval and missing external evidence belong in CHECKLIST.
 
-FILE_GUIDE links existing P04 source/tests and labels future paths as planned. Current file links point to real repository files. Any change to a requirement must update its tasks, design decisions, protocol/UI implications and validation plan.
+FILE_GUIDE links the implemented source/tests and genuine capture assets and labels future paths as planned. Current file links point to real repository files. Any change to a requirement must update its tasks, design decisions, protocol/UI implications and validation plan.

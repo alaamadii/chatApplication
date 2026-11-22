@@ -1,6 +1,6 @@
 # Security and data boundaries
 
-Status: P04 adds accepted socket metadata and verified local lifecycle/feedback fixes. P03 implements bounded framing/strict JSON/directions, supported names/text, authoritative server metadata, one pending/accepted peer, cancellation/deadlines and literal message rendering. There is no transcript persistence. These safeguards are not authentication, encryption or a security certification.
+Status: P06 reviews the merged P04 baseline and publishes synthetic application-window captures with integrity checks. P03 implements bounded framing/strict JSON/directions, supported names/text, authoritative server metadata, one pending/accepted peer, cancellation/deadlines and literal message rendering. There is no transcript persistence. These safeguards are not authentication, encryption or a security certification.
 
 ## Trust model
 
@@ -56,3 +56,9 @@ The server captures remote endpoint and UTC acceptance time from its own accepte
 Explicit Start/Connect join prior terminal callbacks/sends before replacing session fields. A failed Disconnect/Stop still aborts I/O; incomplete cleanup remains observable/retryable. No old callback may restore a previous row or clear the new row. Persistent unconfirmed-send guidance explains uncertain delivery without automatic replay.
 
 Trusted-LAN verification is not performed in this session: no second Windows machine/authorized remote execution target is available. Follow ENVIRONMENT on deliberately selected trusted machines. Do not scan for peers, change firewall/router rules automatically or publish private endpoints/conversations in evidence. Dependency advisory results remain point-in-time checks.
+
+## Published final-review evidence
+
+The three P06 screenshots contain only synthetic names/messages and loopback metadata from the actual application windows. No desktop/private conversation or student number is published. Full capture source, method and fingerprints are recorded in the manifest.
+
+PNG/hash validation detects changed assets and missing embeds; it is not proof of human approval or a security certification. Physical/LAN/second-machine checks remain Not performed per owner report. The final PR remains draft while required evidence is missing, and existing public visibility is preserved.

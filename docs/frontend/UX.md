@@ -1,6 +1,6 @@
 # Frontend UX specification
 
-Status: P04 implements the accepted-client information list and local lifecycle/feedback robustness alongside existing real-time messaging. Owner review and actual trusted-LAN verification remain pending. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a connected-state design proposal using synthetic content.
+Status: P06 reviews the merged P04 interface without changing runtime behavior. Real README captures document the actual connected states; owner/manual acceptance and genuine trusted-LAN verification remain pending. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a connected-state design proposal using synthetic content.
 
 ## Shared layout
 
@@ -105,3 +105,9 @@ Connected client now lists exactly one accepted username, actual remote IP/port,
 Commands have busy guards. Start/Connect explicitly join old terminal work; Stop/Disconnect remain retryable when cleanup fails. Existing sender/echo/order/500-entry behavior remains. Unconfirmed-send guidance survives status changes and identity edits until a confirmed successful send; typed text stays available for explicit retry.
 
 Numeric times are local HH:mm:ss; complete accessible/connection dates use Gregorian yyyy-MM-dd HH:mm:ss zzz with invariant formatting. This avoids an unlabeled calendar change under ar-SA. Physical keyboard/IME, screen reader/high contrast, F5, other DPI/monitor transitions and trusted LAN remain owner checks.
+
+## P06 review evidence
+
+The [README](../../README.md) now shows real connected Server/Client states and a supplementary scrolled connection-time view. These images use synthetic text and actual server-authoritative messages; no UI mockup is substituted. Their [manifest](assets/screenshots/manifest.json) records capture source/date/DPI/hashes.
+
+The owner reported physical input/IME/focus, accessibility/F5/display and multi-machine checks Not performed on 2026-11-22. Automated native behavior and assistant visual inspection remain separate evidence. P06 does not change the implemented interactions or imply owner approval.

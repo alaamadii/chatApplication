@@ -4,7 +4,7 @@ PLAN owns sequence, deliverables and review gates. [TASKS](TASKS.md) owns indivi
 
 ## Current delivery
 
-The owner merged [PR #5](https://github.com/alaamadii/chatApplication/pull/5) before P04. Accepted-client metadata/list, terminal-work joining, cancellation/feedback recovery and visible native retention regressions are now implemented with local and actual-process evidence. P04-001/002/003 artifacts are complete; P04-004 trusted-LAN verification and owner phase acceptance remain pending. Exact publication/CI receipts belong in the P04 PR; physical UI/F5/assistive/other-DPI/second-computer checks carry forward.
+The owner merged [PR #6](https://github.com/alaamadii/chatApplication/pull/6) before P06. The runtime baseline is implemented and reviewed. Final preparation audits source/requirements, publishes genuine screenshots/provenance and verifies an exact published checkout. P04-004 and required physical/second-computer evidence remain pending; the owner reported these checks not performed on 2026-11-22. Image approval and final acceptance remain separate gates. The final PR stays draft while required evidence is missing.
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
@@ -13,9 +13,9 @@ The owner merged [PR #5](https://github.com/alaamadii/chatApplication/pull/5) be
 | P01 | Server/Client interfaces and shared presentation | P00 accepted | PR #3 merged by owner |
 | P02 | Bounded TCP protocol and real connection/username lifecycle | P01 accepted | PR #4 merged by owner |
 | P03 | Real-time timestamped messaging and UI integration | P02 accepted | PR #5 merged by owner |
-| P04 | Client information, disconnect/error/retry and resource regression | P03 accepted | Local implementation/evidence complete; LAN verification and owner review pending |
+| P04 | Client information, disconnect/error/retry and resource regression | P03 accepted | PR #6 merged; trusted-LAN check carried forward Pending |
 | P05 | Separately selected optional features | Mandatory baseline accepted and explicit owner choice | Deferred |
-| P06 | Final QA, actual screenshots, clean checkout and submission review | P04 accepted; selected optional work reviewed | Pending |
+| P06 | Final QA, actual screenshots, clean checkout and submission review | P04 implementation reviewed; optional scope Deferred | In progress; draft final review with missing owner/external evidence |
 
 The order is a dependency plan, not invented calendar history. Course deadline: 2026-11-30 at 23:59; institutional timezone unspecified. Prioritize mandatory behavior before optional work.
 

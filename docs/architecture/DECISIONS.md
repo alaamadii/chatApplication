@@ -1,6 +1,6 @@
 # Design decisions
 
-Decisions are proposals until implemented/validated in their named phase. P00 implements the initialization subset. P01 implements shared native presentation in ADR-014/015. P02 implements the connection protocol and lifetime/UI boundary in ADR-016/017/018. P03 implements authoritative messages, pending acceptance and native message presentation in ADR-019/020/021.
+Decisions are proposals until implemented/validated in their named phase. P00 implements the initialization subset. P01 implements shared native presentation in ADR-014/015. P02 implements the connection protocol and lifetime/UI boundary in ADR-016/017/018. P03 implements authoritative messaging in ADR-019/020/021; P04 implements metadata/local robustness in ADR-022/023/024. P06 evidence separation is recorded in ADR-025.
 
 | ADR | Decision / date | Rationale and consequence |
 | --- | --- | --- |
@@ -21,7 +21,7 @@ Decisions are proposals until implemented/validated in their named phase. P00 im
 
 Record a new dated decision or explicitly supersede an old one. Explain the concrete reason, affected requirements/files/protocol/UI, migration impact and tests needed. Do not update task status merely because a design paragraph exists.
 
-Open decisions: performance/assistive review of message cards in P01/P03 and optional feature selection in P05. P00 test package pins are now implemented and recorded in STACK.
+Open items: physical/assistive acceptance, trusted LAN, another Windows computer and final owner approval. Optional feature selection remains deferred. Implemented tooling pins are recorded in STACK; synthetic performance checks do not certify physical usability.
 
 See [architecture](ARCHITECTURE.md), [protocol](PROTOCOL.md), [stack](../technology/STACK.md) and [tasks](../planning/TASKS.md).
 
@@ -98,3 +98,11 @@ UI command busy guards prevent repeated command queues and allow cleanup retry a
 A fully visible 512-message burst passed alone but exceeded the existing 20-second native fixture deadline during a full run. Keep that deadline: use explicit scrolling-canvas bounds and suspend/resume append/trim layout instead of repeatedly docking all retained cards. Preserve native labels, 500-card/ID bounds, immediate removed-card disposal and scroll access. The visible regression covers burst, trim, resize and close; it is a synthetic local bound, not performance certification.
 
 Actual separate EXEs on an Arabic Windows locale displayed a Hijri year inside yyyy-MM-dd. Format fixed numeric local dates/times with invariant culture, preserving local timezone/offset. Verify the metadata row under ar-SA and keep physical input/accessibility/DPI checks separate.
+
+## ADR-025 — Verifiable captures and an evidence-gated final review — 2026-11-22
+
+P06 preserves the merged application baseline and separates final preparation from course acceptance. Publish three unedited full-window PNG captures from real synthetic loopback messaging, with source commit, UTC capture time, actual display DPI, dimensions and image/original-assembly SHA-256 fingerprints. The original wireframes remain proposals.
+
+The documentation check validates manifest fields, PNG header/dimensions/hashes and README embeds. A deliberate incorrect-hash probe was rejected and restored. These checks detect artifact drift; they do not independently authenticate capture origin or human approval. Original assembly hashes fingerprint the capture build, not a promise that build metadata is identical in another checkout.
+
+Verify exact published commits in an isolated checkout and keep final-head hosted receipts in the PR to avoid self-referential receipt commits. Same-computer automation, a second checkout and scripted input cannot count as physical/LAN/another-computer acceptance. Owner report: Not performed. Keep the final PR draft until required external evidence and screenshot approval are complete.

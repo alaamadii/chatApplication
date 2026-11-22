@@ -48,6 +48,18 @@ Message cards are original native rectangular panels. They own their labels, bor
 
 Pure assertions: [username](../../tests/ChatApplication.Core.Tests/UsernameRulesTests.cs) and [messages](../../tests/ChatApplication.Core.Tests/MessageTests.cs). Networking: [framing](../../tests/ChatApplication.Networking.Tests/ProtocolTests.cs), [lifecycle](../../tests/ChatApplication.Networking.Tests/ConnectionTests.cs), [message protocol](../../tests/ChatApplication.Networking.Tests/MessagingProtocolTests.cs) and [real messaging](../../tests/ChatApplication.Networking.Tests/MessagingTests.cs). Native Windows: [interface regressions](../../tests/ChatApplication.App.Tests/InterfaceTests.cs) and [messaging/retention/lifetime](../../tests/ChatApplication.App.Tests/MessagingInterfaceTests.cs).
 
-P04 completes accepted-client metadata/list population. Additional regressions live in [terminal lifecycle](../../tests/ChatApplication.Networking.Tests/LifecycleRegressionTests.cs), [metadata/robustness](../../tests/ChatApplication.Networking.Tests/PeerInformationTests.cs) and [native metadata/recovery/visible burst](../../tests/ChatApplication.App.Tests/RobustnessInterfaceTests.cs). P04-004 trusted-LAN verification remains pending. No empty future handler, persistence or optional room model is introduced. [Client](assets/client-wireframe.svg) and [Server](assets/server-wireframe.svg) wireframes remain proposals; [tokens](theme.json) remain a design inventory. Local genuine review captures are ignored.
+P04 completes accepted-client metadata/list population. Additional regressions live in [terminal lifecycle](../../tests/ChatApplication.Networking.Tests/LifecycleRegressionTests.cs), [metadata/robustness](../../tests/ChatApplication.Networking.Tests/PeerInformationTests.cs) and [native metadata/recovery/visible burst](../../tests/ChatApplication.App.Tests/RobustnessInterfaceTests.cs). P04-004 trusted-LAN verification remains pending. No empty future handler, persistence or optional room model is introduced. [Client](assets/client-wireframe.svg) and [Server](assets/server-wireframe.svg) wireframes remain proposals; [tokens](theme.json) remain a design inventory. P06 publishes three genuine captures with a provenance/hash manifest; older local probe/review output remains ignored.
 
 See [UX](UX.md), [architecture](../architecture/ARCHITECTURE.md) and [testing](../quality/TESTING.md).
+
+## P06 documentation assets and validation
+
+| Artifact | Ownership |
+| --- | --- |
+| [Server capture](assets/screenshots/server.png) | Genuine accepted-client view and real bidirectional messages |
+| [Client capture](assets/screenshots/client.png) | Genuine connected Client, same messages and timestamps |
+| [Connection-time capture](assets/screenshots/server-client-details.png) | Real native horizontal scroll exposing full local date/offset |
+| [Capture manifest](assets/screenshots/manifest.json) | Source/build/date/DPI/dimensions, SHA-256 fingerprints and owner approval status |
+| [Documentation checker](../../scripts/check-docs.ps1) | Existing links/tasks/tokens/proposals plus capture-integrity/README-embed checks |
+
+Application source remains the merged P04 baseline during P06. Capture automation is a review method, not a runtime or development-check dependency; fresh checkouts use only tracked scripts/source/assets. Final receipts and owner evidence belong in TESTING/CHECKLIST.
