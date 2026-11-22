@@ -175,7 +175,7 @@ public sealed class InterfaceTests
                 Assert.False(Find<TextBox>(client, "Username").Enabled);
                 Assert.False(Find<Button>(client, "SendMessage").Enabled);
                 Assert.Empty(Find<TextBox>(client, "MessageInput").Text);
-                Assert.Empty(Find<ListView>(server, "ConnectedClients").Items);
+                Assert.Equal("علاء", Assert.Single(Find<ListView>(server, "ConnectedClients").Items.Cast<ListViewItem>()).Text);
                 if (cycle == 0)
                 {
                     Find<Button>(client, "Disconnect").PerformClick();
@@ -223,7 +223,7 @@ public sealed class InterfaceTests
 
     private static IEnumerable<Control> Descendants(Control root) => StaWindow.Descendants(root);
 
-    private static void AssertLayout(Form form)
+    internal static void AssertLayout(Form form)
     {
         foreach (var table in Descendants(form).OfType<TableLayoutPanel>())
         {

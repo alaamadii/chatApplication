@@ -24,14 +24,15 @@ internal sealed partial class ServerForm : ChatWindow
     {
         Name = "ConnectedClients",
         AccessibleName = "Connected client information",
-        AccessibleDescription = "No accepted peer. Detailed client information is planned for P04.",
+        AccessibleDescription = "No accepted client. Pending and rejected connections are not listed.",
         View = View.Details,
         Height = 96,
         Dock = DockStyle.Top,
         Margin = new Padding(0, 0, 0, 12),
         TabStop = false,
         FullRowSelect = true,
-        HideSelection = false
+        HideSelection = false,
+        ShowItemToolTips = true
     };
 
     private readonly Button _startButton = UiLayout.ActionButton("S&tart server", "StartServer");
@@ -47,6 +48,8 @@ internal sealed partial class ServerForm : ChatWindow
         _stopButton.Click += StopClicked;
         _bindAddress.TextChanged += (_, _) => RenderConnection(_server.Snapshot);
         _port.ValueChanged += (_, _) => RenderConnection(_server.Snapshot);
+        _clients.HandleCreated += (_, _) => FitClientColumns();
+        _clients.DpiChangedAfterParent += (_, _) => FitClientColumns();
         RenderConnection(_server.Snapshot);
     }
 }

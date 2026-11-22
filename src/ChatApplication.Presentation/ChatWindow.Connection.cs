@@ -52,7 +52,7 @@ public abstract partial class ChatWindow
         catch (Exception)
         {
             _closing = false;
-            Feedback.Text = "Cleanup did not complete. Try closing again; no successful shutdown is claimed.";
+            SetConnectionFeedback("Cleanup did not complete. Try closing again; no successful shutdown is claimed.");
         }
     }
 }
