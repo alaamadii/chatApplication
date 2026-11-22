@@ -4,7 +4,7 @@ PLAN owns sequence, deliverables and review gates. [TASKS](TASKS.md) owns indivi
 
 ## Current delivery
 
-The owner merged [PR #4](https://github.com/alaamadii/chatApplication/pull/4) before P03. Real-time bidirectional text now uses server-assigned identity/ID/time, ordered dispatch, echo-only outgoing display, a pending-send lifecycle and bounded native transcripts. Local/actual separate-EXE evidence is in TESTING; exact publication/CI receipts belong in the phase PR. P03 owner acceptance remains pending. Physical UI/F5/assistive/LAN checks carry forward; detailed participant information remains P04.
+The owner merged [PR #5](https://github.com/alaamadii/chatApplication/pull/5) before P04. Accepted-client metadata/list, terminal-work joining, cancellation/feedback recovery and visible native retention regressions are now implemented with local and actual-process evidence. P04-001/002/003 artifacts are complete; P04-004 trusted-LAN verification and owner phase acceptance remain pending. Exact publication/CI receipts belong in the P04 PR; physical UI/F5/assistive/other-DPI/second-computer checks carry forward.
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
@@ -12,8 +12,8 @@ The owner merged [PR #4](https://github.com/alaamadii/chatApplication/pull/4) be
 | P00 | Solution, initialization windows, environment and .NET CI | Foundation reviewed/requested | PR #2 merged by owner |
 | P01 | Server/Client interfaces and shared presentation | P00 accepted | PR #3 merged by owner |
 | P02 | Bounded TCP protocol and real connection/username lifecycle | P01 accepted | PR #4 merged by owner |
-| P03 | Real-time timestamped messaging and UI integration | P02 accepted | Implemented; owner review pending |
-| P04 | Client information, disconnect/error/retry and resource regression | P03 accepted | Pending |
+| P03 | Real-time timestamped messaging and UI integration | P02 accepted | PR #5 merged by owner |
+| P04 | Client information, disconnect/error/retry and resource regression | P03 accepted | Local implementation/evidence complete; LAN verification and owner review pending |
 | P05 | Separately selected optional features | Mandatory baseline accepted and explicit owner choice | Deferred |
 | P06 | Final QA, actual screenshots, clean checkout and submission review | P04 accepted; selected optional work reviewed | Pending |
 

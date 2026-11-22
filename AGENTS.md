@@ -3,7 +3,7 @@
 ## Scope and workflow
 
 - Work only in this Chat Application repository; do not change sibling assignments.
-- PR #4 is merged. Phase P03 real-time timestamped messaging is authorized. Complete its implementation, evidence and PR; owner review is required before P04.
+- PR #5 is merged. Phase P04 connected-client information and connection robustness are authorized. Complete code, evidence and its PR; owner review is required before P05/P06. Leave unavailable trusted-LAN checks pending.
 - Inspect status/remotes and preserve owner edits before changes.
 - Use a dedicated branch and one reviewed PR per phase. Main's minimal bootstrap is only the PR base.
 - Never force-push, rewrite history, merge automatically or submit to Classroom.

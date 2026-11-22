@@ -51,10 +51,10 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 | ID | Task | Depends on | Evidence / acceptance | Status |
 | --- | --- | --- | --- | --- |
-| P04-001 | Harden disconnect/abort/reconnect and state/action recovery | P03-003 + owner review | Repeated lifecycle and readable recoverable failures | Pending |
-| P04-002 | Verify close during I/O/dispatch, deadlines and bounded transcript | P04-001 | Owned cleanup, trim notice, no hangs/late UI updates | Pending |
-| P04-003 | Complete server client-info list and remove stale entries | P04-001 | Username/endpoint/time/state reflect the live accepted session | Pending |
-| P04-004 | Exercise deliberate trusted-LAN setup | P04-001, P04-003 | Actual addresses/date/commit/results; firewall changes not automated | Pending |
+| P04-001 | Harden disconnect/abort/reconnect and state/action recovery | P03-003 + owner review | Terminal-callback and notification-failure regressions; 12 simultaneous stop/disconnect/restart cycles; persistent uncertain-send feedback | Done |
+| P04-002 | Verify close during I/O/dispatch, deadlines and bounded transcript | P04-001 | Deadline failure retains owned tasks; active native close/port release and visible 512-message trim/resize/close regressions; TESTING | Done |
+| P04-003 | Complete server client-info list and remove stale entries | P04-001 | Actual socket/clock metadata, pending/busy rejection, fresh sessions, native one-row/clearing and actual EXE evidence; TESTING | Done |
+| P04-004 | Exercise deliberate trusted-LAN setup | P04-001, P04-003 | Not performed: no second Windows machine/authorized remote target; exact owner procedure in ENVIRONMENT; no firewall changes | Pending |
 
 ## P05 — Optional owner decisions
 
@@ -75,4 +75,4 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 ## Update rule
 
-When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 was merged in PR #3. P02 is accepted through owner merge of PR #4. P03 artifacts/checks are Done while owner acceptance remains pending; exact final-head publication/CI receipt is maintained in the P03 PR. Physical checks and phase acceptance remain owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.
+When a task changes, add evidence and update the phase gate in PLAN. P00 is accepted through owner merge of PR #2. P01 was merged in PR #3. P02 is accepted through owner merge of PR #4. P03 is accepted through owner merge of PR #5. P04-001/002/003 artifacts/checks are Done; P04-004 and owner phase acceptance remain pending. Exact final-head publication/CI receipt is maintained in the P04 PR. Physical checks and phase acceptance remain owner actions. Optional tasks remain Deferred until separately chosen; they do not quietly become mandatory.

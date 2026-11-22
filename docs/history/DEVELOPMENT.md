@@ -128,3 +128,28 @@ Branch: feat/realtime-messaging. Verified owner merge of PR #4 at 7e1f95c6167280
 - Full check passed with 124 cases and docs validation: 24 artifacts, 22 Markdown files, 138 local links, 29 tasks/91 references, 10 contrast pairs and 2 labeled SVG proposals.
 - Repeated both actual EXE lifecycle/messaging checks after the final source build; both exited 0. Inspected final Unicode/multiline and repeated-message captures at DPI 120.
 - Inspected source/diff/references, excluded local/build/TRX output and ran a limited credential-pattern scan with no matches. This is not a comprehensive secret/security certification.
+
+## 2026-11-22 — P04 accepted-client information and local robustness
+
+Branch: fix/connection-lifecycle. Confirmed owner merge of PR #5 at b74825a1fc5b2afad7bde8330d60bad39b41cdee and successful predecessor CI. Inspected clean status/correct origin, fetched, fast-forwarded main and branched without changing sibling assignments.
+
+- Added server-local immutable ConnectedClientInfo from the actual accepted socket and TimeProvider clock after welcome. ConnectionSnapshot carries it without changing wire packets. Source-checked callbacks and joined old lifetimes protect new sessions.
+- Completed the native accepted-only information row: name, actual IP/port, local Gregorian date/time with offset and Connected state, measured columns/horizontal scrolling, tooltip and complete accessible description. Pending/rejected/busy peers have no row; disconnect/stop clears live state.
+- Reproduced three terminal-callback/Disconnecting-observer failures before fixing them. Explicit Start/Connect now join prior terminal work/sender before replacement, with bounded waits; any Stop/Disconnect failure still aborts I/O.
+- Fixed a simultaneous stop/disconnect cancellation escaping the session-final notification. Normal server-lifetime cancellation completes cleanly; unrelated failure remains observable.
+- Added command busy guards, cleanup retry and persistent unconfirmed-send guidance independent of status renders/field edits. A successful confirmed send clears that guidance; no reconnect/resend is automated.
+- A full visible burst revealed layout cost after an isolated pass. Explicit canvas bounds and batched append/trim layout preserve real native controls/500-card disposal within the existing 20-second fixture deadline. Full-run visible results included 7.57 s and 13.59 s; no throughput certification is claimed.
+- Corrected ambiguous numeric calendar display found in actual Arabic-Windows EXEs. Invariant formatting preserves local time/offset; ar-SA metadata rendering is tested.
+- Doctor and final ./scripts/dev.ps1 check passed: restore, Release build, 139 cases (Core 31, Networking 80, native App 28), format and documentation checks; 0 failed/skipped and 0 build warnings/errors. Official direct/transitive advisory query reported no known vulnerable packages at execution time. Final-head publication/hosted receipts are maintained in the phase PR after execution.
+- Actual separate EXEs on owned loopback port 51276, repeated after final command-input locking on 51230, passed bidirectional Unicode/multiline, exact count/author/time, accepted metadata/removal/fresh reconnect, Stop/restart, intentional owned Client termination, replacement recovery and Server close during activity. Server/replacement Client exited 0; owned port rebind passed. Inspected genuine 125% captures; ignored probes/images remain local.
+- Fixture corrections covered IPv4-mapped raw endpoints, OS EOF/reset differences, actual enabled-action readiness and the PowerShell UIA assembly's missing legacy pattern; no production test hooks were added.
+- Updated organized product/architecture/protocol/decisions/frontend/setup/security/stack/plan/tasks/evidence. P04-001/002/003 artifacts are Done; P04-004 remains Pending because a second Windows machine/authorized remote target is unavailable. Added a precise deliberate trusted-LAN owner procedure.
+- Owner acceptance and physical keyboard/IME/assistive/F5/other-DPI/monitor/LAN evidence remain pending. No P05/P06 implementation, optional feature, student number, merge or Classroom action.
+
+### P04 final local review
+
+- Final development check passed with 139 cases, format verification and documentation validation: 24 artifacts, 22 Markdown files, 144 local links, 29 tasks/106 references, 10 contrast pairs and 2 labeled SVG proposals.
+- Verified immediate identity/endpoint locks during owned command preparation and retained failure guidance until successful retry.
+- Repeated actual EXE checks after final source changes, including horizontal list scrolling; Server/replacement Client exited 0 and the owned port rebound. The original Client was deliberately terminated to test recovery.
+- Inspected references, complete source/diff, narrow exclusions and limited credential-pattern scan (no matches). This is not a comprehensive security/secret certification.
+- Trusted-LAN, physical acceptance and owner phase review remain pending; no next phase was begun.

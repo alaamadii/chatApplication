@@ -1,20 +1,20 @@
 # Frontend UX specification
 
-Status: P03 implements real connection actions, timestamped message rendering and composition. P03 owner review is pending; detailed client metadata remains P04. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a future connected state with synthetic content.
+Status: P04 implements the accepted-client information list and local lifecycle/feedback robustness alongside existing real-time messaging. Owner review and actual trusted-LAN verification remain pending. The [Client wireframe](assets/client-wireframe.svg) and [Server wireframe](assets/server-wireframe.svg) illustrate a connected-state design proposal using synthetic content.
 
 ## Shared layout
 
-Keep native Windows title bars, resizing, focus behavior and controls. Use a light canvas, white conversation surface, blue primary actions and text-backed state badges. Connection context lives in a left sidebar; conversation and composer occupy the larger right pane. No unrelated settings/search/contact features.
+Keep native Windows title bars, resizing, focus behavior and controls. Use a light canvas, white conversation surface, native actions and text-backed state badges. Connection context lives in a left sidebar; conversation and composer occupy the larger right pane. No unrelated settings/search/contact features.
 
 Default design client: 1120x720 at 96 DPI; design minimum: 900x620. Clamp initial size to the actual working area. If the scaled design minimum cannot fit a small display, use a working-area-bounded effective minimum and scroll the layout rather than clipping actions. Verify actual 100%/125%/150% and monitor changes in P01/P06.
 
 ## Client window
 
-| Region / planned control | Content and interaction |
+| Region / implemented control | Content and interaction |
 | --- | --- |
 | Header / identity | Chat Application, Client role and current state badge |
 | Connection sidebar | Username, server IPv4 address, port, Connect and Disconnect |
-| Conversation header | Accepted name/peer endpoint; distinct Disconnected/Connecting/Connected state |
+| Conversation header | Accepted client name; distinct Disconnected/Connecting/Connected state |
 | Transcript | Sender, body and local timestamp per message; outgoing/right and incoming/left grouping with explicit author |
 | Composer | Multiline text, remaining-length hint and Send |
 | Feedback/footer | Specific retry guidance; plaintext/local-demo scope; trimmed-history notice when relevant |
@@ -25,7 +25,7 @@ A client send is appended only when the server's authoritative message arrives. 
 
 ## Server window
 
-| Region / planned control | Content and interaction |
+| Region / implemented control | Content and interaction |
 | --- | --- |
 | Header | Server console and Stopped/Starting/Listening/Stopping state |
 | Listener sidebar | Bind IPv4/port, Start server and Stop server |
@@ -43,7 +43,8 @@ Default bind is loopback. Stopping closes the owned peer and listener, updates t
 | Disconnected | Valid fields only | Disabled | Disabled | Enabled |
 | Connecting / handshaking | Disabled | Cancel action | Disabled | Locked |
 | Connected | Disabled | Enabled | Valid text and no pending send | Locked |
-| Disconnecting / closing | Disabled | Disabled | Disabled | Locked |
+| Disconnecting | Disabled | Disabled while cleanup runs; explicit retry after failure | Disabled | Locked |
+| Closing | Disabled | Disabled | Disabled | Locked |
 | Failed -> Disconnected | Valid fields/retry | Disabled | Disabled | Enabled |
 
 Server Start is available only when stopped with valid bind/port. Stop is available while running; it may cancel Starting. Send requires a handshaken live client. State transitions are serialized, not triggered by decorative badges.
@@ -52,7 +53,7 @@ Actual Start/Stop and Connect/Cancel/Disconnect follow these states. Connected r
 
 ## Compose, keyboard and error behavior
 
-Enter sends valid text when connected; Shift+Enter inserts a newline. Tab/Shift+Tab navigate, never send. Respect IME composition; verify Turkish/Arabic input and multiline behavior physically before claiming acceptance. Keep typed text on validation/write failure; clear it after the accepted send path, avoiding duplicates/retries.
+Enter sends valid text when connected; Shift+Enter inserts a newline. Tab/Shift+Tab navigate, never send. Respect IME composition; verify Turkish/Arabic input and multiline behavior physically before claiming acceptance. Keep typed text on validation/write failure; clear it after the accepted send path, avoiding duplicates/retries. P04 keeps unconfirmed-send guidance across connection updates and input edits until a confirmed successful send. Starting/connecting/stopping/disconnecting commands have busy guards; a failed cleanup remains retryable.
 
 Use distinct Alt mnemonics, visible keyboard focus and accessible names/status descriptions. Messages are plain text; ampersands must remain literal and no received HTML/RTF or remote command is evaluated. Use native message-card labels with complete accessible author/time/body text.
 
@@ -96,3 +97,11 @@ Both roles now display real server-authoritative messages, explicit authors, loc
 The remaining-length hint counts UTF-16 units; emoji consumes a surrogate pair. Invalid/whitespace text cannot be submitted. One pending operation locks composer/Send; unrelated incoming messages still appear. Confirmation clears only that unchanged draft. Failure retains text, ends the affected connection and asks for explicit reconnect/retry. No human-read/delivery tick is implied.
 
 Actual separate EXEs exchanged Unicode/multiline and repeated equal text, then disconnected/reconnected and stopped/closed during messaging activity. Current 125% captures were reviewed. Synthetic Enter/button tests are automated evidence, not physical keyboard/IME/F5 or accessibility acceptance.
+
+## Implemented P04 information and recovery — 2026-11-22
+
+Connected client now lists exactly one accepted username, actual remote IP/port, local acceptance date/time with offset and Connected state. The row appears after welcome and is removed on disconnect/stop. Pending/rejected connections create no row. Reconnect supplies a fresh session; old callbacks cannot replace it. Horizontal scrolling exposes full measured columns; the row tooltip and list accessibility description include all fields. Tab reaches a populated list.
+
+Commands have busy guards. Start/Connect explicitly join old terminal work; Stop/Disconnect remain retryable when cleanup fails. Existing sender/echo/order/500-entry behavior remains. Unconfirmed-send guidance survives status changes and identity edits until a confirmed successful send; typed text stays available for explicit retry.
+
+Numeric times are local HH:mm:ss; complete accessible/connection dates use Gregorian yyyy-MM-dd HH:mm:ss zzz with invariant formatting. This avoids an unlabeled calendar change under ar-SA. Physical keyboard/IME, screen reader/high contrast, F5, other DPI/monitor transitions and trusted LAN remain owner checks.

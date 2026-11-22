@@ -36,6 +36,6 @@ Transcript retention is bounded to the latest 500 messages per window, with a vi
 
 ## Current state and review
 
-PR #4 is merged. P03 now provides real bidirectional text, server-assigned author/time/ID, bounded transcripts, one pending send and explicit cancellation/reconnect. Owner P03 review remains pending. Detailed participant information remains P04; actual LAN/physical acceptance is not inferred from loopback checks.
+PR #5 is merged. P04 now adds real accepted-client information, stale-row cleanup, terminal-notification joining, cancellation-race fixes and persistent unconfirmed-send guidance to the existing bidirectional baseline. Owner review and actual trusted-LAN verification remain pending; physical/second-computer acceptance is not inferred from loopback checks.
 
 See [requirements](REQUIREMENTS.md), [frontend UX](../frontend/UX.md), [architecture](../architecture/ARCHITECTURE.md) and [plan](../planning/PLAN.md).

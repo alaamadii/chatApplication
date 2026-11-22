@@ -7,13 +7,13 @@ Use Windows, Git, PowerShell 5.1+ and a stable .NET 10 SDK allowed by global.jso
 ```powershell
 git clone https://github.com/alaamadii/chatApplication.git
 cd chatApplication
-# While the P03 PR is open:
-git switch feat/realtime-messaging
+# While the P04 PR is open:
+git switch fix/connection-lifecycle
 ./scripts/dev.ps1 doctor
 ./scripts/dev.ps1 check
 ```
 
-After owner merge, use main and a fast-forward pull. The local P03 environment on 2026-11-21 reported SDK 10.0.402, .NET/WindowsDesktop 10.0.13, Windows 10.0.22631, PowerShell 5.1.22621.6133 and Git 2.53.0.windows.1.
+After owner merge, use main and a fast-forward pull. The local P04 environment on 2026-11-22 reported SDK 10.0.402, .NET/WindowsDesktop 10.0.13, Windows 10.0.22631, PowerShell 5.1.22621.6133 and Git 2.53.0.windows.1.
 
 | Command | Implemented behavior |
 | --- | --- |
@@ -92,3 +92,21 @@ Send Turkish/Arabic, emoji and an ampersand from Client; use Shift+Enter for a s
 Disconnect/reconnect explicitly and send again. Stop Server or close a window during representative send activity; verify recovery/shutdown without claiming every interrupted message was delivered. Failed/unconfirmed text remains for review, and no automatic resend occurs. Transcripts retain latest 500 in that window only; closing releases them.
 
 Actual scripted separate-EXE checks on 2026-11-21 used an owned ephemeral loopback port, native Unicode character messages/UI Automation and condition-based waits. This is separate from physical keyboard/IME/F5, actual LAN or another-computer checks. See TESTING for results and capture provenance.
+
+## P04 accepted-client and recovery procedure
+
+After Connect, inspect Server's Connected client list. It must show only the accepted username, actual remote client IP/port, local Gregorian connection date/time with offset and Connected state. Scroll horizontally for all columns, or use the complete row tooltip/accessibility description. Listening describes the server, not a pending client's acceptance.
+
+Disconnect explicitly: the row/context clears. Reconnect: a fresh session supplies the row. Stop/close removes live information. If cleanup reports failure, wait for or retry the explicit Stop/Disconnect action; successful completion is not assumed. A retained unconfirmed-send warning clears only after a successful confirmed send, so inspect the draft before retrying.
+
+### Trusted LAN — owner procedure, not performed
+
+1. Use two deliberately selected Windows computers on the same trusted network. Verify compatible .NET SDK/WindowsDesktop runtime and record the exact tested commit/build and actual date.
+2. On Server, inspect the intended adapter's IPv4 in Windows network properties or local ipconfig output. Do not publish the full output. Use that actual address as Bind IPv4 and an available nonzero port such as 5000.
+3. Start Server. On the other computer set Client's Server IPv4 to that server adapter address and the same port, enter a synthetic name and Connect. 127.0.0.1 refers to each computer itself and cannot reach the other machine.
+4. Verify one accepted row with the real remote client endpoint, name/date/state; exchange Turkish/Arabic/emoji/multiline text both ways and intentionally send identical text twice.
+5. Disconnect/reconnect, stop/restart and close each program normally. Record observed state/row removal, error recovery and shutdown results. Interrupted delivery must be recorded as uncertain when unconfirmed.
+6. If the network blocks the connection, stop and have the owner/admin review the existing network/firewall policy. Do not disable protection or add broad rules automatically.
+7. Record Windows/SDK, commit/build, commands, actual outcomes and pending failures. Keep private addresses in owner-local notes or redact them in public evidence.
+
+P04-004 remains Pending because this session has no second Windows machine/authorized remote target for a genuine two-machine test. Two local EXEs and loopback tests do not satisfy it. The P06 second-computer clean-checkout requirement also remains separate.

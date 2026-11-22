@@ -1,6 +1,6 @@
 # TCP protocol v1
 
-Status: P03 implements connection packets plus real-time chat/message flow. One accepted client and the Server operator form the baseline.
+Status: P03 connection/message packets are preserved by P04; no packet, field, version or default deadline was added or relaxed. One accepted client and the Server operator form the baseline.
 
 ## Framing and parsing
 
@@ -60,3 +60,11 @@ Arrival order is preserved regardless of timestamps. Display local HH:mm:ss; exp
 A completed write/echo is not human receipt or a read acknowledgment. A disconnect can make delivery uncertain. No automatic reconnect, replay or resend, and no exactly-once guarantee across sessions. Closing a session cancels/faults pending acceptance and joins owned work; old callbacks/sends cannot migrate to a new session.
 
 See [architecture](ARCHITECTURE.md), [security](../quality/SECURITY.md) and [executed tests](../quality/TESTING.md).
+
+## P04 metadata and lifecycle boundary — 2026-11-22
+
+ConnectedClientInfo is server-local, immutable accepted-session data, captured from the actual socket endpoint and the server UTC clock only after welcome succeeds. It adds no wire fields or packet types. The Client cannot supply its authoritative endpoint/time/state. Server Listening and accepted-peer Connected are separate concepts.
+
+Explicit Start/Connect join a previous terminal callback/lifetime before creating another session, under a bounded cleanup wait. Disconnect/Stop failures still abort I/O, retain observable owned completion and permit explicit cleanup retry. An expected canceled final peer notification is suppressed only when its server lifetime was canceled.
+
+P04 does not alter delivery guarantees, text/frame limits, recent-ID bounds or protocol deadlines. Local numeric dates/times use invariant formatting after conversion to the user's timezone, so an ISO-shaped date does not silently use a different calendar. No encryption/authentication, replay or automatic recovery protocol is introduced.

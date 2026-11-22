@@ -1,6 +1,6 @@
 # Visual design system
 
-Status: P03 applies the native shell, real connection-state tones and original native message cards; custom primary-action tokens remain proposals. This is not complete accessibility acceptance or a claim of pixel identity with the wireframes. [theme.json](theme.json) is the machine-readable design source for current contrast checks. P01 maps reviewed tokens into shared Presentation code and verifies them there.
+Status: P04 adds real accepted-client metadata to the established presentation. P03 applies the native shell, real connection-state tones and original native message cards; custom primary-action tokens remain proposals. This is not complete accessibility acceptance or a claim of pixel identity with the wireframes. [theme.json](theme.json) is the machine-readable design source for current contrast checks. P01 maps reviewed tokens into shared Presentation code and verifies them there.
 
 ## Palette
 
@@ -42,7 +42,7 @@ Use shared tokens rather than unrelated hex values in Forms. Fonts/components mu
 
 Use PerMonitorV2 and a 96-DPI design baseline. Layout panels and text measurement reflow messages on resize; actions/status remain visible or reachable through scrolling. Bound effective minimum size to the real working area.
 
-In high contrast, prefer system foreground/background/highlight colors and native focus over decorative palette choices. Physical monitor transitions and assistive review remain pending until implemented.
+In high contrast, prefer system foreground/background/highlight colors and native focus over decorative palette choices. Physical monitor transitions and assistive review remain pending until performed.
 
 English shell labels; Turkish/Arabic/English message content. Keep sender, timestamp and body in separate accessible elements to reduce bidi confusion. Do not encode information only in left/right alignment.
 
@@ -57,3 +57,9 @@ ConnectionBadge now maps actual states to success (#166534/#DCFCE7), warning (#9
 On system-color changes the shell reapplies semantic colors. High contrast uses system Control/Window backgrounds with matching foregrounds, native disabled appearance and focus behavior. This branch is implemented but physical high-contrast/screen-reader acceptance has not been performed.
 
 Default/minimum/wide actual window captures were reviewed on the current 125% display. Root/independent sidebar scrolling keeps smaller working areas and expanded guidance reachable. Automated native checks found and verified fixes for initial scaling, minimum-size scrollbars and long-guidance overlap. Physical keyboard/F5, 100%/150% scaling and monitor transitions remain pending.
+
+## P04 client-information presentation
+
+Keep the existing palette/fonts/native controls. A populated ListView displays accepted name, endpoint, connected-at and state; no decorative fake rows or extra participant colors are introduced. Columns are measured from header/cell text using current control graphics/font/DPI with padding. Native horizontal scrolling preserves full content in the fixed-width sidebar; tooltip and accessible description expose full metadata. The list joins Tab navigation only when populated.
+
+Connection dates and full accessible message dates use invariant Gregorian numeric formatting after local-time conversion. Text-based state and explicit author remain essential; color/alignment alone never communicates identity. Command failures and unconfirmed-send guidance remain separate from the transcript.
