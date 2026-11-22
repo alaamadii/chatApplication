@@ -7,4 +7,5 @@ public enum ConnectionState
 }
 
 public sealed record ConnectionSnapshot(
-    ConnectionState State, string? UserName = null, Guid? SessionId = null, string? ErrorCode = null);
+    ConnectionState State, string? UserName = null, Guid? SessionId = null, string? ErrorCode = null,
+    ConnectedClientInfo? ClientInfo = null);

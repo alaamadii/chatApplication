@@ -1,3 +1,4 @@
+using System.Globalization;
 using ChatApplication.Core;
 using ChatApplication.Presentation.Theme;
 
@@ -23,8 +24,8 @@ public sealed class MessageCard : Panel
         TabStop = false;
         _author = CreateLabel(message.AuthorName, fonts.Metadata, "Author");
         var local = message.SentAtUtc.ToLocalTime();
-        _time = CreateLabel(local.ToString("HH:mm:ss"), fonts.Metadata, "Time");
-        _time.AccessibleDescription = local.ToString("yyyy-MM-dd HH:mm:ss zzz");
+        _time = CreateLabel(local.ToString("HH:mm:ss", CultureInfo.InvariantCulture), fonts.Metadata, "Time");
+        _time.AccessibleDescription = local.ToString("yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture);
         _body = CreateLabel(message.Text, fonts.Body, "Body");
         Controls.AddRange([_author, _time, _body]);
         ChatTheme.Apply(this);

@@ -1,6 +1,62 @@
 # Validation strategy and current evidence
 
-## P03 messaging evidence — 2026-11-21
+## P04 information and robustness evidence — 2026-11-22
+
+Status: local implementation/evidence prepared for owner review. P04-001/002/003 artifacts are complete; **P04-004 trusted-LAN verification remains Pending**. Confirmed [PR #5](https://github.com/alaamadii/chatApplication/pull/5) merged at **b74825a1fc5b2afad7bde8330d60bad39b41cdee** and its final Windows/documentation runs succeeded for d15f91640dd78cbfbd1669e4d0274eb51f5a959e. Inspected a clean tree/correct origin, fetched, fast-forwarded main and created **fix/connection-lifecycle**.
+
+| Evidence | Executed result |
+| --- | --- |
+| Prerequisites | ./scripts/dev.ps1 doctor passed: Windows 10.0.22631, PowerShell 5.1.22621.6133, Git 2.53.0.windows.1, SDK 10.0.402, .NET/WindowsDesktop 10.0.13 |
+| Behavioral suite | ./scripts/dev.ps1 test passed: **139 passed, 0 failed, 0 skipped** — 31 Core, 80 Networking, 28 native App |
+| Build | Release build passed, 0 warnings/0 errors |
+| Dependencies | Official nuget.org direct/transitive advisory query for all eight projects reported no known vulnerable packages at execution time |
+| Documentation | ./scripts/check-docs.ps1 passed: 24 artifacts, 22 Markdown files, 144 local links, 29 tasks/106 references, 10 contrast pairs, 2 labeled SVG proposals |
+| Full development check | ./scripts/dev.ps1 check passed after final source changes: restore, Release build, all 139 cases, format verification and documentation validation |
+| Hosted CI | Exact final-head Windows/documentation results are maintained in the P04 PR after publication; local results are not hosted evidence |
+
+### Reproduced defects and regression scope
+
+Before fixes, three targeted regression cases all failed: explicit Start/Connect completed with rejection while a final terminal observer was still finishing, and a throwing Disconnecting observer left the Client reader active. The updated commands join old terminal ownership before replacement; any Stop/Disconnect failure still aborts I/O. These three cases now pass.
+
+A subsequent 12-cycle simultaneous disconnect/stop run exposed an expected cancellation escaping the final peer callback and faulting PeerCompletion. Only cancellation from the actual server lifetime is now suppressed at that final boundary; unrelated failures remain visible. The repeated lifecycle case requires successfully completed accept/peer/client ownership and cleared metadata.
+
+Metadata cases verify the actual socket address/port, canonical name, session ID and injected UTC clock; pending/busy/invalid peers never gain metadata. They cover fresh reconnect, abrupt reset, incomplete handshake/accepted frames, stop clearing, 12 simultaneous lifecycle cycles and a deliberately noncooperative observer. A cleanup timeout must keep Stopping, clear live metadata and expose incomplete owned work; the fixture then releases its observer and verifies successful explicit cleanup retry.
+
+Native cases preserve P03 regressions and add accepted-only list values, full accessible local date/offset, column reachability under resize, busy-peer isolation, clearing, ar-SA calendar behavior, retained unconfirmed-send guidance through edits/reconnect, confirmed retry and either Form closing during submission with original-port rebind.
+
+The visible 512-message burst passed alone, then exceeded the existing 20-second fixture deadline in a full run. Explicit canvas bounds and batched append/trim layout resolved that observed cost without increasing the fixture deadline or hiding controls. Full-run visible-burst results included 7.57 s and 13.59 s after the change. The test pumps native events, trims/disposes live cards to 500, resizes and closes. This is synthetic bounded evidence, not a throughput or physical usability certification.
+
+Fixture corrections: default raw TcpClient sockets may expose an IPv4-mapped local address, so comparisons normalize that representation against the server's real IPv4 endpoint. Abrupt closure can surface as EOF or reset; require actual metadata removal and recovery rather than one OS-specific error. Reconnect actions wait for their real enabled state, not an earlier intermediate notification.
+
+### Actual separate-process demonstration
+
+Launched actual Release Server and Client EXEs with synthetic identities, an owned ephemeral loopback reservation and condition-based UI Automation/native Unicode character input. A final-source pass used **127.0.0.1:51276**; the final repeat after immediate command-input locking used **127.0.0.1:51230** and also exercised native horizontal list scrolling. An earlier complete pass used 53804 before the invariant-date correction.
+
+Executed and passed:
+1. Actual listen/hello/welcome; one accepted row and full name/remote endpoint/date-offset/Connected accessibility description.
+2. Both directions with Arabic/Turkish/emoji, multiline, ampersand and literal markup; four sends produced exactly four entries at both windows, including two deliberate identical texts.
+3. Explicit disconnect cleared row/description; reconnect as Alaa_Reconnect supplied fresh information and another message.
+4. Stop cleared metadata and disconnected Client; explicit Server/Client restart succeeded.
+5. Intentionally terminated only the probe-owned Client process; Server removed its accepted information.
+6. Started a replacement actual Client as Alaa_Recovery; it connected explicitly and supplied one fresh row.
+7. Closed Server during representative operator-send activity; replacement Client observed disconnection. Server and replacement Client closed normally with **exit 0**; the original Client was intentionally terminated and is not counted as a normal exit.
+8. Rebound the owned server port successfully after shutdown.
+
+An interrupted send may be accepted or uncertain; shutdown checks do not promise delivery. Local probes/images remain ignored under .local/p04-review and add no production test hooks.
+
+The PowerShell UI Automation assembly lacked LegacyIAccessiblePattern; the ignored probe uses the native MSAA description plus UIA list items to verify full metadata. Initial actual EXEs exposed a Hijri year inside an ISO-shaped date on Arabic Windows. Invariant numeric formatting now retains local time/offset with an unambiguous Gregorian date; native ar-SA and final actual-process checks verify it.
+
+### Visual and remaining owner evidence
+
+Inspected genuine PrintWindow Server/Client Unicode/multiline captures at measured **DPI 120 (125%)**, from this branch's P04 Release working tree on 2026-11-22. Server shows one accepted row with native horizontal access; a right-scrolled capture was also inspected for state/date access. Complete metadata is exposed by tooltip/accessibility. Captures are local review evidence, not published final screenshots or owner approval.
+
+Still pending:
+- Owner P04 code/UI review and phase acceptance.
+- **P04-004:** genuine two-machine trusted-LAN test. This session has no second Windows machine/authorized remote target; follow ENVIRONMENT. No firewall/router rules or network discovery were changed.
+- Physical keyboard/held keys/focus/mnemonics/IME, high contrast/screen reader, F5/debug stop, actual 100%/150% and monitor transitions.
+- P06 clean published checkout, second-computer evidence and final owner-approved screenshots.
+
+## Historical P03 messaging evidence — 2026-11-21
 
 Status: implementation complete, owner acceptance pending. Confirmed [PR #4](https://github.com/alaamadii/chatApplication/pull/4) merged at **7e1f95c6167280e017e4a8bf006cfc51cf2f7456**. Inspected a clean tree/correct origin, fetched, fast-forwarded main and created **feat/realtime-messaging**. Sibling assignments were not changed.
 

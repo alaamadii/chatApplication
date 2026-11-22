@@ -1,6 +1,6 @@
 # Technology stack and version policy
 
-## Implemented P03 baseline — 2026-11-21
+## Implemented P04 baseline — 2026-11-21
 
 | Technology | Current placement | Verified configuration |
 | --- | --- | --- |
@@ -22,9 +22,9 @@ The development machine reports Windows 10.0.22631 and Microsoft.NETCore.App / M
 
 [NuGet.Config](../../NuGet.Config) clears inherited package/audit sources and uses the official nuget.org v3 feed. No credentials are stored. Test packages are exact direct version pins verified by an actual restore; transitive versions are resolved by NuGet and are not locked by a packages.lock.json. Production projects have no external PackageReference.
 
-Official package metadata: [test SDK 18.12.0](https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/18.12.0), [xUnit 2.9.3](https://www.nuget.org/packages/xunit/2.9.3) and [VS adapter 4.0.1](https://www.nuget.org/packages/xunit.runner.visualstudio/4.0.1). Restore/build/discovery succeeded with this combination. P03 executes 31 Core, 70 Networking and 23 serial native App cases, including message validation/delivery/order/pending failure and native rendering/retention. Networking/Networking.Tests target net10.0; no new package or version upgrade was needed.
+Official package metadata: [test SDK 18.12.0](https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/18.12.0), [xUnit 2.9.3](https://www.nuget.org/packages/xunit/2.9.3) and [VS adapter 4.0.1](https://www.nuget.org/packages/xunit.runner.visualstudio/4.0.1). Restore/build/discovery succeeded with this combination. P04 executes 31 Core, 80 Networking and 28 serial native App cases, including message validation/delivery/order/pending failure and native rendering/retention. Networking/Networking.Tests target net10.0; no new package or version upgrade was needed.
 
-On 2026-11-21, restore auditing and the explicit direct/transitive advisory query against nuget.org reported no known vulnerable packages. This is a point-in-time advisory result, not a security certification. Recheck when changing dependencies.
+On 2026-11-22, restore auditing and the explicit direct/transitive advisory query against nuget.org reported no known vulnerable packages. This is a point-in-time advisory result, not a security certification. Recheck when changing dependencies.
 
 ## Implemented transport and remaining work
 

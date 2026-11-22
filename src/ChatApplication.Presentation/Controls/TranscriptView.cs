@@ -59,7 +59,8 @@ public sealed class TranscriptView : UserControl
             TextAlign = ContentAlignment.MiddleCenter,
             UseMnemonic = false
         };
-        _content = new Panel { Dock = DockStyle.Top, Height = 0, Tag = ThemeRole.Surface };
+        // Explicit canvas bounds avoid Dock re-running layout over every retained card on append/scroll.
+        _content = new Panel { Height = 0, Tag = ThemeRole.Surface };
         _viewport = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Tag = ThemeRole.Surface };
         _viewport.Controls.Add(_content);
         _viewport.Controls.Add(_empty);
@@ -74,23 +75,35 @@ public sealed class TranscriptView : UserControl
         if (!_ids.Add(message.MessageId)) { return; }
         var trimmed = false;
         var card = new MessageCard(message, outgoing, _fonts);
-        _cards.Add(card);
-        _content.Controls.Add(card);
-        if (_cards.Count > MaximumMessages)
+        SuspendLayout();
+        _viewport.SuspendLayout();
+        _content.SuspendLayout();
+        try
         {
-            var removed = _cards[0];
-            _cards.RemoveAt(0);
-            _ids.Remove(removed.Message.MessageId);
-            _content.Controls.Remove(removed);
-            removed.Dispose();
-            HasTrimmedMessages = true;
-            trimmed = true;
+            _cards.Add(card);
+            _content.Controls.Add(card);
+            if (_cards.Count > MaximumMessages)
+            {
+                var removed = _cards[0];
+                _cards.RemoveAt(0);
+                _ids.Remove(removed.Message.MessageId);
+                _content.Controls.Remove(removed);
+                removed.Dispose();
+                HasTrimmedMessages = true;
+                trimmed = true;
+            }
+            _empty.Visible = false;
+            _summary.Visible = true;
+            _summary.Text = $"{_cards.Count} messages";
+            _notice.Visible = HasTrimmedMessages;
+            Reflow(force: true, startIndex: trimmed ? 0 : _cards.Count - 1);
         }
-        _empty.Visible = false;
-        _summary.Visible = true;
-        _summary.Text = $"{_cards.Count} messages";
-        _notice.Visible = HasTrimmedMessages;
-        Reflow(force: true, startIndex: trimmed ? 0 : _cards.Count - 1);
+        finally
+        {
+            _content.ResumeLayout(performLayout: false);
+            _viewport.ResumeLayout(performLayout: true);
+            ResumeLayout(performLayout: true);
+        }
         _viewport.ScrollControlIntoView(card);
     }
 

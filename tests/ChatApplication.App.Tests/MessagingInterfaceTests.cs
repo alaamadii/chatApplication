@@ -38,8 +38,8 @@ public sealed class MessagingInterfaceTests
             Assert.Equal(message.Text, body.Text);
             Assert.False(body.UseMnemonic);
             Assert.Equal("Server", Find<Label>(cards[0], "Author").Text);
-            Assert.Equal(message.SentAtUtc.ToLocalTime().ToString("HH:mm:ss"), Find<Label>(cards[0], "Time").Text);
-            Assert.Equal(message.SentAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss zzz"),
+            Assert.Equal(message.SentAtUtc.ToLocalTime().ToString("HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture), Find<Label>(cards[0], "Time").Text);
+            Assert.Equal(message.SentAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss zzz", System.Globalization.CultureInfo.InvariantCulture),
                 Find<Label>(cards[0], "Time").AccessibleDescription);
             var originalHeight = cards[0].Height;
             form.ClientSize = new Size(320, 500);

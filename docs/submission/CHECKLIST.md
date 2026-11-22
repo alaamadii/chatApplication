@@ -1,6 +1,6 @@
 # Course submission and owner evidence
 
-Current state: P02 PR #4 merged; P03 messaging implemented, owner review pending. Course submission is not ready: P04 detailed peer information/robustness and P06 final evidence remain pending.
+Current state: P03 PR #5 merged; P04 accepted-peer information and local robustness implemented. Owner P04 review and P04-004 trusted-LAN verification remain pending. Course submission is not ready: final P06 evidence/review remains pending.
 
 Repository: [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication), currently public. The instructor recommends YMH219-ChatApp; retain the owner's selected repository and do not create another copy.
 
@@ -24,7 +24,7 @@ Author: Alaa Madi, as supplied. The original sheet requires name/student number;
 - [ ] Owner approves final PR/course readiness.
 - [ ] Owner submits GitHub profile link in Classroom.
 
-Current P03 commands/results are recorded in TESTING, including real bidirectional messaging in separate EXEs, repeated equal text, reconnect and normal close. Captured messaging-window review covers the current 125% display only. Physical UI, F5/other DPI, final completed-app images and second-computer evidence remain pending. Wireframes do not complete these checks.
+Current P04 commands/results are recorded in TESTING, including 139 local cases, real accepted-peer metadata, bidirectional messaging, abrupt owned-process drop/recovery and normal close. Captured messaging-window review covers the current 125% display only. Physical UI, F5/other DPI, final completed-app images and second-computer evidence remain pending. Wireframes do not complete these checks.
 
 ## Screenshots and final record
 

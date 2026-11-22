@@ -55,10 +55,17 @@ public sealed class ChatClient : IAsyncDisposable
         await _lifecycle.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            if (!_runTask.IsCompleted || _send.CurrentCount == 0)
+            if (Snapshot.State != ConnectionState.Disconnected)
             {
                 throw new InvalidOperationException("Client is already active or completing a send.");
             }
+            // The final Disconnected callback may still be running, or an old sender unwinding.
+            // Join before replacing any generation-owned fields. Send cleanup never takes this gate.
+            using var cleanup = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            cleanup.CancelAfter(_options.ShutdownTimeout);
+            await _runTask.WaitAsync(cleanup.Token).ConfigureAwait(false);
+            await _send.WaitAsync(cleanup.Token).ConfigureAwait(false);
+            _send.Release();
             _lifetime?.Dispose();
             _lifetime = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             run = _runTask = RunAsync(endpoint, normalized, ++_generation, ready, _lifetime.Token);
@@ -238,6 +245,7 @@ public sealed class ChatClient : IAsyncDisposable
             _lifetime = null;
             await _updates.PublishAsync(new(ConnectionState.Disconnected), shutdown.Token).ConfigureAwait(false);
         }
+        catch { Abort(); throw; }
         finally { _lifecycle.Release(); }
     }
 

@@ -1,6 +1,6 @@
 # Security and data boundaries
 
-Status: P03 implements bounded framing/strict JSON/directions, supported names/text, authoritative server metadata, one pending/accepted peer, cancellation/deadlines and literal message rendering. There is no transcript persistence. These safeguards are not authentication, encryption or a security certification.
+Status: P04 adds accepted socket metadata and verified local lifecycle/feedback fixes. P03 implements bounded framing/strict JSON/directions, supported names/text, authoritative server metadata, one pending/accepted peer, cancellation/deadlines and literal message rendering. There is no transcript persistence. These safeguards are not authentication, encryption or a security certification.
 
 ## Trust model
 
@@ -15,7 +15,7 @@ Do not scan networks, change firewall/router rules or bind broadly automatically
 | Data | Owner / planned lifetime |
 | --- | --- |
 | Username | Accepted connection session; display claim, not authentication |
-| Peer endpoint / connected time | Server memory while peer is connected; shown for course requirement |
+| Peer endpoint / connected time | Server-local immutable accepted-session value and one UI row; removed from live state on disconnect/stop. No wire claim is trusted or saved |
 | Message body / ID / server UTC time | Current ordered flow and latest 500 visible messages/window |
 | Composer text | Native control until accepted send/user editing; keep on recoverable failure |
 | Diagnostic failure | Controlled code/guidance without message bodies, credentials or stack dumps |
@@ -48,3 +48,11 @@ Exclude bin/obj/.local/TestResults, personal IDE state, .env/certificates and tr
 Test malformed/oversized/truncated frames, spoofed direction/role, Unicode limits, slow/incomplete peers, extra clients, repeated disconnect/close and UI callbacks during cancellation. Assert no leaked owned tasks/sockets or crash; do not claim a protocol limit is implemented until tests/code exist.
 
 Physical LAN/native UI/high-contrast/another-computer results remain separate from automated loopback tests. See [PROTOCOL](../architecture/PROTOCOL.md), [TESTING](TESTING.md) and [submission](../submission/CHECKLIST.md).
+
+## P04 accepted information and verified local recovery
+
+The server captures remote endpoint and UTC acceptance time from its own accepted socket/clock. This is connection metadata, not an account identity or verified physical location. Pending/busy/rejected peers never become accepted rows. Clearing live peer state does not erase author names already retained in the bounded conversation.
+
+Explicit Start/Connect join prior terminal callbacks/sends before replacing session fields. A failed Disconnect/Stop still aborts I/O; incomplete cleanup remains observable/retryable. No old callback may restore a previous row or clear the new row. Persistent unconfirmed-send guidance explains uncertain delivery without automatic replay.
+
+Trusted-LAN verification is not performed in this session: no second Windows machine/authorized remote execution target is available. Follow ENVIRONMENT on deliberately selected trusted machines. Do not scan for peers, change firewall/router rules automatically or publish private endpoints/conversations in evidence. Dependency advisory results remain point-in-time checks.

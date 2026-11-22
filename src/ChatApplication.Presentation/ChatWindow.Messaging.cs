@@ -15,6 +15,9 @@ public abstract partial class ChatWindow
     private bool _sending;
     private readonly bool _isServer;
 
+    protected bool IsSending => _sending;
+    protected virtual void OnMessageSendFinished() { }
+
     protected void SetMessagingAvailable(bool available)
     {
         _messagingAvailable = available;
@@ -51,19 +54,25 @@ public abstract partial class ChatWindow
         try
         {
             await SendMessageAsync(submitted);
-            if (!IsClosing && _messageInput.Text == submitted) { _messageInput.Clear(); }
+            if (!IsClosing)
+            {
+                if (_messageInput.Text == submitted) { _messageInput.Clear(); }
+                _unconfirmedSend = false;
+                RefreshFeedback();
+            }
         }
         catch (Exception)
         {
             if (!IsClosing)
             {
-                Feedback.Text = "Message was not confirmed. The connection may have ended; text is kept. Reconnect explicitly before retrying.";
+                _unconfirmedSend = true;
+                RefreshFeedback();
             }
         }
         finally
         {
             _sending = false;
-            if (!IsClosing) { UpdateComposer(); }
+            if (!IsClosing) { UpdateComposer(); OnMessageSendFinished(); }
         }
     }
 }

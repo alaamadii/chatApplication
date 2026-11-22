@@ -1,6 +1,6 @@
 # Architecture
 
-## Implemented P03 structure
+## Implemented P04 structure
 
 [ChatApplication.slnx](../../ChatApplication.slnx) contains eight projects.
 
@@ -19,7 +19,7 @@ Dependencies: Networking -> Core; Presentation -> Core; Apps -> Core/Networking/
 
 ChatServer owns its listener, accept task and at most one pending/accepted ClientSession task. Admission is reserved before handshake I/O. The accept loop handles busy rejection serially with a bounded initial-frame drain; it creates no unbounded arrival tasks.
 
-ClientSession owns its socket, framed stream, accepted name and cancellation source. PeerCompletion releases the peer slot only after its read loop and any active operator dispatch have unwound. ChatClient owns one connect/handshake/continuous-read task. Connected requires a validated welcome, matching canonical name and nonempty session GUID. EOF/disconnect clears live peer state; reconnect is explicit.
+ClientSession owns its socket, framed stream, accepted name and cancellation source. After welcome succeeds it captures the actual socket endpoint and server TimeProvider UTC acceptance time in immutable ConnectedClientInfo. ConnectionSnapshot carries this server-local value alongside its compatible name/session fields. Pending/busy/rejected peers have no accepted metadata; server peer notifications check their source session. PeerCompletion releases the peer slot only after its read loop and any active operator dispatch have unwound. ChatClient owns one connect/handshake/continuous-read task. Connected requires a validated welcome, matching canonical name and nonempty session GUID. EOF/disconnect clears live peer state; reconnect is explicit. Start/Connect may see a terminal snapshot before its final observer returns: they now join the old lifetime (and pending Client sender) under the lifecycle gate before replacing fields, with a shutdown-budget deadline. These are explicit user commands, never automatic reconnects.
 
 FramedConnection has one reader and a serialized complete-frame writer. It bounds allocation and parsing and owns stream disposal. See [PROTOCOL](PROTOCOL.md).
 
@@ -43,7 +43,7 @@ A per-read-loop queue/set remembers at most 500 recent message IDs. Repeated rec
 
 ConnectionUpdates serializes awaited immutable state notifications. MessageUpdates awaits immutable messages with cancellation/deadline tokens. Observers must honor cancellation and must not reenter service cleanup from a notification. A failed message callback fails the session; owned Forms use cancellable InvokeAsync.
 
-Default deadlines: connect/handshake/send/shutdown 5 seconds; frame completion 10 seconds after its first byte. Idle accepted reads do not expire. Shutdown budgets include lifecycle admission, close attempt, joining and final state notification. Failure retains observable completion instead of claiming successful cleanup.
+Default deadlines: connect/handshake/send/shutdown 5 seconds; frame completion 10 seconds after its first byte. Any Disconnect/Stop failure still aborts owned I/O. Session-final notification cancellation is normal only when its server lifetime was actually canceled; unrelated failures remain observable. Session abort is idempotent and its cancellation source is disposed after dispatch joins. Idle accepted reads do not expire. Shutdown budgets include lifecycle admission, close attempt, joining and final state notification. Failure retains observable completion instead of claiming successful cleanup.
 
 Forms own their command Tasks and pending UI send. Async-void is confined to framework event boundaries that await handled commands. Normal close guards UI callbacks, aborts I/O, joins commands/service disposal and pending UI send, then disposes controls and fonts. Direct Form disposal aborts I/O; normal awaited close is the verified application path.
 
@@ -51,14 +51,16 @@ Forms own their command Tasks and pending UI send. Async-void is confined to fra
 
 ChatWindow owns shared geometry, role composition, per-window fonts, TranscriptView and MessageComposer. MessageCard separates literal author, local time and body labels; outgoing alignment/color supplement explicit author text. Point fonts are borrowed from the window, disposed after its children.
 
+ServerForm.ClientInfo projects one accepted row only, with measured DPI-aware column widths, native horizontal scrolling, a complete tooltip/accessibility description and keyboard access when populated. Connected is the row's accepted-peer state, distinct from the server's Listening state. Stopping/Stopped or peer removal clears the row.
+
 The transcript retains only the latest 500 cards and corresponding IDs. Removing a card removes its collection/control references and disposes it immediately. A persistent trim notice explains the loss. Reconnect retains this bounded window view; closing the window releases it. There is no other transcript, history file or global message collection.
 
-Native scrolling follows the latest appended message. Resize/DPI changes remeasure wrapping. At stable width only the new card is measured; width/DPI caches avoid repeated measurement of retained cards. Default/minimum/working-area and small-display scrolling retain P01 regressions.
+Native scrolling follows the latest appended message. Resize/DPI changes remeasure wrapping. At stable width only the new card is measured; width/DPI caches avoid repeated measurement of retained cards. P04 uses explicit scrolling-canvas bounds and batches append/trim layout to avoid repeated Dock layout across retained cards. The visible 512-message regression exercises real native controls, resize, trim/disposal and close within the existing fixture deadline. Default/minimum/working-area and small-display scrolling retain P01 regressions.
 
-Composer/button share one guarded async send path. It disables editing during a pending submission, displays UTF-16 remaining length, clears only a successfully confirmed unchanged draft and retains failed/newer text. Enter sends, Shift+Enter inserts a line, Tab navigates. IME composition suppresses Enter submission while active; physical input/assistive verification remains pending.
+Composer/button share one guarded async send path. It disables editing during a pending submission, displays UTF-16 remaining length, clears only a successfully confirmed unchanged draft and retains failed/newer text. Unconfirmed-send guidance is stored independently of current connection guidance and remains until a successful confirmed send. Busy command flags prevent repeated click queues; failed cleanup permits explicit Stop/Disconnect retry. Enter sends, Shift+Enter inserts a line, Tab navigates. IME composition suppresses Enter submission while active; physical input/assistive verification remains pending.
 
 ## Remaining scope
 
-P04 completes detailed participant metadata/list and the wider robustness/LAN review. Optional rooms/private messages/history remain deferred. P06 owns final images, clean checkout, another computer and submission review. Passing CI does not provide owner acceptance.
+P04 implements the accepted-client list and the documented local robustness cases. P04-004 trusted-LAN verification and owner review remain pending. Optional rooms/private messages/history remain deferred. P06 owns final images, clean checkout, another computer and submission review. Passing CI does not provide owner acceptance.
 
 See [decisions](DECISIONS.md), [frontend file guide](../frontend/FILE_GUIDE.md) and [testing](../quality/TESTING.md).

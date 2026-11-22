@@ -8,6 +8,7 @@ internal sealed partial class ServerForm
     {
         _bindAddress.Font = Fonts.Body;
         _port.Font = Fonts.Body;
+        _clients.Font = Fonts.Body;
         UiLayout.AddRow(Sidebar, UiLayout.Text("Server console", Fonts.Section));
         UiLayout.AddRow(Sidebar, UiLayout.Text("Choose a local listener endpoint.", Fonts.Metadata, secondary: true));
         UiLayout.AddRow(Sidebar, UiLayout.Field("&Bind IPv4 address", _bindAddress));
@@ -16,8 +17,8 @@ internal sealed partial class ServerForm
         UiLayout.AddRow(Sidebar, UiLayout.Text(
             "Start a local listener, then connect one client.",
             Fonts.Metadata, secondary: true));
-        UiLayout.AddRow(Sidebar, UiLayout.Text("Client information (P04)", Fonts.Section));
-        _peerSummary = UiLayout.Text("No accepted peer. Detailed client information arrives in P04.", Fonts.Metadata, secondary: true);
+        UiLayout.AddRow(Sidebar, UiLayout.Text("Connected client", Fonts.Section));
+        _peerSummary = UiLayout.Text("No accepted peer.", Fonts.Metadata, secondary: true);
         _peerSummary.Name = "PeerSummary";
         UiLayout.AddRow(Sidebar, _peerSummary);
 

@@ -80,3 +80,21 @@ Recent receive IDs and visible-card IDs are each bounded to 500. This prevents r
 Presentation now references Core because it renders actual immutable values, superseding ADR-018's P02 no-Core-reference boundary. It remains independent of Networking. Separate literal author/time/body labels expose full local date/offset, use per-window fonts and apply incoming/outgoing tokens. Keep latest 500 cards; remove/dispose older controls and show a persistent notice. Reconnect keeps this bounded view; close releases it.
 
 One guarded UI send path serves button/Enter, locks composition during acceptance, counts UTF-16 units and clears only a confirmed unchanged draft. Respect Shift+Enter, Tab and active IME composition. Cache width/DPI measurement to avoid remeasuring every card on each append. Tests distinguish synthetic key/native automation from physical keyboard/IME acceptance.
+
+## ADR-022 — Accepted-session metadata stays local — 2026-11-22
+
+Capture immutable ConnectedClientInfo after successful welcome: canonical name, existing session GUID, actual remote socket IPv4/port and server TimeProvider UTC acceptance time. Carry it in ConnectionSnapshot without changing v1 packets. Server renders one Connected row; pending/busy/rejected peers have none. Clear live metadata on peer close/stop; join the old session and check callback source identity before replacement.
+
+Use native ListView columns measured from current font/DPI, horizontal scrolling, tooltip and complete accessible description. The accepted row's Connected state is distinct from the listener's Listening state. No historical participant list or verified identity claim is added.
+
+## ADR-023 — Join terminal work and preserve failure guidance — 2026-11-22
+
+Regression tests reproduced Start/Connect rejection while final terminal callbacks were still finishing, and a Disconnecting observer failure that left the reader active. Explicit Start/Connect now join previous lifetime/send ownership before replacing fields, with the existing shutdown budget. Any Stop/Disconnect exception still aborts owned I/O. A simultaneous stop/disconnect run also exposed cancellation escaping the final peer notification; suppress it only when the server lifetime actually requested cancellation.
+
+UI command busy guards prevent repeated command queues and allow cleanup retry after failure. Keep unconfirmed-send guidance separately from current connection guidance until a successful confirmed send, so later snapshots/field edits cannot erase it. No automatic reconnect/resend is authorized.
+
+## ADR-024 — Batched native layout and unambiguous dates — 2026-11-22
+
+A fully visible 512-message burst passed alone but exceeded the existing 20-second native fixture deadline during a full run. Keep that deadline: use explicit scrolling-canvas bounds and suspend/resume append/trim layout instead of repeatedly docking all retained cards. Preserve native labels, 500-card/ID bounds, immediate removed-card disposal and scroll access. The visible regression covers burst, trim, resize and close; it is a synthetic local bound, not performance certification.
+
+Actual separate EXEs on an Arabic Windows locale displayed a Hijri year inside yyyy-MM-dd. Format fixed numeric local dates/times with invariant culture, preserving local timezone/offset. Verify the metadata row under ar-SA and keep physical input/accessibility/DPI checks separate.
