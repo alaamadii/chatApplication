@@ -45,10 +45,14 @@ public sealed class ChatServer : IAsyncDisposable
         await _lifecycle.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            if (!_acceptTask.IsCompleted || Snapshot.State != ConnectionState.Stopped)
+            if (Snapshot.State != ConnectionState.Stopped)
             {
                 throw new InvalidOperationException("Server is already active.");
             }
+            // Stopped can already be visible while its final observer is finishing.
+            using var cleanup = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            cleanup.CancelAfter(_options.ShutdownTimeout);
+            await _acceptTask.WaitAsync(cleanup.Token).ConfigureAwait(false);
             _lifetime?.Dispose();
             _lifetime = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             _sessionTask = Task.CompletedTask;
@@ -106,8 +110,10 @@ public sealed class ChatServer : IAsyncDisposable
                 }
 
                 await _sessionTask.ConfigureAwait(false);
-                _session = new(socket, _options, _messages, _clock);
-                _sessionTask = _session.RunAsync(UpdatePeerAsync, cancellationToken);
+                var session = new ClientSession(socket, _options, _messages, _clock);
+                _session = session;
+                _sessionTask = session.RunAsync((info, error, token) =>
+                    UpdatePeerAsync(session, info, error, token), cancellationToken);
             }
         }
         catch (Exception exception)
@@ -132,8 +138,15 @@ public sealed class ChatServer : IAsyncDisposable
         }
     }
 
-    private Task UpdatePeerAsync(string? name, Guid? session, string? error, CancellationToken token) =>
-        _updates.PublishAsync(new(ConnectionState.Listening, name, session, error), token);
+    private Task UpdatePeerAsync(ClientSession source, ConnectedClientInfo? info, string? error, CancellationToken token)
+    {
+        if (!ReferenceEquals(_session, source) || token.IsCancellationRequested
+            || Snapshot.State is ConnectionState.Stopping or ConnectionState.Stopped)
+        {
+            return Task.CompletedTask;
+        }
+        return _updates.PublishAsync(new(ConnectionState.Listening, info?.UserName, info?.SessionId, error, info), token);
+    }
 
     public Task<ChatMessage> SendAsync(string text, CancellationToken cancellationToken = default)
     {
@@ -180,6 +193,7 @@ public sealed class ChatServer : IAsyncDisposable
             _session = null;
             await _updates.PublishAsync(new(ConnectionState.Stopped), shutdown.Token).ConfigureAwait(false);
         }
+        catch { Abort(); throw; }
         finally { _lifecycle.Release(); }
     }
 

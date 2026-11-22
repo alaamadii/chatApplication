@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Sockets;
 using ChatApplication.Core;
 using ChatApplication.Networking.Protocol;
@@ -13,9 +14,10 @@ internal sealed class ClientSession(
     private readonly CancellationTokenSource _closed = new();
     private string? _name;
     private bool _accepted;
+    private int _aborted;
 
     public async Task RunAsync(
-        Func<string?, Guid?, string?, CancellationToken, Task> update, CancellationToken cancellationToken)
+        Func<ConnectedClientInfo?, string?, CancellationToken, Task> update, CancellationToken cancellationToken)
     {
         using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _closed.Token);
         var token = lifetime.Token;
@@ -38,9 +40,11 @@ internal sealed class ClientSession(
 
             var sessionId = Guid.NewGuid();
             await _channel.WriteAsync(ConnectionPacket.Welcome(name, sessionId), handshake.Token).ConfigureAwait(false);
+            var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint!;
+            var info = new ConnectedClientInfo(sessionId, name, endpoint.Address.ToString(), endpoint.Port, clock.GetUtcNow());
             _name = name;
             _accepted = true;
-            await update(name, sessionId, null, token).ConfigureAwait(false);
+            await update(info, null, token).ConfigureAwait(false);
             while (!token.IsCancellationRequested)
             {
                 var packet = await _channel.ReadAsync(PacketPhase.ServerAccepted, token).ConfigureAwait(false);
@@ -69,9 +73,11 @@ internal sealed class ClientSession(
             // Release the peer slot only after an operator dispatch has unwound.
             await _dispatch.WaitAsync().ConfigureAwait(false);
             _dispatch.Release();
+            _closed.Dispose();
             if (!cancellationToken.IsCancellationRequested)
             {
-                await update(null, null, failure, cancellationToken).ConfigureAwait(false);
+                try { await update(null, failure, cancellationToken).ConfigureAwait(false); }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
             }
         }
     }
@@ -113,10 +119,12 @@ internal sealed class ClientSession(
 
     public void Dispose()
     {
+        if (Interlocked.Exchange(ref _aborted, 1) != 0) { return; }
         _accepted = false;
         _closed.Cancel();
         _channel.Dispose();
         socket.Dispose();
-        // The semaphore/CTS have no native wait handle and remain valid while async owners unwind.
+        // The CTS is disposed after dispatch joins in RunAsync; canceled waiters can still unwind.
+        // The semaphore has no allocated native wait handle.
     }
 }
