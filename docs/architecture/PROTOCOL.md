@@ -1,6 +1,6 @@
 # TCP protocol v1
 
-Status: P03 connection/message packets are preserved by P04; no packet, field, version or default deadline was added or relaxed. One accepted client and the Server operator form the baseline.
+Status: the P03/P04 wire contract is preserved during P06 final review; no packet, field, version, limit or default deadline is added or relaxed. One accepted client and the Server operator form the baseline.
 
 ## Framing and parsing
 

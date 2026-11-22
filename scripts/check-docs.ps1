@@ -14,7 +14,10 @@ $required = @(
     'docs/frontend/assets/client-wireframe.svg', 'docs/frontend/assets/server-wireframe.svg',
     'docs/planning/PLAN.md', 'docs/planning/TASKS.md', 'docs/planning/WORKFLOW.md',
     'docs/quality/TESTING.md', 'docs/quality/SECURITY.md', 'docs/setup/ENVIRONMENT.md',
-    'docs/submission/CHECKLIST.md', 'docs/history/DEVELOPMENT.md', 'docs/references/SOURCES.md'
+    'docs/submission/CHECKLIST.md', 'docs/history/DEVELOPMENT.md', 'docs/references/SOURCES.md',
+    'docs/frontend/assets/screenshots/manifest.json',
+    'docs/frontend/assets/screenshots/server.png', 'docs/frontend/assets/screenshots/client.png',
+    'docs/frontend/assets/screenshots/server-client-details.png'
 )
 foreach ($relative in $required) {
     if (-not (Test-Path -LiteralPath (Join-Path $root $relative) -PathType Leaf)) {
@@ -128,6 +131,64 @@ foreach ($name in @('client-wireframe.svg', 'server-wireframe.svg')) {
     }
     $svgCount++
 }
+
+
+# Genuine capture integrity/provenance. Approval is recorded separately by the owner.
+$captureRoot = Join-Path $root 'docs/frontend/assets/screenshots'
+$capture = [IO.File]::ReadAllText((Join-Path $captureRoot 'manifest.json')) | ConvertFrom-Json
+$expectedImages = @('server.png', 'client.png', 'server-client-details.png')
+$capturedAt = [DateTimeOffset]::MinValue
+if ($capture.schemaVersion -ne 1 -or $capture.sourceCommit -notmatch '^[0-9a-f]{40}$' -or
+    $capture.configuration -ne 'Release' -or $capture.ownerApproval -notin @('pending', 'approved') -or
+    -not [DateTimeOffset]::TryParse($capture.capturedAtUtc, [Globalization.CultureInfo]::InvariantCulture,
+        [Globalization.DateTimeStyles]::None, [ref]$capturedAt) -or $capturedAt.Offset -ne [TimeSpan]::Zero -or
+    $capture.displayDpi -le 0 -or $capture.displayScalePercent -ne ($capture.displayDpi * 100 / 96) -or
+    [string]::IsNullOrWhiteSpace($capture.method) -or [string]::IsNullOrWhiteSpace($capture.sdk)) {
+    throw 'Invalid screenshot provenance or approval status.'
+}
+if ($capture.images.Count -ne 3 -or @($capture.images.file | Select-Object -Unique).Count -ne 3) {
+    throw 'Screenshot manifest must list three distinct captures.'
+}
+$readme = [IO.File]::ReadAllText((Join-Path $root 'README.md'))
+$pngCount = 0
+foreach ($entry in $capture.images) {
+    if ($entry.file -notin $expectedImages -or $entry.sha256 -notmatch '^[0-9a-f]{64}$') {
+        throw 'Invalid screenshot filename/hash.'
+    }
+    $path = Join-Path $captureRoot $entry.file
+    if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -ne $entry.sha256) {
+        throw "Screenshot hash mismatch: $($entry.file)"
+    }
+    $header = New-Object byte[] 24
+    $stream = [IO.File]::OpenRead($path)
+    try { $count = $stream.Read($header, 0, $header.Length) }
+    finally { $stream.Dispose() }
+    if ($count -ne 24 -or [BitConverter]::ToString($header, 0, 8) -ne '89-50-4E-47-0D-0A-1A-0A' -or
+        [Text.Encoding]::ASCII.GetString($header, 12, 4) -ne 'IHDR') {
+        throw "Invalid PNG header: $($entry.file)"
+    }
+    $widthBytes = [byte[]]$header[16..19]
+    $heightBytes = [byte[]]$header[20..23]
+    if ([BitConverter]::IsLittleEndian) { [Array]::Reverse($widthBytes); [Array]::Reverse($heightBytes) }
+    $width = [BitConverter]::ToInt32($widthBytes, 0)
+    $height = [BitConverter]::ToInt32($heightBytes, 0)
+    if ($width -le 0 -or $height -le 0 -or $entry.width -ne $width -or $entry.height -ne $height) {
+        throw "Screenshot dimensions differ: $($entry.file)"
+    }
+    $relative = 'docs/frontend/assets/screenshots/' + $entry.file
+    if ($readme -notmatch ('!\[[^\]]+\]\(' + [regex]::Escape($relative) + '\)')) {
+        throw "Screenshot not embedded with alt text in README: $($entry.file)"
+    }
+    $pngCount++
+}
+if ($capture.builds.Count -ne 2 -or @($capture.builds.assembly | Select-Object -Unique).Count -ne 2) {
+    throw 'Capture must identify both application builds.'
+}
+foreach ($build in $capture.builds) {
+    if ($build.assembly -notin @('ChatApplication.Server.dll', 'ChatApplication.Client.dll') -or
+        $build.sha256 -notmatch '^[0-9a-f]{64}$') { throw 'Invalid captured build fingerprint.' }
+}
+Write-Output "Capture integrity: $pngCount PNGs; original source $($capture.sourceCommit); owner approval $($capture.ownerApproval)."
 
 Write-Output "PASS: $($required.Count) required artifacts; $($markdown.Count) Markdown files; $links local file links; $($definitions.Count) tasks / $taskReferences references; $contrastCount contrast pairs; $svgCount labeled SVGs."
 Write-Output 'Documentation validation only. No application behavioral tests or manual UI acceptance claimed.'

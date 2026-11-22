@@ -1,0 +1,42 @@
+{
+    "schemaVersion":  1,
+    "sourceCommit":  "1234b22205750059439cb8b5b16349edd4afc95c",
+    "capturedAtUtc":  "2026-11-22T15:26:31.9418251+00:00",
+    "configuration":  "Release",
+    "sdk":  "10.0.402",
+    "displayDpi":  120,
+    "displayScalePercent":  125,
+    "method":  "Win32 PrintWindow of complete actual application windows; no compositing, pixel edits or simulated UI.",
+    "content":  "Synthetic messages exchanged through the actual loopback Server and Client.",
+    "ownerApproval":  "approved",
+    "builds":  [
+                   {
+                       "assembly":  "ChatApplication.Server.dll",
+                       "sha256":  "6d4bd1f045adedf007fbe8576e4dc241a8965f37ebb4c242e7afca290a3f7355"
+                   },
+                   {
+                       "assembly":  "ChatApplication.Client.dll",
+                       "sha256":  "9ab331d3f397178157aacdab1d48e88455a32edf0bcc66a0c382021f8d28bc47"
+                   }
+               ],
+    "images":  [
+                   {
+                       "file":  "server.png",
+                       "sha256":  "01504e5e73e0ecdb7cc5a8a30219b4687a81c72870a971eb9577514f19c9b948",
+                       "width":  1418,
+                       "height":  947
+                   },
+                   {
+                       "file":  "client.png",
+                       "sha256":  "0b923953df36aa3585554677425212afa332b59c88edfee7c40672d158ac7118",
+                       "width":  1418,
+                       "height":  947
+                   },
+                   {
+                       "file":  "server-client-details.png",
+                       "sha256":  "a4653227d048a33187ff5ea259401437746604b116fca99720a1b49ca1acdd5a",
+                       "width":  1418,
+                       "height":  947
+                   }
+               ]
+}

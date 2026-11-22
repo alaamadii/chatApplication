@@ -1,6 +1,6 @@
 # Architecture
 
-## Implemented P04 structure
+## Implemented baseline reviewed in P06
 
 [ChatApplication.slnx](../../ChatApplication.slnx) contains eight projects.
 
@@ -61,6 +61,6 @@ Composer/button share one guarded async send path. It disables editing during a 
 
 ## Remaining scope
 
-P04 implements the accepted-client list and the documented local robustness cases. P04-004 trusted-LAN verification and owner review remain pending. Optional rooms/private messages/history remain deferred. P06 owns final images, clean checkout, another computer and submission review. Passing CI does not provide owner acceptance.
+The accepted-client list and documented local robustness cases are merged through PR #6. P04-004 trusted-LAN verification remains pending. P06 adds final documentation and real capture validation without changing application code. Optional rooms/private messages/history remain deferred. P06 prepares final images, exact published-checkout evidence and submission review. Another computer, physical acceptance and owner approval remain external checks; the final PR stays draft while required evidence is missing. Passing CI does not provide owner acceptance.
 
 See [decisions](DECISIONS.md), [frontend file guide](../frontend/FILE_GUIDE.md) and [testing](../quality/TESTING.md).

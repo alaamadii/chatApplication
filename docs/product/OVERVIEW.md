@@ -36,6 +36,6 @@ Transcript retention is bounded to the latest 500 messages per window, with a vi
 
 ## Current state and review
 
-PR #5 is merged. P04 now adds real accepted-client information, stale-row cleanup, terminal-notification joining, cancellation-race fixes and persistent unconfirmed-send guidance to the existing bidirectional baseline. Owner review and actual trusted-LAN verification remain pending; physical/second-computer acceptance is not inferred from loopback checks.
+PR #6 is merged. P06 audits the implemented baseline and prepares real screenshots, reproducible setup and a draft final PR. The owner reported manual/external checks not performed on 2026-11-22. The owner approved all three screenshots on 2026-11-22, and exact published-checkout verification passed. Trusted LAN, physical/second-computer evidence and final acceptance remain pending; same-computer automation cannot supply them.
 
 See [requirements](REQUIREMENTS.md), [frontend UX](../frontend/UX.md), [architecture](../architecture/ARCHITECTURE.md) and [plan](../planning/PLAN.md).

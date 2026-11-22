@@ -7,13 +7,13 @@ Use Windows, Git, PowerShell 5.1+ and a stable .NET 10 SDK allowed by global.jso
 ```powershell
 git clone https://github.com/alaamadii/chatApplication.git
 cd chatApplication
-# While the P04 PR is open:
-git switch fix/connection-lifecycle
+# While the P06 final-review PR is open:
+git switch docs/final-submission
 ./scripts/dev.ps1 doctor
 ./scripts/dev.ps1 check
 ```
 
-After owner merge, use main and a fast-forward pull. The local P04 environment on 2026-11-22 reported SDK 10.0.402, .NET/WindowsDesktop 10.0.13, Windows 10.0.22631, PowerShell 5.1.22621.6133 and Git 2.53.0.windows.1.
+After owner merge, use main and a fast-forward pull. The local P06 environment on 2026-11-22 reported SDK 10.0.402, .NET/WindowsDesktop 10.0.13, Windows 10.0.22631, PowerShell 5.1.22621.6133 and Git 2.53.0.windows.1.
 
 | Command | Implemented behavior |
 | --- | --- |
@@ -110,3 +110,22 @@ Disconnect explicitly: the row/context clears. Reconnect: a fresh session suppli
 7. Record Windows/SDK, commit/build, commands, actual outcomes and pending failures. Keep private addresses in owner-local notes or redact them in public evidence.
 
 P04-004 remains Pending because this session has no second Windows machine/authorized remote target for a genuine two-machine test. Two local EXEs and loopback tests do not satisfy it. The P06 second-computer clean-checkout requirement also remains separate.
+
+## Exact published-checkout review
+
+Use the full candidate SHA recorded in the final-review PR. Create an isolated checkout without resetting the working project or deleting existing owner directories:
+
+```powershell
+git clone https://github.com/alaamadii/chatApplication.git chat-review
+cd chat-review
+git switch --detach FULL_PUBLISHED_SHA_FROM_PR
+./scripts/dev.ps1 doctor
+./scripts/dev.ps1 check
+./scripts/dev.ps1 run-server
+```
+
+Run ./scripts/dev.ps1 run-client from another terminal in that same checkout. Use synthetic data and an available matching loopback port. Verify bidirectional text/timestamps, metadata, explicit reconnect, controlled errors and normal shutdown. Record the actual date, SHA, Windows/SDK and outcomes in the review receipt.
+
+Replace FULL_PUBLISHED_SHA_FROM_PR with the actual full commit hash; it is an instruction placeholder, not a test result. Build output/CLI/TRX remain ignored. A fresh checkout must not depend on ignored capture probes. The tracked development/documentation commands are sufficient to restore/build/test and verify PNG hashes/embeds.
+
+This review is on the same computer unless a different machine is explicitly identified. It does not satisfy the owner-reported missing second-computer or trusted-LAN evidence.

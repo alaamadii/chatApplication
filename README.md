@@ -2,70 +2,91 @@
 
 A native Windows Forms client–server chat application for **Nesne Tabanlı Programlama (YMH219)**, by **Alaa Madi**.
 
-**Current status: P04 client information and local robustness implemented; owner review and trusted-LAN verification pending.** P03 [PR #5](https://github.com/alaamadii/chatApplication/pull/5) is merged. Separate Server and Client executables exchange text through a strict TCP protocol. Final submission evidence remains P06.
+**Status: P06 final-review candidate.** The working baseline is merged in [PR #6](https://github.com/alaamadii/chatApplication/pull/6). Final preparation includes genuine screenshots, a requirements audit and published-checkout verification. Required physical, trusted-LAN and second-computer evidence remains pending; see the [submission checklist](docs/submission/CHECKLIST.md).
 
 ## Features
 
-- Start/Stop a loopback TCP server; connect with a validated display name and disconnect explicitly.
-- View the accepted client's name, remote IP/port, local connection date/time and state. Pending/rejected connections never create a client row.
-- Exchange messages with the Server operator, with server-assigned author, GUID and UTC timestamp.
-- Display each accepted message once, in the same acceptance order at both windows. Two deliberate sends of identical text remain two distinct messages.
-- Compose Turkish, Arabic, emoji and multiline text, up to 2,000 UTF-16 code units. Enter sends; Shift+Enter adds a line; Tab moves focus.
-- Show local message times, literal plain text and the latest 500 messages per window, with a persistent notice after older entries are removed.
-- Retain a draft if a send is unconfirmed. Reconnection/retry is explicit; there is no automatic resend or saved history.
+- Start/Stop a TCP server and Connect/Disconnect a client with a validated display name.
+- Exchange real-time text with the Server operator, with explicit author and local timestamps.
+- Display each authoritative message once in acceptance order. Deliberately sending equal text twice creates two messages.
+- Compose Turkish, Arabic, emoji and multiline text. Enter sends, Shift+Enter adds a line and Tab navigates. The limit is 2,000 UTF-16 units; an emoji surrogate pair counts as two.
+- Inspect the accepted client's name, actual remote IP/port, connection date/time and state. Pending/rejected peers never create a row.
+- Keep the latest 500 messages per window, with a persistent notice when older entries are removed.
+- Retain an unconfirmed draft and its warning until a successful confirmed send. Recovery is explicit.
 
-The baseline supports **one pending or accepted client** plus the Server operator. Additional clients receive server_busy. Multiple-client rooms, private messaging and file history remain optional and deferred.
+The baseline supports **one accepted client plus the Server operator**. Additional clients receive server_busy. Rooms, private messages and saved history remain deferred.
 
 ## Build and run
 
-Use Windows with the .NET 10 SDK and WindowsDesktop runtime. From PowerShell in this repository:
+Use Windows, Git, PowerShell 5.1+ and a .NET 10 SDK compatible with [global.json](global.json), plus the WindowsDesktop runtime. The verified SDK is **10.0.402**. No database, API key or external UI framework is needed.
 
 ```powershell
+git clone https://github.com/alaamadii/chatApplication.git
+cd chatApplication
 ./scripts/dev.ps1 doctor
 ./scripts/dev.ps1 check
 ./scripts/dev.ps1 run-server
 ```
 
-In a second terminal:
+For the unmerged final-review candidate, switch to docs/final-submission before running the checks. After owner merge, use main. In another PowerShell terminal in the same checkout:
 
 ```powershell
 ./scripts/dev.ps1 run-client
 ```
 
 1. Start Server on 127.0.0.1:5000, or choose another free matching port.
-2. Enter a supported username in Client and select Connect. Connected appears only after the server accepts the name.
-3. Send a message from Client, then reply from Server. Each window shows the author, body and local HH:mm:ss.
-4. Inspect Server's Connected client list. Scroll horizontally for all columns or use the row tooltip; its accessible description includes the full local date/offset.
-5. Disconnect/reconnect explicitly. The previous row disappears and a fresh accepted session supplies the next row. Stop Server or close either window to end its owned connection.
+2. Enter a supported username in Client and Connect. Connected requires an accepted username handshake.
+3. Send text from Client and reply from Server. Both windows show the same author/body/time sequence.
+4. Inspect Server's Connected client list. Scroll horizontally for all columns; its tooltip/accessibility description includes the complete connection date/offset.
+5. Disconnect/reconnect explicitly, then Stop Server or close either window. Live client information clears when its session ends.
 
-Send is available only with an accepted peer and valid nonblank text. One submission is pending at a time; the composer locks until confirmation or failure. The client clears its submitted draft after its own authoritative server echo is displayed. A different Server message cannot confirm that submission. Unconfirmed-send guidance survives later connection-state renders and input edits until a successful confirmed send. Cleanup failures preserve observable owned work and offer explicit retry; Start/Connect join a previous terminal notification before replacing its session.
+Send requires an accepted peer and valid nonblank text. One submission is pending at a time. The Client clears its unchanged draft after its own authoritative echo is displayed; an unrelated Server message cannot confirm it. If a send is unconfirmed, inspect the retained text before explicitly reconnecting/retrying.
 
-TCP is **plaintext**, and display names are **not authenticated**. Use loopback or a deliberately configured trusted LAN. No firewall/router configuration is changed automatically. Completion does not promise human receipt, a read acknowledgment or exactly-once delivery across reconnect.
+Shared VS Code role/compound launch configurations are included. Physical F5/debugger validation remains pending. See [ENVIRONMENT](docs/setup/ENVIRONMENT.md) for prerequisites, commands, recovery and the deliberate trusted-LAN procedure.
 
-## Engineering and validation
+## Actual application screenshots
 
-SDK 10.0.402, C#/.NET 10, native Windows Forms, TcpListener/TcpClient and BCL JSON/framing. Core and Networking target net10.0; the Windows executables, shared Presentation and App tests target net10.0-windows. No production package, database, cloud service or external UI framework is required.
+Captured on **2026-11-22**, from Release build source **1234b22205750059439cb8b5b16349edd4afc95c**, at **125% (DPI 120)**. These are complete application-window captures with synthetic messages exchanged through the real Server/Client. The owner approved all three screenshots on 2026-11-22.
 
-The development check restores, builds Release, runs **139 cases: 31 Core, 80 Networking and 28 native App**, verifies formatting and validates documentation. Real loopback tests cover authoritative messaging, accepted socket metadata, pending/busy admission, terminal-callback races, interrupted sends, repeated simultaneous stop/disconnect and cleanup-deadline failure. Native tests include a visible 512-message burst/trim/resize/close. Separate actual EXEs passed bidirectional messaging, fresh/cleared client information, explicit recovery after an intentionally terminated Client and normal Server/replacement-Client exit 0. Actual 125% captures were inspected. Physical keyboard/IME, accessibility, VS Code F5, 100%/150%, monitor transitions, LAN and another Windows computer remain pending. See [TESTING](docs/quality/TESTING.md) for exact evidence and limitations.
+**Server — accepted client, actual remote endpoint and bidirectional conversation.**
 
-## Documentation
+![Server window with one accepted Demo_Client and two real timestamped messages](docs/frontend/assets/screenshots/server.png)
 
-| Document | Purpose |
+**Client — the same conversation with outgoing and incoming messages.**
+
+![Client window connected as Demo_Client with its message and the Server reply](docs/frontend/assets/screenshots/client.png)
+
+**Connection details — native list scrolled to the full local connection date and offset.** The sidebar supports horizontal scrolling for the remaining columns.
+
+![Server information list scrolled to show the complete connection date and timezone offset](docs/frontend/assets/screenshots/server-client-details.png)
+
+[Capture provenance and SHA-256 manifest](docs/frontend/assets/screenshots/manifest.json) · [Approval/evidence status](docs/submission/CHECKLIST.md). Original [Client](docs/frontend/assets/client-wireframe.svg) and [Server](docs/frontend/assets/server-wireframe.svg) wireframes remain synthetic design proposals.
+
+## Architecture and validation
+
+C#/.NET 10, Windows Forms, TcpListener/TcpClient and BCL JSON/framing. Core owns pure rules/immutable messages; Networking owns sockets/protocol/lifetimes; Presentation owns native controls; separate Server/Client executables compose them. No production external packages are required.
+
+The latest executed suite has **139 passing cases: 31 Core, 80 Networking and 28 native App**, with no skipped cases. The development check restores, builds Release, runs tests, verifies formatting and validates documentation plus screenshot integrity. Actual-process checks cover Unicode/multiline exchange, repeated equal text, client metadata, explicit recovery, controlled errors and shutdown. Exact local/hosted/published-checkout receipts are in [TESTING](docs/quality/TESTING.md) and the final-review PR.
+
+## Limits and remaining evidence
+
+TCP is plaintext and names are unauthenticated display claims. Use loopback or a deliberately configured trusted LAN. There is no saved history, automatic reconnect/resend, human-read receipt or exactly-once guarantee across sessions. An interrupted send may already have reached the peer.
+
+The owner reported physical checks **not performed** on 2026-11-22. Keyboard/IME/focus, accessibility, VS Code F5, other display settings/monitor transitions, genuine two-machine LAN and another Windows computer remain pending. Scripted 125% captures and another checkout on this computer do not replace those checks.
+
+## Documentation and delivery
+
+| Read | Purpose |
 | --- | --- |
-| [Documentation index](docs/README.md) | Ordered guide and document ownership |
-| [Overview](docs/product/OVERVIEW.md) / [Requirements](docs/product/REQUIREMENTS.md) | Scope, course criteria and traceability |
-| [Stack](docs/technology/STACK.md) / [Environment](docs/setup/ENVIRONMENT.md) | Tools, versions, setup, run and demo steps |
-| [Architecture](docs/architecture/ARCHITECTURE.md) / [Protocol](docs/architecture/PROTOCOL.md) | Boundaries, lifecycle and exact wire contract |
-| [UX](docs/frontend/UX.md) / [Design system](docs/frontend/DESIGN_SYSTEM.md) / [File guide](docs/frontend/FILE_GUIDE.md) | Controls, colors, layout, accessibility and file ownership |
-| [Plan](docs/planning/PLAN.md) / [Tasks](docs/planning/TASKS.md) / [Workflow](docs/planning/WORKFLOW.md) | Phases, separate task ledger and review process |
-| [Security](docs/quality/SECURITY.md) / [Testing](docs/quality/TESTING.md) | Data boundaries, actual checks and pending owner review |
-| [Decisions](docs/architecture/DECISIONS.md) / [Development](docs/history/DEVELOPMENT.md) | Rationale and dated evidence |
-| [Submission](docs/submission/CHECKLIST.md) / [Sources](docs/references/SOURCES.md) | Remaining submission actions and course authority |
+| [Documentation index](docs/README.md) | Organized navigation |
+| [Overview](docs/product/OVERVIEW.md) / [Requirements](docs/product/REQUIREMENTS.md) | Scope and source/test traceability |
+| [Stack](docs/technology/STACK.md) / [Environment](docs/setup/ENVIRONMENT.md) | Tools, versions and reproducible setup |
+| [Architecture](docs/architecture/ARCHITECTURE.md) / [Protocol](docs/architecture/PROTOCOL.md) / [Decisions](docs/architecture/DECISIONS.md) | Ownership, wire contract and rationale |
+| [UX](docs/frontend/UX.md) / [Design system](docs/frontend/DESIGN_SYSTEM.md) / [File guide](docs/frontend/FILE_GUIDE.md) | Controls, colors and file/resource ownership |
+| [Plan](docs/planning/PLAN.md) / [Tasks](docs/planning/TASKS.md) / [Workflow](docs/planning/WORKFLOW.md) | Separate milestones, backlog and review process |
+| [Testing](docs/quality/TESTING.md) / [Security](docs/quality/SECURITY.md) | Actual evidence and boundaries |
+| [Submission](docs/submission/CHECKLIST.md) / [Development](docs/history/DEVELOPMENT.md) / [Sources](docs/references/SOURCES.md) | Remaining owner actions, history and authority |
 
-## Screenshots and submission
+Repository: [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication). Course deadline: **2026-11-30, 23:59**, institutional timezone unspecified. The owner submits their GitHub profile link and approves merging. Final preparation is not a claim of course submission or completed manual acceptance.
 
-[Client](docs/frontend/assets/client-wireframe.svg) and [Server](docs/frontend/assets/server-wireframe.svg) wireframes remain **design proposals with synthetic content**. Local P03/P04 captures are genuine review images, kept ignored; final submission still needs at least two owner-approved captures of the completed application.
-
-Repository: [alaamadii/chatApplication](https://github.com/alaamadii/chatApplication). The instructor recommends YMH219-ChatApp; the owner's selected name is retained. Deadline: **2026-11-30, 23:59**, institutional timezone unspecified. The student number is omitted by owner direction, with no instructor waiver claimed. The owner submits their GitHub profile link; the assistant does not submit to Classroom or merge automatically.
-
-See the [working agreement](AGENTS.md).
+See [AGENTS.md](AGENTS.md) for the working agreement.

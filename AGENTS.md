@@ -3,7 +3,7 @@
 ## Scope and workflow
 
 - Work only in this Chat Application repository; do not change sibling assignments.
-- PR #5 is merged. Phase P04 connected-client information and connection robustness are authorized. Complete code, evidence and its PR; owner review is required before P05/P06. Leave unavailable trusted-LAN checks pending.
+- PR #6 is merged. Phase P06 final audit, genuine screenshots, exact published-checkout validation and a draft final PR are authorized. Owner approved all three README screenshots on 2026-11-22. Keep missing physical/LAN/second-computer evidence pending; no automatic merge or course-readiness claim.
 - Inspect status/remotes and preserve owner edits before changes.
 - Use a dedicated branch and one reviewed PR per phase. Main's minimal bootstrap is only the PR base.
 - Never force-push, rewrite history, merge automatically or submit to Classroom.

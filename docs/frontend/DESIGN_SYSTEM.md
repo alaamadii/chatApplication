@@ -1,6 +1,6 @@
 # Visual design system
 
-Status: P04 adds real accepted-client metadata to the established presentation. P03 applies the native shell, real connection-state tones and original native message cards; custom primary-action tokens remain proposals. This is not complete accessibility acceptance or a claim of pixel identity with the wireframes. [theme.json](theme.json) is the machine-readable design source for current contrast checks. P01 maps reviewed tokens into shared Presentation code and verifies them there.
+Status: P06 captures the actual P04 presentation for review without changing its palette, fonts or controls. P03 applies the native shell, real connection-state tones and original native message cards; custom primary-action tokens remain proposals. This is not complete accessibility acceptance or a claim of pixel identity with the wireframes. [theme.json](theme.json) is the machine-readable design source for current contrast checks. P01 maps reviewed tokens into shared Presentation code and verifies them there.
 
 ## Palette
 
@@ -63,3 +63,9 @@ Default/minimum/wide actual window captures were reviewed on the current 125% di
 Keep the existing palette/fonts/native controls. A populated ListView displays accepted name, endpoint, connected-at and state; no decorative fake rows or extra participant colors are introduced. Columns are measured from header/cell text using current control graphics/font/DPI with padding. Native horizontal scrolling preserves full content in the fixed-width sidebar; tooltip and accessible description expose full metadata. The list joins Tab navigation only when populated.
 
 Connection dates and full accessible message dates use invariant Gregorian numeric formatting after local-time conversion. Text-based state and explicit author remain essential; color/alignment alone never communicates identity. Command failures and unconfirmed-send guidance remain separate from the transcript.
+
+## Genuine review captures
+
+P06 publishes original full-window captures at measured DPI 120 (125%) in the screenshot manifest/README, using the implemented native controls and existing theme. Pixel hashes and source/build provenance are checked; images are not composited, simulated or recolored. The complete numeric connection timestamp is shown through the real list's horizontal scroll.
+
+The owner has not supplied physical display/assistive evidence. Scripted 125% visual review does not accept other scaling, monitor transitions, high contrast or screen-reader behavior.
