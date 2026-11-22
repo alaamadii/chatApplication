@@ -8,7 +8,7 @@
     "displayScalePercent":  125,
     "method":  "Win32 PrintWindow of complete actual application windows; no compositing, pixel edits or simulated UI.",
     "content":  "Synthetic messages exchanged through the actual loopback Server and Client.",
-    "ownerApproval":  "pending",
+    "ownerApproval":  "approved",
     "builds":  [
                    {
                        "assembly":  "ChatApplication.Server.dll",

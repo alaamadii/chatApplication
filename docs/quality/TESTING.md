@@ -12,10 +12,10 @@ Status: draft final candidate. PR #6 is confirmed merged at **1234b2220575005943
 | Dependency query | Official direct/transitive nuget.org advisory query reported no known vulnerable packages in all eight projects at execution time |
 | Capture checks | Three original PNGs copied byte-for-byte; source/date/DPI/dimensions/hashes and both original assembly fingerprints recorded |
 | Negative integrity check | Deliberately incorrect first-image SHA-256 rejected; exact original manifest bytes restored and positive check passed |
-| Published clean checkout | Pending candidate publication/execution; exact receipts will be recorded here/final PR |
-| Final hosted CI/access | Pending candidate publication/verification; use the final PR's exact-head receipt |
+| Published clean checkout | Exact published 7c6904219d872df332ff6365249de19970446057 cloned over HTTPS; doctor/check passed, 139 cases, 0 failed/skipped, build 0 warnings/errors, format/docs success; actual EXEs passed and tracked tree stayed clean |
+| Hosted CI/access | Published 7c6904219d872df332ff6365249de19970446057 passed [Windows run 45039966756](https://github.com/alaamadii/chatApplication/actions/runs/45039966756) and [docs run 45039966757](https://github.com/alaamadii/chatApplication/actions/runs/45039966757); anonymous README/three PNGs/manifest returned HTTP 200. Final receipt-commit outcomes belong in PR #7 |
 | Owner physical/external report | **Not performed**, supplied 2026-11-22; no manual/LAN/second-computer outcome inferred |
-| Image approval | Pending owner response for the three displayed genuine captures |
+| Image approval | Owner explicitly approved all three displayed captures on 2026-11-22; manual/external checks remain Not performed |
 
 ### Requirements/source review
 
@@ -39,6 +39,14 @@ Executed actual Release Server/Client processes from the verified source build, 
 Interrupted send delivery is not guaranteed. These are scripted actual-process results, not physical keyboard/IME or multi-machine tests.
 
 Captured and visually inspected three full-window PNGs at **DPI 120 / 125%**, UTC **2026-11-22T15:26:31.9418251+00:00**, Release source **1234b22205750059439cb8b5b16349edd4afc95c**, SDK 10.0.402. Images are **1418 × 947** and show real messages/metadata; the supplementary image scrolls to the full local connection date/offset. No compositing, simulated UI or pixel edits. See the [capture manifest](../frontend/assets/screenshots/manifest.json) and [submission provenance](../submission/CHECKLIST.md).
+
+### Published-checkout execution receipt
+
+On 2026-11-22, cloned the existing HTTPS repository into a new ignored isolated folder and detached exact published commit **7c6904219d872df332ff6365249de19970446057**. On the environment above, ./scripts/dev.ps1 doctor and ./scripts/dev.ps1 check passed. A logged full-check repeat also passed all 139 cases, Release build, format and screenshot/documentation checks without changing deadlines or cases.
+
+Launched that checkout's actual Release EXEs and repeated the condition-based scenarios listed above on owned loopback port **55872**. Metadata, Unicode/multiline, equal text twice, explicit reconnect/restart, controlled occupied/refused errors, abrupt owned-Client removal and replacement recovery passed. Server/replacement Client exited 0 and the port rebound. The intentionally terminated original Client is not counted as normal shutdown. git status --short remained empty.
+
+The optional review probe was stored outside that checkout's tracked files; it is not required by restore/build/check/run. All application binaries and normal developer commands used only the cloned source/configuration. This is another checkout on the same computer, not another-machine/LAN evidence. Capture assembly fingerprints identify the original capture build; source-revision build metadata may differ in later documentation commits. Final receipt-commit exact SHA/CI/public-access results are maintained in [PR #7](https://github.com/alaamadii/chatApplication/pull/7).
 
 ### Pending owner/external evidence
 

@@ -164,7 +164,16 @@ Branch: docs/final-submission. Verified PR #6 merged at 1234b22205750059439cb8b5
 - Captured three genuine complete application-window PNGs at DPI 120 (125%), from Release source 1234b22205750059439cb8b5b16349edd4afc95c. Visually reviewed synthetic conversation and a scrolled full connection-time view. Copied original bytes into organized frontend assets and embedded them with captions/alt text.
 - Added source/build/date/DPI/dimension/image SHA-256 provenance and original assembly fingerprints. Extended check-docs to validate PNG integrity/README embeds; a deliberately incorrect hash was rejected, then original manifest bytes were restored and validation passed.
 - Reconciled organized README, requirements/source audit, architecture/protocol/decisions, frontend/file guide, setup/stack/security, plan/tasks and submission evidence.
-- The owner reported all requested manual/external checks Not performed on 2026-11-22. Physical input/IME/accessibility/F5/DPI/monitor/LAN and another Windows computer remain Pending. Requested owner review of the three concrete screenshot files; approval is pending.
+- The owner reported all requested manual/external checks Not performed on 2026-11-22. Physical input/IME/accessibility/F5/DPI/monitor/LAN and another Windows computer remain Pending. The owner subsequently approved all three concrete screenshot files on 2026-11-22; the manifest and guides record that approval.
 - Published-candidate clean-checkout and exact final-head hosted/public-access receipts follow actual execution. Keep the final PR draft while required evidence is missing; no automatic merge/Classroom submission or optional implementation.
 
 - One later full-check repeat hit the existing 20-second native fixture deadline in two send/feedback cases. Both targeted cases and the complete 28-case native suite subsequently passed unchanged; cause was not established. Recorded the observation without increasing deadlines, skipping cases or claiming a runtime fix.
+
+### P06 published candidate and owner screenshot approval
+
+- Published documentation/capture commit 401d1a2 and integrity tooling commit 7c6904219d872df332ff6365249de19970446057; opened draft PR #7 targeting main.
+- Exact published candidate passed Windows run 45039966756 and documentation run 45039966757. Windows logs confirm 139 passing cases, 0 failed/skipped, build 0 warnings/errors and format/docs success.
+- Cloned exact published candidate over HTTPS into a new isolated ignored folder; doctor/check passed using the tracked configuration. A logged full-check repeat passed unchanged. Actual cloned Release EXEs repeated the controlled error, metadata, messaging, reconnect/restart and recovery scenarios on owned loopback port 55872. Server/replacement Client exited 0 and the port rebound; the original Client was intentionally terminated. The tracked clone remained clean.
+- Anonymous HTTP requests to the exact published README, three PNGs and manifest returned 200. Existing public visibility was preserved. Source/tests/build configuration/workflows remain unchanged; generated/local output is excluded.
+- Owner explicitly approved all three README screenshot files on 2026-11-22. Updated manifest and evidence consistently; P06-001/002 artifacts are Done. Physical/manual/LAN/second-machine work remains Pending and PR #7 remains draft.
+- Final receipt-commit exact SHA, hosted checks and public-access results belong in PR #7 after verification; no self-referential receipt commit or automatic merge.

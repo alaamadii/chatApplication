@@ -68,8 +68,8 @@ IDs are stable references used by REQUIREMENTS. Dependencies must be satisfied o
 
 | ID | Task | Depends on | Evidence / acceptance | Status |
 | --- | --- | --- | --- | --- |
-| P06-001 | Audit requirements/source, versions, setup and clean published checkout | P04 accepted; selected P05 work reviewed | Source audit and baseline checks passed; exact published-checkout/final-head receipts follow execution in TESTING/PR | In progress |
-| P06-002 | Capture genuine Server/Client images and reconcile guides | P06-001 | Three actual captures, manifest hashes/source/DPI and README embeds prepared; owner approval Pending | In progress |
+| P06-001 | Audit requirements/source, versions, setup and clean published checkout | P04 accepted; selected P05 work reviewed | Source audit, exact published 7c6904219d872df332ff6365249de19970446057 clone/doctor/check/actual EXEs passed; hosted/public receipts in TESTING/PR #7 | Done |
+| P06-002 | Capture genuine Server/Client images and reconcile guides | P06-001 | Three actual captures, manifest hashes/source/DPI and README embeds; owner approved all three on 2026-11-22 | Done |
 | P06-003 | Record physical UI and second-computer results | P06-001 | Owner reported Not performed on 2026-11-22; no physical/second-machine pass inferred | Pending |
 | P06-004 | Owner final PR acceptance and GitHub-profile submission | P06-002, P06-003 | Owner decision; no assistant merge/Classroom submission | Pending |
 

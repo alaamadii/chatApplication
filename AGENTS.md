@@ -3,7 +3,7 @@
 ## Scope and workflow
 
 - Work only in this Chat Application repository; do not change sibling assignments.
-- PR #6 is merged. Phase P06 final audit, genuine screenshots, exact published-checkout validation and a draft final PR are authorized. Keep missing physical/LAN/second-computer evidence and image approval pending; no automatic merge or course-readiness claim.
+- PR #6 is merged. Phase P06 final audit, genuine screenshots, exact published-checkout validation and a draft final PR are authorized. Owner approved all three README screenshots on 2026-11-22. Keep missing physical/LAN/second-computer evidence pending; no automatic merge or course-readiness claim.
 - Inspect status/remotes and preserve owner edits before changes.
 - Use a dedicated branch and one reviewed PR per phase. Main's minimal bootstrap is only the PR base.
 - Never force-push, rewrite history, merge automatically or submit to Classroom.

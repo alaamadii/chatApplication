@@ -46,7 +46,7 @@ Shared VS Code role/compound launch configurations are included. Physical F5/deb
 
 ## Actual application screenshots
 
-Captured on **2026-11-22**, from Release build source **1234b22205750059439cb8b5b16349edd4afc95c**, at **125% (DPI 120)**. These are complete application-window captures with synthetic messages exchanged through the real Server/Client. Owner screenshot approval is pending.
+Captured on **2026-11-22**, from Release build source **1234b22205750059439cb8b5b16349edd4afc95c**, at **125% (DPI 120)**. These are complete application-window captures with synthetic messages exchanged through the real Server/Client. The owner approved all three screenshots on 2026-11-22.
 
 **Server — accepted client, actual remote endpoint and bidirectional conversation.**
 

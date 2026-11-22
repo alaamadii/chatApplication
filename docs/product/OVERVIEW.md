@@ -36,6 +36,6 @@ Transcript retention is bounded to the latest 500 messages per window, with a vi
 
 ## Current state and review
 
-PR #6 is merged. P06 audits the implemented baseline and prepares real screenshots, reproducible setup and a draft final PR. The owner reported manual/external checks not performed on 2026-11-22. Trusted LAN, physical/second-computer evidence, screenshot approval and final acceptance remain pending; same-computer automation cannot supply them.
+PR #6 is merged. P06 audits the implemented baseline and prepares real screenshots, reproducible setup and a draft final PR. The owner reported manual/external checks not performed on 2026-11-22. The owner approved all three screenshots on 2026-11-22, and exact published-checkout verification passed. Trusted LAN, physical/second-computer evidence and final acceptance remain pending; same-computer automation cannot supply them.
 
 See [requirements](REQUIREMENTS.md), [frontend UX](../frontend/UX.md), [architecture](../architecture/ARCHITECTURE.md) and [plan](../planning/PLAN.md).

@@ -10,12 +10,12 @@ Repository: [alaamadii/chatApplication](https://github.com/alaamadii/chatApplica
 | --- | --- |
 | Separate source repository, .gitignore, staged history | Existing repository and owner-merged phase PRs |
 | Mandatory same-computer functionality | Implemented; source/test mapping in REQUIREMENTS; 139 cases and actual separate processes |
-| README purpose/stack/setup/recovery/limitations | Reconciled P06 guide; final published-checkout receipt follows verification |
+| README purpose/stack/setup/recovery/limitations | Reconciled P06 guide; exact published-checkout receipt in TESTING and PR #7 |
 | Genuine Server/Client images | Three actual captures embedded in README; provenance below |
-| Screenshot owner approval | **Pending** |
-| Exact published checkout doctor/check/run/normal close | Pending execution for the published candidate; exact receipt belongs in TESTING/final PR |
-| Final exact-head Windows/documentation CI | Pending publication/verification; receipt belongs in final PR |
-| Public README/images/history/exclusions audit | Pending published-candidate access checks |
+| Screenshot owner approval | **Approved**, all three images, owner report 2026-11-22 |
+| Exact published checkout doctor/check/run/normal close | Passed for 7c6904219d872df332ff6365249de19970446057; 139 cases and actual EXEs, clean tracked tree; final receipt-commit results in PR #7 |
+| Final exact-head Windows/documentation CI | Both workflows passed for published 7c6904219d872df332ff6365249de19970446057; exact final receipt-commit results in PR #7 |
+| Public README/images/history/exclusions audit | Existing public visibility preserved; anonymous published README/three PNGs/manifest HTTP 200; exclusions/history inspected |
 | Physical UI/IME/focus/accessibility/F5/DPI | **Not performed**, owner report 2026-11-22 |
 | Trusted-LAN test, P04-004 | **Not performed**; two local processes do not satisfy it |
 | Different Windows computer, P06-003 | **Not performed**; another checkout on this computer does not satisfy it |
@@ -56,7 +56,7 @@ Complete and record:
 3. Actual 100%/125%/150% and available monitor transitions. Scripted 125% visual captures are recorded separately.
 4. Two deliberately selected trusted Windows machines for LAN, using the procedure in ENVIRONMENT. Verify messages, client metadata, disconnect/reconnect and shutdown. Do not automate firewall/router changes.
 5. A different Windows computer: clone the exact published commit, run doctor/check, launch both programs and record representative behavior/shutdown.
-6. Review the three exact screenshot files and approve or request changes.
+6. Screenshot review is complete: the owner approved the three exact images on 2026-11-22. This approval does not complete manual/external tests.
 7. Review the final PR/evidence, then decide merging and course readiness.
 
 Use this evidence format for each performed check: actual date, exact commit/build, Windows/SDK, steps, expected/observed result and unresolved failures. Keep private network/machine details in owner-local notes or redact them publicly. Do not replace Not performed with an assumed pass.

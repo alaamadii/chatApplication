@@ -4,7 +4,7 @@ PLAN owns sequence, deliverables and review gates. [TASKS](TASKS.md) owns indivi
 
 ## Current delivery
 
-The owner merged [PR #6](https://github.com/alaamadii/chatApplication/pull/6) before P06. The runtime baseline is implemented and reviewed. Final preparation audits source/requirements, publishes genuine screenshots/provenance and verifies an exact published checkout. P04-004 and required physical/second-computer evidence remain pending; the owner reported these checks not performed on 2026-11-22. Image approval and final acceptance remain separate gates. The final PR stays draft while required evidence is missing.
+The owner merged [PR #6](https://github.com/alaamadii/chatApplication/pull/6) before P06. The runtime baseline is implemented and reviewed. Final preparation audits source/requirements, publishes genuine screenshots/provenance and verifies an exact published checkout. P04-004 and required physical/second-computer evidence remain pending; the owner reported these checks not performed on 2026-11-22. The owner approved all three genuine screenshots on 2026-11-22; the published-checkout audit is complete. Final acceptance remains a separate gate. The final PR stays draft while required evidence is missing.
 
 | Phase | Deliverable | Depends on | Current state |
 | --- | --- | --- | --- |
